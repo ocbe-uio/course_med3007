@@ -1,0 +1,49 @@
+---
+title: "Statistical Principles in Genomics"
+---
+
+# Welcome!
+
+This is the course website for **MED3007: Statistical Principles in Genomics** at the Faculty of Medicine, University of Oslo. 
+
+The course website is developed by the instructors of the course, hosted for free and public accessible on Github. Course material can be found in the [github repository](https://github.com/ocbe-uio/course_med3007).
+
+### Structure
+
+* [Get Started]() provides some information about software installation, data download and code.
+* [Course material]() provides a list of topics and links for each session.
+* [R Lab and Code]() hosts the lab session exercises and code.
+
+
+::: callout-note
+## Official course webpage
+
+Please refer to the [official course page](https://www.uio.no/studier/emner/medisin/med/MED3007/) by University of Oslo for information related to **application, evaluation and other administrative matters**.
+
+:::
+
+### Preparation
+
+You should have R installed on your computer before the course. More on preparation please read [here]().
+
+
+# Schedule
+
+You can find the [official course schedule](https://www.uio.no/studier/emner/medisin/med/MED3007/v24/timeplan/index.html) at the University of Oslo course website. If there is a conflict of information, please refer to the official schedule.
+
+(UPDATE PENDING!!!!)
+
+|     Time      |                                              Topic                                              |     Presenter     |
+|:-------------:|:-----------------------------------------------------------------------------------------------:|:-----------------:|
+|      Now      |                                 [Preparations](part0_prep.qmd)                                  |                   |
+| 9:00 - 10:00  |     [(Supervised) machine learning with small data](/lecture_notes/StatPrinciples_ML_1.pdf)     | Manuela Zucknick  |
+|               |                                    [R lab 1](part1_eda.qmd)                                     | Manuela Zucknick  |
+| 10:15 - 11:15 |       [Overfitting, regularisation and all that](/lecture_notes/StatPrinciples_ML_2.pdf)        | Manuela Zucknick  |
+|               |                                   [R lab 2](part2_model.qmd)                                    | Manuela Zucknick  |
+| 11:30 - 12:00 | [Outlook: Hierarchical models and structured penalties](/lecture_notes/StatPrinciples_ML_3.pdf) | Theophilus Asenso |
+
+
+
+
+
+

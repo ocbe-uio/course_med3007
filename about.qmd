@@ -1,0 +1,20 @@
+---
+title: "About MED3007"
+format: 
+  html:
+    code-fold: true
+    code-tools: false
+---
+
+## Course content 
+
+Genomic data analysis is increasingly important both in medical research and in the clinical practice. In this course, you will learn the basic principles and concepts in the statistical analysis of genomic data. The course will focus on the three main tasks that are frequently involved in genomics: data visualisation, data screening and pre-processing, data modelling (prediction and classification). You will get a practical introduction to RStudio, the best statistical software for analysing genomic data, thus enabling you to perform basic programming tasks, to visualise and analyse genomic data, and to interpret the results.
+
+
+#### Contact
+
+Valeria Vitelli (course lead): valeria.vitelli\@medisin.uio.no
+
+Chi Zhang (R lab sessions): chi.zhang\@medisin.uio.no
+ 
+

@@ -1,0 +1,114 @@
+[
+  {
+    "objectID": "misc/how-to.html",
+    "href": "misc/how-to.html",
+    "title": "Oslo Bioinformatics",
+    "section": "",
+    "text": "The course website\nThe website is linked to the github repository, specifically,\n\nHomepage links to index.qmd\nPreparation links to part0_prep.qmd\nR Lab - Part I links to part1_eda.qmd\nR Lab - Part II links to part2_model.qmd\nAbout links to about.qmd\n\nThe overall appearance is controlled by _quarto.yml.\n\n\nHow to modify the content\nThe website is made by quarto, which is a better version of Rmarkdown. The way code chunk works is exactly the same as Rmarkdown (only that it supports a few more languages in the same file).\nYou might need to install quarto and upgrade Rstudio to the latest version, to be able to render the documents by yourself.\nMake sure that the path are set properly so that files can be loaded properly.\nDeploy changes to the website: push all modifications to github, the site will update itself momentarily (after the CI/CD are successful)\nYou can also let me know if you need any help with the website or text."
+  },
+  {
+    "objectID": "part0_prep.html",
+    "href": "part0_prep.html",
+    "title": "Preparation",
+    "section": "",
+    "text": "Here are some preparation information for the participants."
+  },
+  {
+    "objectID": "part0_prep.html#software",
+    "href": "part0_prep.html#software",
+    "title": "Preparation",
+    "section": "Software",
+    "text": "Software\nIn this workshop we will be using R. You can either\n\nhave R and Rstudio installed on your laptop\nor, use Posit cloud (formerly Rstudio Cloud).\n\nPosit cloud is free of charge for personal users, yet you need to sign up for a new user account and have internet connection. Use this Posit cloud project: https://posit.cloud/content/5131383.\nNote: In the Posit cloud project, all required R code and data sets should already be available, and all required R packages are already installed. If you plan to use your own laptop and local RStudio setup, then you will need to download the data and R code and install"
+  },
+  {
+    "objectID": "part0_prep.html#data",
+    "href": "part0_prep.html#data",
+    "title": "Preparation",
+    "section": "Data",
+    "text": "Data\nThe datasets we use can be found here."
+  },
+  {
+    "objectID": "part0_prep.html#code",
+    "href": "part0_prep.html#code",
+    "title": "Preparation",
+    "section": "Code",
+    "text": "Code\nThe R scripts used in part 1 and part 2 can be found here."
+  },
+  {
+    "objectID": "part0_prep.html#resources",
+    "href": "part0_prep.html#resources",
+    "title": "Preparation",
+    "section": "Resources",
+    "text": "Resources\nLecture notes link\nLab notes link\nAure 2015 Paper link"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Statistical Principles in Genomics",
+    "section": "",
+    "text": "Welcome!\nThis is the course website for MED3007: Statistical Principles in Genomics at the Faculty of Medicine, University of Oslo.\nThe course website is developed by the instructors of the course, hosted for free and public accessible on Github. Course material can be found in the github repository.\n\nStructure\n\nGet Started provides some information about software installation, data download and code.\nCourse material provides a list of topics and links for each session.\nR Lab and Code hosts the lab session exercises and code.\n\n\n\n\n\n\n\nOfficial course webpage\n\n\n\nPlease refer to the official course page by University of Oslo for information related to application, evaluation and other administrative matters.\n\n\n\n\nPreparation\nYou should have R installed on your computer before the course. More on preparation please read here.\n\n\n\nSchedule\nYou can find the official course schedule at the University of Oslo course website. If there is a conflict of information, please refer to the official schedule.\n(UPDATE PENDING!!!!)\n\n\n\nTime\nTopic\nPresenter\n\n\n\n\nNow\nPreparations\n\n\n\n9:00 - 10:00\n(Supervised) machine learning with small data\nManuela Zucknick\n\n\n\nR lab 1\nManuela Zucknick\n\n\n10:15 - 11:15\nOverfitting, regularisation and all that\nManuela Zucknick\n\n\n\nR lab 2\nManuela Zucknick\n\n\n11:30 - 12:00\nOutlook: Hierarchical models and structured penalties\nTheophilus Asenso"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About MED3007",
+    "section": "",
+    "text": "Genomic data analysis is increasingly important both in medical research and in the clinical practice. In this course, you will learn the basic principles and concepts in the statistical analysis of genomic data. The course will focus on the three main tasks that are frequently involved in genomics: data visualisation, data screening and pre-processing, data modelling (prediction and classification). You will get a practical introduction to RStudio, the best statistical software for analysing genomic data, thus enabling you to perform basic programming tasks, to visualise and analyse genomic data, and to interpret the results.\n\n\nValeria Vitelli (course lead): valeria.vitelli@medisin.uio.no\nChi Zhang (R lab sessions): chi.zhang@medisin.uio.no"
+  },
+  {
+    "objectID": "part1_eda.html",
+    "href": "part1_eda.html",
+    "title": "R Lab - Part I",
+    "section": "",
+    "text": "See StatPrinciples_RLab.pdf for some background info.\nExercise on analysis of miRNA, mRNA and protein data from the paper Aure et al, Integrated analysis reveals microRNA networks coordinately expressed with key proteins in breast cancer, Genome Medicine, 2015.\nPlease run the code provided to replicate some of the analyses in Aure et al. (2015). Make sure you can explain what all the analysis steps do and that you understand all the results.\nIn addition, there are three extra tasks Task 1, Task 2, Task 3, where no R code is provided. Please do these tasks when you have time available at the end of the lab.\n\n\n\ninstall.packages(\"glmnet\")\ninstall.packages(\"gclus\")\n\n\n\n\nRead the data, and convert to matrix format.\n\nmir &lt;- read.table(\"lab/data/miRNA-421x282.txt\", header=T, sep=\"\\t\", dec=\".\")\nrna &lt;- read.table(\"lab/data/mRNA-100x282.txt\", header=T, sep=\"\\t\", dec=\".\")\nprt &lt;- read.table(\"lab/data/prot-100x282.txt\", header=T, sep=\"\\t\", dec=\".\")\n\n# Convert to matrix format\n\nmir &lt;- as.matrix(mir)\nrna &lt;- as.matrix(rna)\nprt &lt;- as.matrix(prt)\n\nPrint the data\n\nmir[1:4, 1:4]\n\n            OSL2R.3002T4 OSL2R.3005T1 OSL2R.3013T1 OSL2R.3030T2\nhsa-let-7a      -1.10330      0.40033     -0.65364      0.78277\nhsa-let-7a*     -0.58049     -0.72246      1.46023     -0.67980\nhsa-let-7b      -3.17134      0.41602     -0.13054      1.11872\nhsa-let-7c      -3.10923      0.27861     -0.17365      0.47395\n\nrna[1:4, 1:4]\n\n      OSL2R.3002T4 OSL2R.3005T1 OSL2R.3013T1 OSL2R.3030T2\nACACA      1.60034     -0.49087     -0.26553     -0.27857\nANXA1     -2.42501     -0.05416     -0.46478     -2.18393\nAR         0.39615     -0.43348     -0.10232      0.58299\nBAK1       0.78627      0.39897      0.22598     -1.31202\n\nprt[1:4, 1:4]\n\n      OSL2R.3002T4 OSL2R.3005T1 OSL2R.3013T1 OSL2R.3030T2\nACACA      0.48181     -0.76244      0.22878      0.02493\nANXA1     -0.37323      0.52558      0.73313     -1.60107\nAR         1.39394     -0.33711      0.07152      1.51886\nBAK1       1.44828      1.26768     -0.32807      1.41299\n\n\nVisualise the overall distribution of expression levels by histogram\n\npar(mfrow=c(3,1))\nhist(mir, nclass=40, xlim=c(-5,5), col=\"lightblue\")\nhist(rna, nclass=40, xlim=c(-5,5), col=\"lightblue\")\nhist(prt, nclass=40, xlim=c(-5,5), col=\"lightblue\")\n\n\n\n\nmRNA-protein associations (only first nine genes)\n\npar(mfrow=c(3,3))\npar(mar=c(3,3,3,3))\nfor (i in 1:9) {\n  plot(rna[i,], prt[i,], pch=19)\n  title(rownames(rna)[i])\n  lines(smooth.spline(rna[i,], prt[i,], df=4), col=\"red\")\n}\n\n\n\n\n\n\n\n\n\n\nTask 1\n\n\n\nExtend the above analysis to cover all genes."
+  },
+  {
+    "objectID": "part1_eda.html#explore-the-correlations",
+    "href": "part1_eda.html#explore-the-correlations",
+    "title": "R Lab - Part I",
+    "section": "Explore the correlations",
+    "text": "Explore the correlations\nCompute and plot mRNA-protein correlations\n\nrho = rep(NA, nrow(rna))  \nfor (i in 1:nrow(rna)) {\n  rho[i] = cor(rna[i,], prt[i,])\n}\npar(mfrow=c(1,1))\nhist(rho, col=\"lightblue\")\n\n\n\n\nCalculate the correlation of each miRNA to each protein\n\nRHO = matrix(NA, nrow(mir), nrow(prt))\nfor (i in 1:nrow(mir)) {\n  for (j in 1:nrow(prt)) {\n     RHO[i,j] = cor(mir[i,], prt[j,]) \n  }\n}\npar(mfrow=c(1,1))\nhist(RHO, col=\"lightblue\")"
+  },
+  {
+    "objectID": "part1_eda.html#visualize-as-heatmap",
+    "href": "part1_eda.html#visualize-as-heatmap",
+    "title": "R Lab - Part I",
+    "section": "Visualize as heatmap",
+    "text": "Visualize as heatmap\nUse the code provided to visualize the heatmap.\nNote: If you get the error message Error in plot.new() : figure margins too large, try to increase the Plots panel in your RStudio workspace.\n\nsource(\"lab/code/clustermap_beta.R\")\n\nplot.init(tree=c(2,3))\nhcluster(RHO, clust=\"row\", distance=\"euclidean\", linkage=\"complete\")\nhcluster(RHO, clust=\"col\", distance=\"euclidean\", linkage=\"complete\")\nplot.hmap(RHO)\nplot.tree(side=2)\nplot.tree(side=3)\nplot.hmap.key()\n\n\n\n\n\n\n\nTask 2\n\n\n\nCompare this heatmap with Figure 3 in Aure et al. (2015). Are these two figures showing the same results?"
+  },
+  {
+    "objectID": "part2_model.html",
+    "href": "part2_model.html",
+    "title": "R Lab - Part II",
+    "section": "",
+    "text": "In this part of the exercise, we model (on the log-scale) the association of miRNA espression on protein expression adjusting for the corresponding mRNA.\nInvestigate miR-107 and B-RAF (Aure et al, 2015, Figure 2H)\n\nprt.BRAF = prt[12,]\nrna.BRAF = rna[12,]\nmir.107 = mir[16,] \n\n\n\non the log-scale, Aure et al. 2015, equation (3)\n\nfitA &lt;- lm(prt.BRAF ~ mir.107 + rna.BRAF)\nsummary(fitA)\n\n\nCall:\nlm(formula = prt.BRAF ~ mir.107 + rna.BRAF)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-2.3028 -0.6126  0.0453  0.6153  3.1361 \n\nCoefficients:\n              Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) -7.315e-08  5.068e-02   0.000        1    \nmir.107      4.324e-01  5.079e-02   8.513 1.06e-15 ***\nrna.BRAF     3.200e-01  5.079e-02   6.301 1.15e-09 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.851 on 279 degrees of freedom\nMultiple R-squared:  0.281, Adjusted R-squared:  0.2758 \nF-statistic: 54.51 on 2 and 279 DF,  p-value: &lt; 2.2e-16\n\n\nAdd smooth non-linear cures to the scatterplots: use existing panel.smooth() function, and add linear regression lines to the scatterplots:\n\npanel.linear &lt;- function (x, y, col.regres = \"blue\", ...) \n{ \n  points(x, y, pch=19) \n  ok &lt;- is.finite(x) & is.finite(y) \n  if (any(ok)) \n    abline(stats::lm(y[ok] ~ x[ok]), col = col.regres, ...) \n} \n\npairs(data.frame(mir.107, prt.BRAF, rna.BRAF), \n      lower.panel = panel.smooth,\n      upper.panel = panel.linear)\n\n\n\n\n\n\n\nwith all miRNAs (Aure et al. 2015, equation (4))\n\nlibrary(glmnet)\n\n# 10-fold CV to determine the optimal lambda:\n# Note: rna.BRAF is penalised together with all the mir variables. \n# You can use the penalty.factor option to avoid this.\nset.seed(1234)\ncvfit &lt;- cv.glmnet(y=prt.BRAF, x=t(rbind(mir, rna.BRAF)),\n                   alpha=1, nfolds=10, standardize=TRUE)\n\npar(mfrow=c(1,1))\nplot(cvfit)\nlambda.opt &lt;- cvfit$lambda.min\n\n# Coefficient path plot and coefficients for optimal lambda:\nfitB &lt;- cvfit$glmnet.fit\n\nplot(fitB, xvar=\"lambda\")\nabline(v=log(lambda.opt))\n\ncoef(fitB, s=lambda.opt)\npredict(fitB, type=\"nonzero\", s=lambda.opt)\n\nCompare the regression coefficient of mir.107 from the models in (a) and (b):\n\ncoef(fitA)[\"mir.107\"]\nas.matrix(coef(fitB, s=cvfit$lambda.min))[\"hsa-miR-107\",]\n\n\n\n\n\n\n\nTask 3\n\n\n\nRepeat the lasso analysis, but this time do not penalise the rna.BRAF variable together with the mir variables.\nCheck out the information on the penalty.factor option in ?glmnet to understand how."
+  },
+  {
+    "objectID": "part0_prep.html#required-r-packages",
+    "href": "part0_prep.html#required-r-packages",
+    "title": "Preparation",
+    "section": "Required R packages",
+    "text": "Required R packages\nThe R package we are using is glmnet. Otherwise, we use base R packages which are already installed by default. We will also need R package gclus for one of the tasks (not essential for running other parts of the lab). You can install the packages by running the following code:\ninstall.packages(\"glmnet\")\ninstall.packages(\"gclus\")"
+  },
+  {
+    "objectID": "part2_model.html#association-modeling",
+    "href": "part2_model.html#association-modeling",
+    "title": "R Lab - Part II",
+    "section": "",
+    "text": "In this part of the exercise, we model (on the log-scale) the association of miRNA espression on protein expression adjusting for the corresponding mRNA.\nInvestigate miR-107 and B-RAF (Aure et al, 2015, Figure 2H)\n\nprt.BRAF = prt[12,]\nrna.BRAF = rna[12,]\nmir.107 = mir[16,] \n\n\n\non the log-scale, Aure et al. 2015, equation (3)\n\nfitA &lt;- lm(prt.BRAF ~ mir.107 + rna.BRAF)\nsummary(fitA)\n\n\nCall:\nlm(formula = prt.BRAF ~ mir.107 + rna.BRAF)\n\nResiduals:\n    Min      1Q  Median      3Q     Max \n-2.3028 -0.6126  0.0453  0.6153  3.1361 \n\nCoefficients:\n              Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept) -7.315e-08  5.068e-02   0.000        1    \nmir.107      4.324e-01  5.079e-02   8.513 1.06e-15 ***\nrna.BRAF     3.200e-01  5.079e-02   6.301 1.15e-09 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 0.851 on 279 degrees of freedom\nMultiple R-squared:  0.281, Adjusted R-squared:  0.2758 \nF-statistic: 54.51 on 2 and 279 DF,  p-value: &lt; 2.2e-16\n\n\nAdd smooth non-linear cures to the scatterplots: use existing panel.smooth() function, and add linear regression lines to the scatterplots:\n\npanel.linear &lt;- function (x, y, col.regres = \"blue\", ...) \n{ \n  points(x, y, pch=19) \n  ok &lt;- is.finite(x) & is.finite(y) \n  if (any(ok)) \n    abline(stats::lm(y[ok] ~ x[ok]), col = col.regres, ...) \n} \n\npairs(data.frame(mir.107, prt.BRAF, rna.BRAF), \n      lower.panel = panel.smooth,\n      upper.panel = panel.linear)\n\n\n\n\n\n\n\nwith all miRNAs (Aure et al. 2015, equation (4))\n\nlibrary(glmnet)\n\n# 10-fold CV to determine the optimal lambda:\n# Note: rna.BRAF is penalised together with all the mir variables. \n# You can use the penalty.factor option to avoid this.\nset.seed(1234)\ncvfit &lt;- cv.glmnet(y=prt.BRAF, x=t(rbind(mir, rna.BRAF)),\n                   alpha=1, nfolds=10, standardize=TRUE)\n\npar(mfrow=c(1,1))\nplot(cvfit)\nlambda.opt &lt;- cvfit$lambda.min\n\n# Coefficient path plot and coefficients for optimal lambda:\nfitB &lt;- cvfit$glmnet.fit\n\nplot(fitB, xvar=\"lambda\")\nabline(v=log(lambda.opt))\n\ncoef(fitB, s=lambda.opt)\npredict(fitB, type=\"nonzero\", s=lambda.opt)\n\nCompare the regression coefficient of mir.107 from the models in (a) and (b):\n\ncoef(fitA)[\"mir.107\"]\nas.matrix(coef(fitB, s=cvfit$lambda.min))[\"hsa-miR-107\",]\n\n\n\n\n\n\n\nTask 3\n\n\n\nRepeat the lasso analysis, but this time do not penalise the rna.BRAF variable together with the mir variables.\nCheck out the information on the penalty.factor option in ?glmnet to understand how."
+  },
+  {
+    "objectID": "part1_eda.html#a-cancer-modeling-example",
+    "href": "part1_eda.html#a-cancer-modeling-example",
+    "title": "R Lab - Part I",
+    "section": "",
+    "text": "See StatPrinciples_RLab.pdf for some background info.\nExercise on analysis of miRNA, mRNA and protein data from the paper Aure et al, Integrated analysis reveals microRNA networks coordinately expressed with key proteins in breast cancer, Genome Medicine, 2015.\nPlease run the code provided to replicate some of the analyses in Aure et al. (2015). Make sure you can explain what all the analysis steps do and that you understand all the results.\nIn addition, there are three extra tasks Task 1, Task 2, Task 3, where no R code is provided. Please do these tasks when you have time available at the end of the lab.\n\n\n\ninstall.packages(\"glmnet\")\ninstall.packages(\"gclus\")\n\n\n\n\nRead the data, and convert to matrix format.\n\nmir &lt;- read.table(\"lab/data/miRNA-421x282.txt\", header=T, sep=\"\\t\", dec=\".\")\nrna &lt;- read.table(\"lab/data/mRNA-100x282.txt\", header=T, sep=\"\\t\", dec=\".\")\nprt &lt;- read.table(\"lab/data/prot-100x282.txt\", header=T, sep=\"\\t\", dec=\".\")\n\n# Convert to matrix format\n\nmir &lt;- as.matrix(mir)\nrna &lt;- as.matrix(rna)\nprt &lt;- as.matrix(prt)\n\nPrint the data\n\nmir[1:4, 1:4]\n\n            OSL2R.3002T4 OSL2R.3005T1 OSL2R.3013T1 OSL2R.3030T2\nhsa-let-7a      -1.10330      0.40033     -0.65364      0.78277\nhsa-let-7a*     -0.58049     -0.72246      1.46023     -0.67980\nhsa-let-7b      -3.17134      0.41602     -0.13054      1.11872\nhsa-let-7c      -3.10923      0.27861     -0.17365      0.47395\n\nrna[1:4, 1:4]\n\n      OSL2R.3002T4 OSL2R.3005T1 OSL2R.3013T1 OSL2R.3030T2\nACACA      1.60034     -0.49087     -0.26553     -0.27857\nANXA1     -2.42501     -0.05416     -0.46478     -2.18393\nAR         0.39615     -0.43348     -0.10232      0.58299\nBAK1       0.78627      0.39897      0.22598     -1.31202\n\nprt[1:4, 1:4]\n\n      OSL2R.3002T4 OSL2R.3005T1 OSL2R.3013T1 OSL2R.3030T2\nACACA      0.48181     -0.76244      0.22878      0.02493\nANXA1     -0.37323      0.52558      0.73313     -1.60107\nAR         1.39394     -0.33711      0.07152      1.51886\nBAK1       1.44828      1.26768     -0.32807      1.41299\n\n\nVisualise the overall distribution of expression levels by histogram\n\npar(mfrow=c(3,1))\nhist(mir, nclass=40, xlim=c(-5,5), col=\"lightblue\")\nhist(rna, nclass=40, xlim=c(-5,5), col=\"lightblue\")\nhist(prt, nclass=40, xlim=c(-5,5), col=\"lightblue\")\n\n\n\n\nmRNA-protein associations (only first nine genes)\n\npar(mfrow=c(3,3))\npar(mar=c(3,3,3,3))\nfor (i in 1:9) {\n  plot(rna[i,], prt[i,], pch=19)\n  title(rownames(rna)[i])\n  lines(smooth.spline(rna[i,], prt[i,], df=4), col=\"red\")\n}\n\n\n\n\n\n\n\n\n\n\nTask 1\n\n\n\nExtend the above analysis to cover all genes."
+  },
+  {
+    "objectID": "about.html#course-content",
+    "href": "about.html#course-content",
+    "title": "About MED3007",
+    "section": "",
+    "text": "Genomic data analysis is increasingly important both in medical research and in the clinical practice. In this course, you will learn the basic principles and concepts in the statistical analysis of genomic data. The course will focus on the three main tasks that are frequently involved in genomics: data visualisation, data screening and pre-processing, data modelling (prediction and classification). You will get a practical introduction to RStudio, the best statistical software for analysing genomic data, thus enabling you to perform basic programming tasks, to visualise and analyse genomic data, and to interpret the results.\n\n\nValeria Vitelli (course lead): valeria.vitelli@medisin.uio.no\nChi Zhang (R lab sessions): chi.zhang@medisin.uio.no"
+  }
+]
