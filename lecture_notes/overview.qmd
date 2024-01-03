@@ -1,0 +1,21 @@
+---
+title: "Overview"
+format: 
+  html:
+    code-fold: false
+    code-tools: true
+---
+
+## A Cancer Modeling Example
+
+See `StatPrinciples_RLab.pdf` for some background info.
+
+Exercise on analysis of miRNA, mRNA and protein data from the paper Aure et al, Integrated analysis reveals microRNA networks coordinately expressed with key proteins in breast cancer, Genome Medicine, 2015.
+
+Please run the code provided to replicate some of the analyses in Aure et al. (2015). Make sure you can explain what all the analysis steps do and that you understand all the results.
+
+In addition, there are three extra tasks `Task 1`, `Task 2`, `Task 3`, where no R code is provided. Please do these tasks when you have time available at the end of the lab.
+
+### Install R packages
+
+

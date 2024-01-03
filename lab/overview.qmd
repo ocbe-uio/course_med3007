@@ -1,0 +1,36 @@
+---
+title: "R Lab: Overview"
+format: 
+  html:
+    code-fold: false
+    code-tools: true
+---
+
+## Datasets
+
+day 2 (MT)
+
+- brainshake (t-test)
+- NCI60 (t-test, multiple testing)
+- Ch10Ex11
+
+day 3 (PCA)
+
+- pima.txt
+- NCI60
+- USarrest
+- Food
+- CH10Ex11
+
+day 4 (clustering)
+
+- iris
+- birds
+- NCI60
+- CH10Ex11
+
+
+
+
+
+

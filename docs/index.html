@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>MED3007 V24 - Statistical Principles in Genomics</title>
+<title>MED3007 V24 - MED3007: Statistical Principles in Genomics</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -63,7 +63,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-sidebar docked nav-fixed">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -85,6 +85,14 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./get_started/get_started.html" rel="" target="">
+ <span class="menu-text">Get Started</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./lab/overview.html" rel="" target="">
+ <span class="menu-text">Lab and Code</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="./about.html" rel="" target="">
  <span class="menu-text">About</span></a>
   </li>  
@@ -101,53 +109,10 @@ ul.task-list li input[type="checkbox"] {
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav">
-    <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-        <i class="bi bi-layout-text-sidebar-reverse"></i>
-      </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Statistical Principles in Genomics</li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
-    </div>
-  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation docked overflow-auto">
-        <div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./part0_prep.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Preparation</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./part1_eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">R Lab - Part I</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./part2_model.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">R Lab - Part II</span></a>
-  </div>
-</li>
-    </ul>
-    </div>
-</nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -159,7 +124,13 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#structure" id="toc-structure" class="nav-link" data-scroll-target="#structure">Structure</a></li>
   <li><a href="#preparation" id="toc-preparation" class="nav-link" data-scroll-target="#preparation">Preparation</a></li>
   </ul></li>
-  <li><a href="#schedule" id="toc-schedule" class="nav-link" data-scroll-target="#schedule">Schedule</a></li>
+  <li><a href="#schedule" id="toc-schedule" class="nav-link" data-scroll-target="#schedule">Schedule</a>
+  <ul class="collapse">
+  <li><a href="#day-1" id="toc-day-1" class="nav-link" data-scroll-target="#day-1">Day 1</a></li>
+  <li><a href="#day-2" id="toc-day-2" class="nav-link" data-scroll-target="#day-2">Day 2</a></li>
+  <li><a href="#day-3" id="toc-day-3" class="nav-link" data-scroll-target="#day-3">Day 3</a></li>
+  <li><a href="#day-4" id="toc-day-4" class="nav-link" data-scroll-target="#day-4">Day 4</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -168,7 +139,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Statistical Principles in Genomics</h1>
+<h1 class="title">MED3007: Statistical Principles in Genomics</h1>
 </div>
 
 
@@ -191,7 +162,6 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="structure">Structure</h3>
 <ul>
 <li><a href="">Get Started</a> provides some information about software installation, data download and code.</li>
-<li><a href="">Course material</a> provides a list of topics and links for each session.</li>
 <li><a href="">R Lab and Code</a> hosts the lab session exercises and code.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -215,51 +185,125 @@ Official course webpage
 </section>
 <section id="schedule" class="level1">
 <h1>Schedule</h1>
-<p>You can find the <a href="https://www.uio.no/studier/emner/medisin/med/MED3007/v24/timeplan/index.html">official course schedule</a> at the University of Oslo course website. If there is a conflict of information, please refer to the official schedule.</p>
-<p>(UPDATE PENDING!!!!)</p>
+<p>You can find the <strong>time and place</strong> on the <a href="https://www.uio.no/studier/emner/medisin/med/MED3007/v24/timeplan/index.html">official course schedule</a> at the University of Oslo course website. If there is a conflict of information, please refer to the official schedule.</p>
+<section id="day-1" class="level3">
+<h3 class="anchored" data-anchor-id="day-1">Day 1</h3>
 <table class="table">
 <thead>
 <tr class="header">
 <th style="text-align: center;">Time</th>
 <th style="text-align: center;">Topic</th>
-<th style="text-align: center;">Presenter</th>
+<th style="text-align: center;">Course material</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">Now</td>
-<td style="text-align: center;"><a href="./part0_prep.html">Preparations</a></td>
-<td style="text-align: center;"></td>
+<td style="text-align: center;">9:00 - 9:45</td>
+<td style="text-align: center;">Introduction to the course</td>
+<td style="text-align: center;"><a href="">Lecture</a></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">9:00 - 10:00</td>
-<td style="text-align: center;"><a href="./lecture_notes/StatPrinciples_ML_1.pdf">(Supervised) machine learning with small data</a></td>
-<td style="text-align: center;">Manuela Zucknick</td>
+<td style="text-align: center;">10:00 - 11:30</td>
+<td style="text-align: center;">Introduction to Rstudio</td>
+<td style="text-align: center;"><a href="">R Lab</a>, <a href="">Code</a></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"></td>
-<td style="text-align: center;"><a href="./part1_eda.html">R lab 1</a></td>
-<td style="text-align: center;">Manuela Zucknick</td>
+<td style="text-align: center;">13:00 - 14:00</td>
+<td style="text-align: center;">Basic statistical concepts</td>
+<td style="text-align: center;"><a href="">Lecture</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="day-2" class="level3">
+<h3 class="anchored" data-anchor-id="day-2">Day 2</h3>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Time</th>
+<th style="text-align: center;">Topic</th>
+<th style="text-align: center;">Course material</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">9:00 - 9:45</td>
+<td style="text-align: center;">Statistcal tests</td>
+<td style="text-align: center;"><a href="">R Lab</a>, <a href="">Code</a></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">10:15 - 11:15</td>
-<td style="text-align: center;"><a href="./lecture_notes/StatPrinciples_ML_2.pdf">Overfitting, regularisation and all that</a></td>
-<td style="text-align: center;">Manuela Zucknick</td>
+<td style="text-align: center;">10:00 - 11:30</td>
+<td style="text-align: center;">Data screening and multiple testing</td>
+<td style="text-align: center;"><a href="">R Lab</a>, <a href="">Code</a></td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"></td>
-<td style="text-align: center;"><a href="./part2_model.html">R lab 2</a></td>
-<td style="text-align: center;">Manuela Zucknick</td>
+<td style="text-align: center;">13:00 - 14:00</td>
+<td style="text-align: center;">Data visualization, dimensional reduction, principal component analysis</td>
+<td style="text-align: center;"><a href="">Lecture</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="day-3" class="level3">
+<h3 class="anchored" data-anchor-id="day-3">Day 3</h3>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Time</th>
+<th style="text-align: center;">Topic</th>
+<th style="text-align: center;">Course material</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">9:00 - 9:45</td>
+<td style="text-align: center;">Data visualization, dimensional reduction</td>
+<td style="text-align: center;"><a href="">R Lab</a>, <a href="">Code</a></td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">11:30 - 12:00</td>
-<td style="text-align: center;"><a href="./lecture_notes/StatPrinciples_ML_3.pdf">Outlook: Hierarchical models and structured penalties</a></td>
-<td style="text-align: center;">Theophilus Asenso</td>
+<td style="text-align: center;">10:00 - 11:30</td>
+<td style="text-align: center;">Exercises</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">13:00 - 14:00</td>
+<td style="text-align: center;">Unsupervised learning: clustering</td>
+<td style="text-align: center;"><a href="">Lecture</a></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="day-4" class="level3">
+<h3 class="anchored" data-anchor-id="day-4">Day 4</h3>
+<table class="table">
+<thead>
+<tr class="header">
+<th style="text-align: center;">Time</th>
+<th style="text-align: center;">Topic</th>
+<th style="text-align: center;">Course material</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">9:00 - 9:45</td>
+<td style="text-align: center;">Clustering and heatmaps</td>
+<td style="text-align: center;"><a href="">R Lab</a>, <a href="">Code</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">10:00 - 11:30</td>
+<td style="text-align: center;">Exercises</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">13:00 - 14:00</td>
+<td style="text-align: center;">Take-home exam simulation</td>
+<td style="text-align: center;"></td>
 </tr>
 </tbody>
 </table>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

@@ -1,5 +1,5 @@
 ---
-title: "Statistical Principles in Genomics"
+title: "MED3007: Statistical Principles in Genomics"
 ---
 
 # Welcome!
@@ -11,7 +11,6 @@ The course website is developed by the instructors of the course, hosted for fre
 ### Structure
 
 * [Get Started]() provides some information about software installation, data download and code.
-* [Course material]() provides a list of topics and links for each session.
 * [R Lab and Code]() hosts the lab session exercises and code.
 
 
@@ -29,20 +28,45 @@ You should have R installed on your computer before the course. More on preparat
 
 # Schedule
 
-You can find the [official course schedule](https://www.uio.no/studier/emner/medisin/med/MED3007/v24/timeplan/index.html) at the University of Oslo course website. If there is a conflict of information, please refer to the official schedule.
+You can find the **time and place** on the [official course schedule](https://www.uio.no/studier/emner/medisin/med/MED3007/v24/timeplan/index.html) at the University of Oslo course website. If there is a conflict of information, please refer to the official schedule.
 
-(UPDATE PENDING!!!!)
+### Day 1
 
-|     Time      |                                              Topic                                              |     Presenter     |
-|:-------------:|:-----------------------------------------------------------------------------------------------:|:-----------------:|
-|      Now      |                                 [Preparations](part0_prep.qmd)                                  |                   |
-| 9:00 - 10:00  |     [(Supervised) machine learning with small data](/lecture_notes/StatPrinciples_ML_1.pdf)     | Manuela Zucknick  |
-|               |                                    [R lab 1](part1_eda.qmd)                                     | Manuela Zucknick  |
-| 10:15 - 11:15 |       [Overfitting, regularisation and all that](/lecture_notes/StatPrinciples_ML_2.pdf)        | Manuela Zucknick  |
-|               |                                   [R lab 2](part2_model.qmd)                                    | Manuela Zucknick  |
-| 11:30 - 12:00 | [Outlook: Hierarchical models and structured penalties](/lecture_notes/StatPrinciples_ML_3.pdf) | Theophilus Asenso |
+|     Time      |                 Topic                |  Course material  |
+|:-------------:|:------------------------------------:|:-----------------:|
+| 9:00 - 9:45   | Introduction to the course | [Lecture]()                  |
+| 10:00 - 11:30  | Introduction to Rstudio  | [R Lab](), [Code]() |
+| 13:00 - 14:00  | Basic statistical concepts   | [Lecture]()  |
 
 
+
+
+### Day 2
+
+|     Time      |                 Topic                |  Course material  |
+|:-------------:|:------------------------------------:|:-----------------:|
+| 9:00 - 9:45   | Statistcal tests  | [R Lab](), [Code]()  |
+| 10:00 - 11:30  | Data screening and multiple testing  | [R Lab](), [Code]()  |
+| 13:00 - 14:00  | Data visualization, dimensional reduction, principal component analysis | [Lecture]()   |
+
+
+
+### Day 3
+
+|     Time      |                 Topic                |  Course material  |
+|:-------------:|:------------------------------------:|:-----------------:|
+| 9:00 - 9:45   | Data visualization, dimensional reduction |  [R Lab](), [Code]() |
+| 10:00 - 11:30  | Exercises  |  |
+| 13:00 - 14:00  | Unsupervised learning: clustering   |  [Lecture]()  |
+
+
+### Day 4
+
+|     Time      |                 Topic                |  Course material  |
+|:-------------:|:------------------------------------:|:-----------------:|
+| 9:00 - 9:45   | Clustering and heatmaps |  [R Lab](), [Code]() |
+| 10:00 - 11:30  | Exercises  |  |
+| 13:00 - 14:00  | Take-home exam simulation   |  |
 
 
 

@@ -44,9 +44,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Statistical Principles in Genomics",
+    "title": "MED3007: Statistical Principles in Genomics",
     "section": "",
-    "text": "Welcome!\nThis is the course website for MED3007: Statistical Principles in Genomics at the Faculty of Medicine, University of Oslo.\nThe course website is developed by the instructors of the course, hosted for free and public accessible on Github. Course material can be found in the github repository.\n\nStructure\n\nGet Started provides some information about software installation, data download and code.\nCourse material provides a list of topics and links for each session.\nR Lab and Code hosts the lab session exercises and code.\n\n\n\n\n\n\n\nOfficial course webpage\n\n\n\nPlease refer to the official course page by University of Oslo for information related to application, evaluation and other administrative matters.\n\n\n\n\nPreparation\nYou should have R installed on your computer before the course. More on preparation please read here.\n\n\n\nSchedule\nYou can find the official course schedule at the University of Oslo course website. If there is a conflict of information, please refer to the official schedule.\n(UPDATE PENDING!!!!)\n\n\n\nTime\nTopic\nPresenter\n\n\n\n\nNow\nPreparations\n\n\n\n9:00 - 10:00\n(Supervised) machine learning with small data\nManuela Zucknick\n\n\n\nR lab 1\nManuela Zucknick\n\n\n10:15 - 11:15\nOverfitting, regularisation and all that\nManuela Zucknick\n\n\n\nR lab 2\nManuela Zucknick\n\n\n11:30 - 12:00\nOutlook: Hierarchical models and structured penalties\nTheophilus Asenso"
+    "text": "Welcome!\nThis is the course website for MED3007: Statistical Principles in Genomics at the Faculty of Medicine, University of Oslo.\nThe course website is developed by the instructors of the course, hosted for free and public accessible on Github. Course material can be found in the github repository.\n\nStructure\n\nGet Started provides some information about software installation, data download and code.\nR Lab and Code hosts the lab session exercises and code.\n\n\n\n\n\n\n\nOfficial course webpage\n\n\n\nPlease refer to the official course page by University of Oslo for information related to application, evaluation and other administrative matters.\n\n\n\n\nPreparation\nYou should have R installed on your computer before the course. More on preparation please read here.\n\n\n\nSchedule\nYou can find the time and place on the official course schedule at the University of Oslo course website. If there is a conflict of information, please refer to the official schedule.\n\nDay 1\n\n\n\nTime\nTopic\nCourse material\n\n\n\n\n9:00 - 9:45\nIntroduction to the course\nLecture\n\n\n10:00 - 11:30\nIntroduction to Rstudio\nR Lab, Code\n\n\n13:00 - 14:00\nBasic statistical concepts\nLecture\n\n\n\n\n\nDay 2\n\n\n\nTime\nTopic\nCourse material\n\n\n\n\n9:00 - 9:45\nStatistcal tests\nR Lab, Code\n\n\n10:00 - 11:30\nData screening and multiple testing\nR Lab, Code\n\n\n13:00 - 14:00\nData visualization, dimensional reduction, principal component analysis\nLecture\n\n\n\n\n\nDay 3\n\n\n\nTime\nTopic\nCourse material\n\n\n\n\n9:00 - 9:45\nData visualization, dimensional reduction\nR Lab, Code\n\n\n10:00 - 11:30\nExercises\n\n\n\n13:00 - 14:00\nUnsupervised learning: clustering\nLecture\n\n\n\n\n\nDay 4\n\n\n\nTime\nTopic\nCourse material\n\n\n\n\n9:00 - 9:45\nClustering and heatmaps\nR Lab, Code\n\n\n10:00 - 11:30\nExercises\n\n\n\n13:00 - 14:00\nTake-home exam simulation"
   },
   {
     "objectID": "about.html",
@@ -110,5 +110,61 @@
     "title": "About MED3007",
     "section": "",
     "text": "Genomic data analysis is increasingly important both in medical research and in the clinical practice. In this course, you will learn the basic principles and concepts in the statistical analysis of genomic data. The course will focus on the three main tasks that are frequently involved in genomics: data visualisation, data screening and pre-processing, data modelling (prediction and classification). You will get a practical introduction to RStudio, the best statistical software for analysing genomic data, thus enabling you to perform basic programming tasks, to visualise and analyse genomic data, and to interpret the results.\n\n\nValeria Vitelli (course lead): valeria.vitelli@medisin.uio.no\nChi Zhang (R lab sessions): chi.zhang@medisin.uio.no"
+  },
+  {
+    "objectID": "get_started/get_started.html",
+    "href": "get_started/get_started.html",
+    "title": "Get started",
+    "section": "",
+    "text": "Here you will find useful information on how to get started.\nIn this workshop we will be using R. You can either\n\n(recommended) have R and Rstudio installed on your laptop\nor, use Posit cloud (formerly Rstudio Cloud).\n\n\nOption 1: Set up your RStudio on your laptop\nYou will need both R and Rstudio, they are two separate things.\nYou can download Rstudio here. In this page it will ask you to install R, so it should be clear to follow.\n\nYou can download R for Linux, macOS or Windows here or here\n\nOnce you have finished installing both R and Rstudio, open Rstudio, and you should be seeing something like this:\n\n\n\n\n\n\n\nTip\n\n\n\nWatch these YouTube videos if you are stuck.\n\n\n\n\nOption 2: Use Posit Cloud\n\n\n\n\n\n\nNote\n\n\n\nIt is recommended to have R and Rstudio installed on your laptop, this is because you have a better control of where you prefer to download data and course material. This is also useful when you want to analyse your own datasets. For example, you might have to upload datafiles to the server for Posit Cloud to work.\nHowever, if there is a problem with the installation, you can use Posit Cloud as an alternative.\nOn Tuesday morning we will see if most people can successfully make R run on their laptop and make necessary adjustments.\n\n\nPosit Cloud is free of charge for personal users. You need to sign up for a new user account and have internet connection.\n\nOnce you signed up, you can open a new workspace, and it will look like something like this. If it is the first time you use Posit Cloud, it will be empty (i.e. no script or data).\n\n\n\nData\nThe datasets used in this course are stored in this folder.\n\nDownload data\n\nGo to the repository, select the data you want to download by left-click the file name\nIf it is a dataset in .csv, .txt format, you will see something like this\n\n\n\nfind Raw button, right-click, you will see a list of options\nchoose Download Linked File, this will download the data into your default download folder\nalternatively, choose Download linked file as… so that you can change where you put it and file name.\n\n\nIf it is a dataset in .dta, .xlsx or other format, you might not see the data directly:\n\n\n\nfind Download button, left-click, and you will download it into your default download folder.\n\n\nOptional: download data via URL\nIf you feel like it, you can also download data inside R via URL. You can read more about it here.\n\n\n\n\nCode\nR scripts are stored in this folder.\nTo download an R script, it is similar to downloading a dataset\n\nAlternatively, you can create your own R script locally inside Rstudio, by copy and paste the script from Github.\n\n\nResources\nYou will find the material used in class on this page.\nWe keep updating the material, so please stay tuned!\n\nBooks and papers\nYou can find these books in the library.\n\nEssential medical statistics (Kirkwood and Sterne, 2nd edition, 2003) (link\nStatistiske metoder i medisin og helsefag (Aalen, Frigessi, Moger, Scheel, Skovlund og Veierød, 2 utg, 2018) (link)\n\n\n\nVideos\nInstall R and Rstudio YouTube videos"
+  },
+  {
+    "objectID": "lab/overview.html",
+    "href": "lab/overview.html",
+    "title": "R Lab: Overview",
+    "section": "",
+    "text": "day 2 (MT)\n\nbrainshake (t-test)\nNCI60 (t-test, multiple testing)\nCh10Ex11\n\nday 3 (PCA)\n\npima.txt\nNCI60\nUSarrest\nFood\nCH10Ex11\n\nday 4 (clustering)\n\niris\nbirds\nNCI60\nCH10Ex11"
+  },
+  {
+    "objectID": "lab/overview.html#a-cancer-modeling-example",
+    "href": "lab/overview.html#a-cancer-modeling-example",
+    "title": "R Lab - Part I",
+    "section": "",
+    "text": "See StatPrinciples_RLab.pdf for some background info.\nExercise on analysis of miRNA, mRNA and protein data from the paper Aure et al, Integrated analysis reveals microRNA networks coordinately expressed with key proteins in breast cancer, Genome Medicine, 2015.\nPlease run the code provided to replicate some of the analyses in Aure et al. (2015). Make sure you can explain what all the analysis steps do and that you understand all the results.\nIn addition, there are three extra tasks Task 1, Task 2, Task 3, where no R code is provided. Please do these tasks when you have time available at the end of the lab.\n\n\n\n\n\nRead the data, and convert to matrix format."
+  },
+  {
+    "objectID": "lecture_notes/overview.html",
+    "href": "lecture_notes/overview.html",
+    "title": "Overview",
+    "section": "",
+    "text": "See StatPrinciples_RLab.pdf for some background info.\nExercise on analysis of miRNA, mRNA and protein data from the paper Aure et al, Integrated analysis reveals microRNA networks coordinately expressed with key proteins in breast cancer, Genome Medicine, 2015.\nPlease run the code provided to replicate some of the analyses in Aure et al. (2015). Make sure you can explain what all the analysis steps do and that you understand all the results.\nIn addition, there are three extra tasks Task 1, Task 2, Task 3, where no R code is provided. Please do these tasks when you have time available at the end of the lab."
+  },
+  {
+    "objectID": "lecture_notes/overview.html#a-cancer-modeling-example",
+    "href": "lecture_notes/overview.html#a-cancer-modeling-example",
+    "title": "Overview",
+    "section": "",
+    "text": "See StatPrinciples_RLab.pdf for some background info.\nExercise on analysis of miRNA, mRNA and protein data from the paper Aure et al, Integrated analysis reveals microRNA networks coordinately expressed with key proteins in breast cancer, Genome Medicine, 2015.\nPlease run the code provided to replicate some of the analyses in Aure et al. (2015). Make sure you can explain what all the analysis steps do and that you understand all the results.\nIn addition, there are three extra tasks Task 1, Task 2, Task 3, where no R code is provided. Please do these tasks when you have time available at the end of the lab."
+  },
+  {
+    "objectID": "lab/lab_day1_intro.html",
+    "href": "lab/lab_day1_intro.html",
+    "title": "R Lab - Part I",
+    "section": "",
+    "text": "See StatPrinciples_RLab.pdf for some background info.\nExercise on analysis of miRNA, mRNA and protein data from the paper Aure et al, Integrated analysis reveals microRNA networks coordinately expressed with key proteins in breast cancer, Genome Medicine, 2015.\nPlease run the code provided to replicate some of the analyses in Aure et al. (2015). Make sure you can explain what all the analysis steps do and that you understand all the results.\nIn addition, there are three extra tasks Task 1, Task 2, Task 3, where no R code is provided. Please do these tasks when you have time available at the end of the lab.\n\n\n\n\n\nRead the data, and convert to matrix format."
+  },
+  {
+    "objectID": "lab/lab_day1_intro.html#a-cancer-modeling-example",
+    "href": "lab/lab_day1_intro.html#a-cancer-modeling-example",
+    "title": "R Lab - Part I",
+    "section": "",
+    "text": "See StatPrinciples_RLab.pdf for some background info.\nExercise on analysis of miRNA, mRNA and protein data from the paper Aure et al, Integrated analysis reveals microRNA networks coordinately expressed with key proteins in breast cancer, Genome Medicine, 2015.\nPlease run the code provided to replicate some of the analyses in Aure et al. (2015). Make sure you can explain what all the analysis steps do and that you understand all the results.\nIn addition, there are three extra tasks Task 1, Task 2, Task 3, where no R code is provided. Please do these tasks when you have time available at the end of the lab.\n\n\n\n\n\nRead the data, and convert to matrix format."
+  },
+  {
+    "objectID": "lab/overview.html#datasets",
+    "href": "lab/overview.html#datasets",
+    "title": "R Lab: Overview",
+    "section": "",
+    "text": "day 2 (MT)\n\nbrainshake (t-test)\nNCI60 (t-test, multiple testing)\nCh10Ex11\n\nday 3 (PCA)\n\npima.txt\nNCI60\nUSarrest\nFood\nCH10Ex11\n\nday 4 (clustering)\n\niris\nbirds\nNCI60\nCH10Ex11"
   }
 ]
