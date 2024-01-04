@@ -1,0 +1,25 @@
+---
+title: "R Lab (day 4): Clustering"
+format: 
+  html:
+    code-fold: false
+    code-tools: true
+---
+
+Datasets
+
+R script
+
+
+## NCI60
+
+```{r}
+#| label: clust-loaddata
+#| warning: false
+#| echo: true
+
+library(ISLR)
+nci.labs <- NCI60$labs # Sample labels (tissue type)
+nci.data <- NCI60$data # Gene expression data set
+```
+

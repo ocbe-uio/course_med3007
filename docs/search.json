@@ -123,7 +123,7 @@
     "href": "lab/overview.html",
     "title": "R Lab: Overview",
     "section": "",
-    "text": "day 2 (MT)\n\nbrainshake (t-test)\nNCI60 (t-test, multiple testing)\nCh10Ex11\n\nday 3 (PCA)\n\npima.txt\nNCI60\nUSarrest\nFood\nCH10Ex11\n\nday 4 (clustering)\n\niris\nbirds\nNCI60\nCH10Ex11"
+    "text": "day 2 (MT)\n\nbrainshake (t-test)\nNCI60 (t-test, multiple testing)\nCh10Ex11\n\nday 3 (PCA)\n\npima.txt\nNCI60 (done)\nUSarrest\nFood\nCH10Ex11\n\nday 4 (clustering)\n\niris\nbirds\nNCI60\nCH10Ex11"
   },
   {
     "objectID": "lab/overview.html#a-cancer-modeling-example",
@@ -165,6 +165,55 @@
     "href": "lab/overview.html#datasets",
     "title": "R Lab: Overview",
     "section": "",
-    "text": "day 2 (MT)\n\nbrainshake (t-test)\nNCI60 (t-test, multiple testing)\nCh10Ex11\n\nday 3 (PCA)\n\npima.txt\nNCI60\nUSarrest\nFood\nCH10Ex11\n\nday 4 (clustering)\n\niris\nbirds\nNCI60\nCH10Ex11"
+    "text": "day 2 (MT)\n\nbrainshake (t-test)\nNCI60 (t-test, multiple testing)\nCh10Ex11\n\nday 3 (PCA)\n\npima.txt\nNCI60 (done)\nUSarrest\nFood\nCH10Ex11\n\nday 4 (clustering)\n\niris\nbirds\nNCI60\nCH10Ex11"
+  },
+  {
+    "objectID": "lab/lab_day2_pca.html",
+    "href": "lab/lab_day2_pca.html",
+    "title": "R Lab (day 2): PCA",
+    "section": "",
+    "text": "Datasets\nR script"
+  },
+  {
+    "objectID": "lab/lab_day2_pca.html#nci60",
+    "href": "lab/lab_day2_pca.html#nci60",
+    "title": "R Lab (day 2): PCA",
+    "section": "NCI60",
+    "text": "NCI60\n\nlibrary(ISLR)\nnci.labs &lt;- NCI60$labs # Sample labels (tissue type)\nnci.data &lt;- NCI60$data # Gene expression data set\n\n\n# what if I would like to compute the mean of each gene within each tissue type?\ntissue.means &lt;- apply(nci.data, 2, function(x){tapply(x, nci.labs, mean)})\ndim(tissue.means)\n\n[1]   14 6830\n\ntable(nci.labs)\n\nnci.labs\n     BREAST         CNS       COLON K562A-repro K562B-repro    LEUKEMIA \n          7           5           7           1           1           6 \nMCF7A-repro MCF7D-repro    MELANOMA       NSCLC     OVARIAN    PROSTATE \n          1           1           8           9           6           2 \n      RENAL     UNKNOWN \n          9           1 \n\n\nCompute the PC\n\n# PCA analysis after scaling the variables to standard deviation one:\npr.out &lt;- prcomp(nci.data, scale=TRUE)\n\nPrint the summary output\n\nsummary(pr.out)\n\n\npr.var &lt;- pr.out$sdev^2\npve &lt;- pr.var/sum(pr.var)\npve &lt;- 100*pve\n\npar(mfrow=c(1,2))\nplot(pve,  type=\"o\", ylab=\"PVE\", xlab=\"Principal Component\", col=\"blue\")\nplot(cumsum(pve), type=\"o\", ylab=\"Cumulative PVE\", xlab=\"Principal Component\", col=\"brown3\")\n\n\n\n\n\nHow many PCs to keep?\n\nmysel80 &lt;- which(cumsum(pve) &gt; 80)[1] # explains 80% of the variability\nmysel70 &lt;- which(cumsum(pve) &gt; 70)[1] # explains 70% of the variability\n\npar(mfrow=c(1,2)) # plot contains two smaller plots next to each other\nplot(pve,  type=\"o\", ylab=\"PVE\", xlab=\"Principal Component\", col=\"blue\")\nabline(v = mysel80)\nabline(v = mysel70, col=3)\nplot(cumsum(pve), type=\"o\", ylab=\"Cumulative PVE\", xlab=\"Principal Component\", col=\"brown3\")\nabline(v = mysel80)\nabline(h = 80)\nabline(v = mysel70, col=3)\nabline(h = 70, col=3)\n\n\n\n\nIf we decide to only keep the principal components that explains 70% of the variance, we end up with 24 components, which we can further analyse to better understand the relationships between the variables. For simplicity we only look at the first few components.\nWe plot the first few principal component score vectors, to visualize the results. The observations (cell lines) corresponding to a given cancer type will be plotted in the same colour.\n\nCols=function(vec){\n  cols=rainbow(length(unique(vec)))\n  return(cols[as.numeric(as.factor(vec))])\n}\n\n# Plot the first vs second and first vs third principal component score vectors,\n# with colors associated to labels (using the Cols() helper function)\npar(mfrow=c(1,2))\nplot(pr.out$x[,1:2], col=Cols(nci.labs), pch=19,xlab=\"PC 1\",ylab=\" PC 2\")\nplot(pr.out$x[,c(1,3)], col=Cols(nci.labs), pch=19,xlab=\"PC 1\",ylab=\" PC 3\")\nlegend('topleft', col=rainbow(length(unique(nci.labs))), legend=unique(nci.labs), bty='n', lwd=2, cex=.6)"
+  },
+  {
+    "objectID": "lab/overview.html#lab-notes-and-r-scripts",
+    "href": "lab/overview.html#lab-notes-and-r-scripts",
+    "title": "R Lab: Overview",
+    "section": "Lab notes and R scripts",
+    "text": "Lab notes and R scripts\n\n\n\nDay\nLab notes\nR script\n\n\n\n\nDay 1\nDay 1: Introduction to R\n\n\n\nDay 2\nDay 2: Multiple testing\n\n\n\nDay 3\nDay 3: Principal Component Analysis\n\n\n\nDay 4\nDay 4: Clustering"
+  },
+  {
+    "objectID": "lab/lab_day3_pca.html",
+    "href": "lab/lab_day3_pca.html",
+    "title": "R Lab (day 3): Principal Component Analysis",
+    "section": "",
+    "text": "Datasets\nR script"
+  },
+  {
+    "objectID": "lab/lab_day3_pca.html#nci60",
+    "href": "lab/lab_day3_pca.html#nci60",
+    "title": "R Lab (day 3): Principal Component Analysis",
+    "section": "NCI60",
+    "text": "NCI60\n\nlibrary(ISLR)\nnci.labs &lt;- NCI60$labs # Sample labels (tissue type)\nnci.data &lt;- NCI60$data # Gene expression data set\n\n\n# what if I would like to compute the mean of each gene within each tissue type?\ntissue.means &lt;- apply(nci.data, 2, function(x){tapply(x, nci.labs, mean)})\ndim(tissue.means)\n\n[1]   14 6830\n\ntable(nci.labs)\n\nnci.labs\n     BREAST         CNS       COLON K562A-repro K562B-repro    LEUKEMIA \n          7           5           7           1           1           6 \nMCF7A-repro MCF7D-repro    MELANOMA       NSCLC     OVARIAN    PROSTATE \n          1           1           8           9           6           2 \n      RENAL     UNKNOWN \n          9           1 \n\n\nCompute the PC\n\n# PCA analysis after scaling the variables to standard deviation one:\npr.out &lt;- prcomp(nci.data, scale=TRUE)\n\nPrint the summary output\n\nsummary(pr.out)\n\n\npr.var &lt;- pr.out$sdev^2\npve &lt;- pr.var/sum(pr.var)\npve &lt;- 100*pve\n\npar(mfrow=c(1,2))\nplot(pve,  type=\"o\", ylab=\"PVE\", xlab=\"Principal Component\", col=\"blue\")\nplot(cumsum(pve), type=\"o\", ylab=\"Cumulative PVE\", xlab=\"Principal Component\", col=\"brown3\")\n\n\n\n\n\nHow many PCs to keep?\n\nmysel80 &lt;- which(cumsum(pve) &gt; 80)[1] # explains 80% of the variability\nmysel70 &lt;- which(cumsum(pve) &gt; 70)[1] # explains 70% of the variability\n\npar(mfrow=c(1,2)) # plot contains two smaller plots next to each other\nplot(pve,  type=\"o\", ylab=\"PVE\", xlab=\"Principal Component\", col=\"blue\")\nabline(v = mysel80)\nabline(v = mysel70, col=3)\nplot(cumsum(pve), type=\"o\", ylab=\"Cumulative PVE\", xlab=\"Principal Component\", col=\"brown3\")\nabline(v = mysel80)\nabline(h = 80)\nabline(v = mysel70, col=3)\nabline(h = 70, col=3)\n\n\n\n\nIf we decide to only keep the principal components that explains 70% of the variance, we end up with 24 components, which we can further analyse to better understand the relationships between the variables. For simplicity we only look at the first few components.\nWe plot the first few principal component score vectors, to visualize the results. The observations (cell lines) corresponding to a given cancer type will be plotted in the same colour.\n\nCols=function(vec){\n  cols=rainbow(length(unique(vec)))\n  return(cols[as.numeric(as.factor(vec))])\n}\n\n# Plot the first vs second and first vs third principal component score vectors,\n# with colors associated to labels (using the Cols() helper function)\npar(mfrow=c(1,2))\nplot(pr.out$x[,1:2], col=Cols(nci.labs), pch=19,xlab=\"PC 1\",ylab=\" PC 2\")\nplot(pr.out$x[,c(1,3)], col=Cols(nci.labs), pch=19,xlab=\"PC 1\",ylab=\" PC 3\")\nlegend('topleft', col=rainbow(length(unique(nci.labs))), legend=unique(nci.labs), bty='n', lwd=2, cex=.6)"
+  },
+  {
+    "objectID": "lab/lab_day4_clustering.html",
+    "href": "lab/lab_day4_clustering.html",
+    "title": "R Lab (day 4): Clustering",
+    "section": "",
+    "text": "Datasets\nR script"
+  },
+  {
+    "objectID": "lab/lab_day4_clustering.html#nci60",
+    "href": "lab/lab_day4_clustering.html#nci60",
+    "title": "R Lab (day 4): Clustering",
+    "section": "NCI60",
+    "text": "NCI60\n\nlibrary(ISLR)\nnci.labs &lt;- NCI60$labs # Sample labels (tissue type)\nnci.data &lt;- NCI60$data # Gene expression data set"
   }
 ]

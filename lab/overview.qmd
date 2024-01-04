@@ -17,7 +17,7 @@ day 2 (MT)
 day 3 (PCA)
 
 - pima.txt
-- NCI60
+- NCI60 (done)
 - USarrest
 - Food
 - CH10Ex11
@@ -30,7 +30,14 @@ day 4 (clustering)
 - CH10Ex11
 
 
+## Lab notes and R scripts
 
+|     Day      |                 Lab notes                |  R script  |
+|:-------------:|:------------------------------------:|:-----------------:|
+| Day 1   | [Day 1: Introduction to R]()  |   |
+| Day 2  | [Day 2: Multiple testing]()  |   |
+| Day 3  | [Day 3: Principal Component Analysis](lab_day3_pca.qmd) | |
+| Day 4  | [Day 4: Clustering](lab_day4_clustering.qmd) | |
 
 
 
