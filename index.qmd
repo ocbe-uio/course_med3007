@@ -28,7 +28,9 @@ You should have R installed on your computer before the course. More on preparat
 
 # Schedule
 
-You can find the **time and place** on the [official course schedule](https://www.uio.no/studier/emner/medisin/med/MED3007/v24/timeplan/index.html) at the University of Oslo course website. If there is a conflict of information, please refer to the official schedule.
+You can find the **time and place** on the [official course schedule](https://www.uio.no/studier/emner/medisin/med/MED3007/v24/timeplan/index.html) at the University of Oslo course website. 
+
+If there is a conflict of information, please refer to the official schedule.
 
 ### Day 1
 
@@ -37,7 +39,7 @@ You can find the **time and place** on the [official course schedule](https://ww
 | 9:00 - 9:45   | Introduction to the course | [Lecture]()                  |
 | 10:00 - 11:30  | Introduction to Rstudio  | [R Lab](), [Code]() |
 | 13:00 - 14:00  | Basic statistical concepts   | [Lecture]()  |
-
+| 14:00 - 16:00  | Q&A | |
 
 
 
@@ -48,6 +50,7 @@ You can find the **time and place** on the [official course schedule](https://ww
 | 9:00 - 9:45   | Statistcal tests  | [R Lab](), [Code]()  |
 | 10:00 - 11:30  | Data screening and multiple testing  | [R Lab](), [Code]()  |
 | 13:00 - 14:00  | Data visualization, dimensional reduction, principal component analysis | [Lecture]()   |
+| 14:00 - 16:00  | Q&A | |
 
 
 
@@ -58,7 +61,7 @@ You can find the **time and place** on the [official course schedule](https://ww
 | 9:00 - 9:45   | Data visualization, dimensional reduction |  [R Lab](), [Code]() |
 | 10:00 - 11:30  | Exercises  |  |
 | 13:00 - 14:00  | Unsupervised learning: clustering   |  [Lecture]()  |
-
+| 14:00 - 16:00  | Q&A | |
 
 ### Day 4
 
@@ -67,7 +70,7 @@ You can find the **time and place** on the [official course schedule](https://ww
 | 9:00 - 9:45   | Clustering and heatmaps |  [R Lab](), [Code]() |
 | 10:00 - 11:30  | Exercises  |  |
 | 13:00 - 14:00  | Take-home exam simulation   |  |
-
+| 14:00 - 16:00  | Q&A | |
 
 
 
