@@ -1,5 +1,5 @@
 ---
-title: "R Lab (day 3): Principal Component Analysis"
+title: "R Lab (day 3): EDA, Principal Component Analysis"
 format: 
   html:
     code-fold: false

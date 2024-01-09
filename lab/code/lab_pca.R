@@ -135,3 +135,98 @@ legend('topleft', col=rainbow(length(unique(groups))), legend=paste('group ',uni
 
 
 # food example (if need) -----
+
+
+
+food <- read.table('./lab/data/Food.txt', header=T)
+head(food)
+n <- dim(food)[1]
+p <- dim(food)[2]
+n
+p
+
+# let us have a look at the variables
+
+boxplot(food, main = 'Food consumption across European countries')
+# quite different variability of the variables -> I scale the data in the PCA
+
+## PCA
+
+pc.food <- prcomp(food, scale=TRUE)
+pc.food
+summary(pc.food)
+
+## let us explore the PCA results
+
+## proportion of explained variance (same as above!)
+pc.food.var <- pc.food$sdev^2
+pc.food.pve <- pc.food.var/sum(pc.food.var)
+pc.food.pve
+cumsum(pc.food.pve)
+
+## loadings
+# (coefficients in the linear combination of the variables
+#  that defines each component)
+load.food    <- pc.food$rotation
+load.food
+
+
+## scores
+# (projections of each datum in the new space defined by the components)
+# (if we select some of the components, dimensional reduction of the data)
+scores.food <- pc.food$x
+scores.food
+
+## SIDE NOTE:
+# loadings and PC variances are respectively
+# eigenvectors and eigenvalues of the data correlation matrix
+pc.food$rotation
+pc.food$rotation[1:p,1:p]
+pc.food.var
+eigen(cor(food))
+
+
+## Some PCA visualisation
+
+## 1. graphical summary of the proportion of variance explained
+layout(matrix(c(2,3,1,3),2,byrow=T))
+# variance of the PCs
+barplot(pc.food.var, las=2, main='Principal components', ylab='Variances',
+        names.arg = paste('PC ',1:length(pc.food.var),sep=''))
+# variance of the original data variables
+barplot(apply(food, 2, sd)^2, las=2, main='Original Variables', ylim=c(0,150), ylab='Variances')
+# PVE
+plot(cumsum(pc.food.pve), type='b', axes=F, xlab='number of components',
+     ylab='contribution to total variance', ylim=c(0,1))
+abline(h=1, col='blue')
+abline(h=0.8, lty=2, col='blue')
+box()
+axis(2,at=0:10/10,labels=0:10/10)
+axis(1,at=1:ncol(food),labels=1:ncol(food),las=2)
+
+
+## 2. dispersion on original data and in scores
+layout(matrix(c(1,2),2))
+boxplot(food, las=2, col='red', main='Original Variables')
+scores.food <- data.frame(scores.food)
+boxplot(scores.food, las=2, col='red', main='Principal components')
+
+## 3. correlation among scores compared to original variables
+pairs(food, asp=1)
+pairs(scores.food, asp=1)
+
+
+## 4. loadings of the first 3 PCs (those that might be the relevant ones)
+par(mar = c(1,4,0,2), mfrow = c(3,1))
+for(i in 1:3) barplot(load.food[,i], ylim = c(-1, 1))
+
+## 5. a possible comparison: scatterplot of the data corresponding to the 2 variables
+##                           with larger variance, and of the scores of the first
+##                           2 principal components
+layout(matrix(c(1,2),1))
+plot(food[,'Cereals'],food[,'Milk'],type="n",xlab="Cereals",ylab="Milk", asp=1)
+text(food[,'Cereals'],food[,'Milk'],dimnames(food)[[1]], cex=.7)
+plot(scores.food[,1],-scores.food[,2],type="n",xlab="pc1",ylab="-pc2", asp=1)
+text(scores.food[,1],-scores.food[,2],dimnames(food)[[1]], cex=.7)
+
+

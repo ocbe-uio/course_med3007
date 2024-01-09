@@ -10,8 +10,8 @@ The course website is developed by the instructors of the course, hosted for fre
 
 ### Structure
 
-* [Get Started]() provides some information about software installation, data download and code.
-* [R Lab and Code]() hosts the lab session exercises and code.
+* [Get Started](https://ocbe-uio.github.io/course_med3007/get_started/get_started.html) provides some information about software installation, data download and code.
+* [R Lab and Code](https://ocbe-uio.github.io/course_med3007/lab/overview.html) hosts the lab session exercises and code.
 
 
 ::: callout-note
@@ -21,9 +21,11 @@ Please refer to the [official course page](https://www.uio.no/studier/emner/medi
 
 :::
 
-### Preparation
+### Preparation before the course starts
 
-You should have R installed on your computer before the course. More on preparation please read [here]().
+You should have R installed on your computer before the course. More on preparation please read [here](https://ocbe-uio.github.io/course_med3007/get_started/get_started.html).
+
+If you have trouble setting it up with your own laptop, you can also use the PC in the PC lab.
 
 
 # Schedule
@@ -36,9 +38,9 @@ If there is a conflict of information, please refer to the official schedule.
 
 |     Time      |                 Topic                |  Course material  |
 |:-------------:|:------------------------------------:|:-----------------:|
-| 9:00 - 9:45   | Introduction to the course | [Lecture]()                  |
-| 10:00 - 11:30  | Introduction to Rstudio  | [R Lab](), [Code]() |
-| 13:00 - 14:00  | Basic statistical concepts   | [Lecture]()  |
+| 9:00 - 9:45   | Introduction to the course | [Lecture](lecture_notes/MED3007_Lecture0.pdf)                  |
+| 10:00 - 11:30  | Lab: Introduction to R and Rstudio  | [R Lab](), [Code]() |
+| 13:00 - 14:00  | Data screening and multiple testing   | [Lecture](lecture_notes/MED3007_Lecture1.pdf)  |
 | 14:00 - 16:00  | Q&A | |
 
 
@@ -47,9 +49,9 @@ If there is a conflict of information, please refer to the official schedule.
 
 |     Time      |                 Topic                |  Course material  |
 |:-------------:|:------------------------------------:|:-----------------:|
-| 9:00 - 9:45   | Statistcal tests  | [R Lab](), [Code]()  |
-| 10:00 - 11:30  | Data screening and multiple testing  | [R Lab](), [Code]()  |
-| 13:00 - 14:00  | Data visualization, dimensional reduction, principal component analysis | [Lecture]()   |
+| 9:00 - 9:45   | Lab: Data screening and multiple testing  | |
+| 10:00 - 11:30  | Exercises  | [R Lab](), [Code]()  |
+| 13:00 - 14:00  | Data visualization, dimensional reduction | [Lecture]()   |
 | 14:00 - 16:00  | Q&A | |
 
 
@@ -58,17 +60,17 @@ If there is a conflict of information, please refer to the official schedule.
 
 |     Time      |                 Topic                |  Course material  |
 |:-------------:|:------------------------------------:|:-----------------:|
-| 9:00 - 9:45   | Data visualization, dimensional reduction |  [R Lab](), [Code]() |
-| 10:00 - 11:30  | Exercises  |  |
-| 13:00 - 14:00  | Unsupervised learning: clustering   |  [Lecture]()  |
+| 9:00 - 9:45   | Lab: Data visualization, dimensional reduction | [Lecture]()  |
+| 10:00 - 11:30  | Exercises  |[R Lab](), [Code]()  |
+| 13:00 - 14:00  | Clustering   |  [Lecture]()  |
 | 14:00 - 16:00  | Q&A | |
 
 ### Day 4
 
 |     Time      |                 Topic                |  Course material  |
 |:-------------:|:------------------------------------:|:-----------------:|
-| 9:00 - 9:45   | Clustering and heatmaps |  [R Lab](), [Code]() |
-| 10:00 - 11:30  | Exercises  |  |
+| 9:00 - 9:45   | Lab: Clustering and heatmaps |   |
+| 10:00 - 11:30  | Exercises  | [R Lab](), [Code]() |
 | 13:00 - 14:00  | Take-home exam simulation   |  |
 | 14:00 - 16:00  | Q&A | |
 
