@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>MED3007 V24 - R Lab (day 3): EDA, Principal Component Analysis</title>
+<title>MED3007 V24 - R Lab (day 3): Data exploration, Principal Component Analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -153,11 +153,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#nci60" id="toc-nci60" class="nav-link active" data-scroll-target="#nci60">NCI60</a>
+  <li><a href="#exercise-1-food" id="toc-exercise-1-food" class="nav-link active" data-scroll-target="#exercise-1-food">Exercise 1: Food</a>
+  <ul class="collapse">
+  <li><a href="#explore-the-dataset" id="toc-explore-the-dataset" class="nav-link" data-scroll-target="#explore-the-dataset">Explore the dataset</a></li>
+  <li><a href="#principal-component-analysis" id="toc-principal-component-analysis" class="nav-link" data-scroll-target="#principal-component-analysis">Principal component analysis</a></li>
+  <li><a href="#visualize-pca-results" id="toc-visualize-pca-results" class="nav-link" data-scroll-target="#visualize-pca-results">Visualize PCA results</a></li>
+  </ul></li>
+  <li><a href="#exercise-2-nci60" id="toc-exercise-2-nci60" class="nav-link" data-scroll-target="#exercise-2-nci60">Exercise 2: NCI60</a>
   <ul class="collapse">
   <li><a href="#how-many-pcs-to-keep" id="toc-how-many-pcs-to-keep" class="nav-link" data-scroll-target="#how-many-pcs-to-keep">How many PCs to keep?</a></li>
   </ul></li>
-  <li><a href="#gene-expression-data" id="toc-gene-expression-data" class="nav-link" data-scroll-target="#gene-expression-data">Gene expression data</a></li>
+  <li><a href="#exercise-3-gene-expression-data" id="toc-exercise-3-gene-expression-data" class="nav-link" data-scroll-target="#exercise-3-gene-expression-data">Exercise 3: Gene expression data</a></li>
   </ul>
 </nav>
     </div>
@@ -166,7 +172,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">R Lab (day 3): EDA, Principal Component Analysis</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+<div class="quarto-title-block"><div><h1 class="title">R Lab (day 3): Data exploration, Principal Component Analysis</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
 </div>
 
 
@@ -182,26 +188,298 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 <p>Datasets</p>
+<p>The following datasets are used in the exercises. Download datasets from GitHub repository, or from Canvas.</p>
+<ul>
+<li><code>Food.txt</code> (<a href="">link</a>)</li>
+<li><code>nci60</code></li>
+<li><code>ch12ex13.csv</code></li>
+</ul>
 <p>R script</p>
 <p>Lab lecture</p>
-<p>(If not enough content, try include the data manipulation in R + another genomics dataset)</p>
-<section id="nci60" class="level2">
-<h2 class="anchored" data-anchor-id="nci60">NCI60</h2>
+<section id="exercise-1-food" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1-food">Exercise 1: Food</h2>
+<p>In the first exercise, we explore a low-dimensional dataset, <code>Food.txt</code>.</p>
+<p>(This example is not a genomics example, however it is useful to illustrate important concepts in data exploration and dimensional reduction via PCA.)</p>
+<p><code>Food.txt</code> contains data on food consumption of a variety of food categories in European counries. First load the dataset.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>food <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">'data/Food.txt'</span>, <span class="at">header=</span>T)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># we change the name from pulses to a more common name, legume</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(food)[<span class="dv">7</span>] <span class="ot">&lt;-</span> <span class="st">'Legume'</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(food) <span class="co"># print first 6 lines </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Meat Pigs Eggs Milk Fish Cereals Legume Fruit
+Albania        10.1  1.4  0.5  8.9  0.2    42.3    5.5   1.7
+Austria         8.9 14.0  4.3 19.9  2.1    28.0    1.3   4.3
+Belg.Lux.      13.5  9.3  4.1 17.5  4.5    26.6    2.1   4.0
+Bulgaria        7.8  6.0  1.6  8.3  1.2    56.7    3.7   4.2
+Czechoslovakia  9.7 11.4  2.8 12.5  2.0    34.3    1.1   4.0
+Denmark        10.6 10.8  3.7 25.0  9.9    21.9    0.7   2.4</code></pre>
+</div>
+</div>
+<section id="explore-the-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="explore-the-dataset">Explore the dataset</h3>
+<p>The first thing to do after loading the dataset is to get to know its content better.</p>
+<p>Try to find out the following information about the data:</p>
+<ul>
+<li>the <strong>dimension</strong> (numbers of columns and rows)</li>
+<li>the <strong>column names</strong>, and <strong>row names</strong></li>
+</ul>
+<p>We can also look at one food in particular, <code>Fish</code>: find the mean, maximum and minimum value for this variable. This is to investigate one column of the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(food)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 25  8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(food)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Meat"    "Pigs"    "Eggs"    "Milk"    "Fish"    "Cereals" "Legume" 
+[8] "Fruit"  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(food)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Albania"        "Austria"        "Belg.Lux."      "Bulgaria"      
+ [5] "Czechoslovakia" "Denmark"        "East.Germany"   "Finland"       
+ [9] "France"         "Greece"         "Hungary"        "Ireland"       
+[13] "Italy"          "Netherlands"    "Norway"         "Poland"        
+[17] "Portugal"       "Romania"        "Spain"          "Sweden"        
+[21] "Switzerland"    "United.Kingdom" "USSR"           "West.Germany"  
+[25] "Yugoslavia"    </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># explore one variable</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(food<span class="sc">$</span>Fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.284</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(food<span class="sc">$</span>Fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 14.2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(food<span class="sc">$</span>Fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.2</code></pre>
+</div>
+</div>
+<p>Now we investigate the data by row. Each row is a country. We can extract the data (‘filter’) for Norway, for exmaple.</p>
+<p>It is also easy to get data for more than one country, such as from Denmark and Sweden.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># subsetting</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>food[<span class="fu">rownames</span>(food) <span class="sc">==</span> <span class="st">'Norway'</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Meat Pigs Eggs Milk Fish Cereals Legume Fruit
+Norway  9.4  4.7  2.7 23.4  9.7      23    1.6   2.7</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>food[<span class="fu">rownames</span>(food) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'Norway'</span>, <span class="st">'Denmark'</span>, <span class="st">'Sweden'</span>),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Meat Pigs Eggs Milk Fish Cereals Legume Fruit
+Denmark 10.6 10.8  3.7 25.0  9.9    21.9    0.7   2.4
+Norway   9.4  4.7  2.7 23.4  9.7    23.0    1.6   2.7
+Sweden   9.9  7.8  3.5 24.7  7.5    19.5    1.4   2.0</code></pre>
+</div>
+</div>
+<p>Now we can make some simple visualizations. We can look at the distribution for each variable by making a histogram.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(food<span class="sc">$</span>Fish, <span class="at">main =</span> <span class="st">'Histogram of Fish'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day3_pca_files/figure-html/pca-food-histogram-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(food<span class="sc">$</span>Fish, <span class="at">breaks =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">'Histogram of Fish'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day3_pca_files/figure-html/pca-food-histogram-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(food<span class="sc">$</span>Meat, <span class="at">main =</span> <span class="st">'Histogram of Meat'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day3_pca_files/figure-html/pca-food-histogram-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A box plot is another commonly used tool for presenting data distribution, for a few variables together. This way you can compare different foods.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># las rotates the axis text 90 degrees</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(food, <span class="at">las =</span> <span class="dv">2</span>,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">'Food consumption across European countries'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day3_pca_files/figure-html/pca-food-boxplot-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can look at pairs of food, to identify the whether there is some kind of relationship between them. For example, do countries that consume more fish also consume more meat? What about cereal and fruit?</p>
+<p>A scatter plot with one food on its x-axis and another on the y-axis can be useful.</p>
+<p>We can add the country names on top of the scatter plot to provide more information.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># two variables</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(food<span class="sc">$</span>Fish, food<span class="sc">$</span>Meat, <span class="at">pch=</span><span class="dv">20</span>, <span class="at">main =</span> <span class="st">'Fish vs Meat'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day3_pca_files/figure-html/pca-food-scatter-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># to add country: run this line as well</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># text(food$Fish, food$Meat, labels = rownames(food))</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># choose aother pair of food, add country label</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(food<span class="sc">$</span>Cereals, food<span class="sc">$</span>Fruit, <span class="at">main =</span> <span class="st">'Cereals vs Fruit'</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(food<span class="sc">$</span>Cereals, food<span class="sc">$</span>Fruit, <span class="at">labels =</span> <span class="fu">rownames</span>(food))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day3_pca_files/figure-html/pca-food-scatter-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>You can make pair-wise scatter plots for all the food pairs. However when you have many variables, these plots become less easy to read.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pair-wise scatter</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(food, <span class="at">main =</span> <span class="st">'Pair-wise scatter plot'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day3_pca_files/figure-html/pca-food-scatter2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="principal-component-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="principal-component-analysis">Principal component analysis</h3>
+<p>We can use principal component analysis PCA to explore the dataset, and reveal more information beyond the original data points.</p>
+<p>The command we use is <code>prcomp(data, scale)</code>.</p>
+<ul>
+<li><code>data</code> is the dataset to carry out PCA. Sometimes you need to do some processing such as centering and scaling.</li>
+<li><code>scale</code> is an argument that asks the program to scale the data for us automatically. We specify it to be TRUE.</li>
+</ul>
+<p>After running the command, you can print out the results using <code>summary</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># need to scale the data</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>pc_food <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(food, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pc_food</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pc_food)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Importance of components:
+                          PC1    PC2    PC3    PC4     PC5     PC6     PC7
+Standard deviation     1.9251 1.2073 1.0595 0.9315 0.57322 0.52889 0.35617
+Proportion of Variance 0.4632 0.1822 0.1403 0.1085 0.04107 0.03497 0.01586
+Cumulative Proportion  0.4632 0.6454 0.7857 0.8942 0.93527 0.97024 0.98609
+                           PC8
+Standard deviation     0.33354
+Proportion of Variance 0.01391
+Cumulative Proportion  1.00000</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>loading_food <span class="ot">&lt;-</span> pc_food<span class="sc">$</span>rotation</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># print out the result, but only keep 2 digits</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(loading_food, <span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          PC1   PC2   PC3   PC4   PC5   PC6   PC7   PC8
+Meat    -0.33 -0.05 -0.20 -0.72 -0.48 -0.20 -0.12 -0.21
+Pigs    -0.31  0.15  0.68  0.20 -0.06 -0.06 -0.37 -0.48
+Eggs    -0.44 -0.07  0.23 -0.26  0.27  0.53  0.57 -0.06
+Milk    -0.41  0.15 -0.36 -0.03  0.70 -0.38 -0.15 -0.13
+Fish    -0.13 -0.67 -0.32  0.40 -0.13  0.02  0.11 -0.49
+Cereals  0.45  0.29  0.05 -0.13  0.06 -0.32  0.52 -0.56
+Legume   0.43 -0.17 -0.05 -0.36  0.34  0.46 -0.46 -0.32
+Fruit    0.13 -0.62  0.45 -0.25  0.24 -0.46  0.06  0.23</code></pre>
+</div>
+</div>
+<p>Scores (projections)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>scores_food <span class="ot">&lt;-</span> pc_food<span class="sc">$</span>x</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(scores_food, <span class="at">digits =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 PC1   PC2   PC3   PC4   PC5   PC6   PC7   PC8
+Albania         2.94  1.40 -1.60 -0.52 -1.02  0.22 -0.73  0.52
+Austria        -1.61  0.65  1.60  0.30  0.41  0.11  0.19 -0.03
+Belg.Lux.      -1.43 -0.13  0.18 -0.70 -0.46  0.27  0.28 -0.08
+Bulgaria        2.70  1.02  0.32 -0.10 -0.50 -0.63  0.69 -0.26
+Czechoslovakia -0.23  0.78  1.09  0.36 -0.80 -0.38  0.15  0.17
+Denmark        -2.36 -0.34 -0.72  1.25 -0.11  0.07  0.08 -0.73
+East.Germany   -1.03 -0.04  1.01  1.07 -0.82  0.55  0.38  0.20
+Finland        -1.49  0.92 -2.26  0.91  0.87 -0.55  0.00  0.21
+France         -1.46 -1.17  0.27 -1.73 -0.78 -1.10 -0.28 -0.40
+Greece          1.97 -1.50 -0.65 -1.44  1.16  0.21 -0.10 -0.52
+Hungary         1.50  0.86  1.84  0.26  0.44  0.83 -0.45 -0.36
+Ireland        -2.46  0.84 -0.06 -0.92  0.28  0.30  0.20  0.03
+Italy           1.22 -0.88  0.39 -0.70  0.43 -0.24  0.37  0.53
+Netherlands    -1.73  0.69  0.94  0.40  0.47 -0.02 -0.62  0.03
+Norway         -0.94 -0.66 -1.85  1.17 -0.02 -0.05  0.12  0.10
+Poland          0.22 -0.20  1.22  0.45  0.75 -1.10  0.18  0.34
+Portugal        1.83 -3.70  0.15  1.49 -0.64 -0.15 -0.35 -0.19
+Romania         2.68  1.32 -0.10  0.24  0.04  0.19 -0.16 -0.30
+Spain           1.71 -2.26  0.19 -0.27  0.44  0.77  0.23  0.63
+Sweden         -1.81  0.04 -1.17  0.95  0.12  0.40 -0.05  0.03
+Switzerland    -1.24  0.18  0.26 -0.79  0.21 -0.69 -0.61  0.22
+United.Kingdom -1.78 -0.21 -0.96 -2.03 -0.38  0.78  0.31 -0.08
+USSR            1.23  0.86 -0.90 -0.05 -0.12 -0.25  0.32 -0.06
+West.Germany   -2.01  0.20  0.88  0.03 -0.22  0.41 -0.29  0.24
+Yugoslavia      3.57  1.35 -0.05  0.37  0.26  0.07  0.13 -0.24</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>pc_food_var <span class="ot">&lt;-</span> pc_food<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>pc_food_pve <span class="ot">&lt;-</span> pc_food_var<span class="sc">/</span><span class="fu">sum</span>(pc_food_var)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>pc_food_pve</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.46323022 0.18218656 0.14032046 0.10846036 0.04107323 0.03496567 0.01585753
+[8] 0.01390598</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cumsum</span>(pc_food_pve)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.4632302 0.6454168 0.7857372 0.8941976 0.9352708 0.9702365 0.9860940
+[8] 1.0000000</code></pre>
+</div>
+</div>
+</section>
+<section id="visualize-pca-results" class="level3">
+<h3 class="anchored" data-anchor-id="visualize-pca-results">Visualize PCA results</h3>
+<p>Biplot of the principal components</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, pc1 pc2</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">biplot</span>(pc_food)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day3_pca_files/figure-html/pca-food-biplot-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># same as biplot(pc_food, choices = c(1,2)) </span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">biplot</span>(pc_food, <span class="at">choices =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)) <span class="co"># pc1, pc3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day3_pca_files/figure-html/pca-food-biplot-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># variance of the PCs</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(pc_food_var, <span class="at">las=</span><span class="dv">2</span>,</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">main=</span><span class="st">'Principal components'</span>, <span class="at">ylab=</span><span class="st">'Variances'</span>,</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">names.arg =</span> <span class="fu">paste</span>(<span class="st">'PC '</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(pc_food_var),<span class="at">sep=</span><span class="st">''</span>))</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co"># variance of the original data variables</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">apply</span>(food, <span class="dv">2</span>, sd)<span class="sc">^</span><span class="dv">2</span>, <span class="at">las=</span><span class="dv">2</span>, <span class="at">main=</span><span class="st">'Original Variables'</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">150</span>), <span class="at">ylab=</span><span class="st">'Variances'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day3_pca_files/figure-html/pca-food-plot_var-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co"># PVE</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pc_food_pve), <span class="at">type=</span><span class="st">'b'</span>, <span class="at">axes=</span>F, <span class="at">xlab=</span><span class="st">'number of components'</span>,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">'contribution to total variance'</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">1</span>, <span class="at">col=</span><span class="st">'blue'</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="fl">0.8</span>, <span class="at">lty=</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">'blue'</span>)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>()</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>,<span class="at">at=</span><span class="dv">0</span><span class="sc">:</span><span class="dv">10</span><span class="sc">/</span><span class="dv">10</span>,<span class="at">labels=</span><span class="dv">0</span><span class="sc">:</span><span class="dv">10</span><span class="sc">/</span><span class="dv">10</span>)</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>,<span class="at">at=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(food),<span class="at">labels=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(food),<span class="at">las=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day3_pca_files/figure-html/pca-food-plot_pve-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="exercise-2-nci60" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2-nci60">Exercise 2: NCI60</h2>
 <p>Now we move to a typical large-scale biological data set (this is partly based on Lab 10.3 in James et al., 2013).</p>
 <p>We have already seen the NCI60 cancer cell line microarray data set, consisting of 6830 gene expression measurements on 64 cancer cell lines.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>nci.labs <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>labs <span class="co"># Sample labels (tissue type)</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>nci.data <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>data <span class="co"># Gene expression data set</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>nci.labs <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>labs <span class="co"># Sample labels (tissue type)</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>nci.data <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>data <span class="co"># Gene expression data set</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># what if I would like to compute the mean of each gene within each tissue type?</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>tissue.means <span class="ot">&lt;-</span> <span class="fu">apply</span>(nci.data, <span class="dv">2</span>, <span class="cf">function</span>(x){<span class="fu">tapply</span>(x, nci.labs, mean)})</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(tissue.means)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># what if I would like to compute the mean of each gene within each tissue type?</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>tissue.means <span class="ot">&lt;-</span> <span class="fu">apply</span>(nci.data, <span class="dv">2</span>, <span class="cf">function</span>(x){<span class="fu">tapply</span>(x, nci.labs, mean)})</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(tissue.means)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]   14 6830</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(nci.labs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(nci.labs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>nci.labs
      BREAST         CNS       COLON K562A-repro K562B-repro    LEUKEMIA 
@@ -214,21 +492,21 @@ MCF7A-repro MCF7D-repro    MELANOMA       NSCLC     OVARIAN    PROSTATE
 </div>
 <p>Compute the PC</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA analysis after scaling the variables to standard deviation one:</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>pr.out <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(nci.data, <span class="at">scale=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA analysis after scaling the variables to standard deviation one:</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>pr.out <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(nci.data, <span class="at">scale=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Print the summary output</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pr.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pr.out)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>pr.var <span class="ot">&lt;-</span> pr.out<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> pr.var<span class="sc">/</span><span class="fu">sum</span>(pr.var)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span>pve</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve,  <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"Cumulative PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"brown3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>pr.var <span class="ot">&lt;-</span> pr.out<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> pr.var<span class="sc">/</span><span class="fu">sum</span>(pr.var)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span>pve</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve,  <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"Cumulative PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"brown3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab_day3_pca_files/figure-html/pca-nci-plotpc-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -236,18 +514,18 @@ MCF7A-repro MCF7D-repro    MELANOMA       NSCLC     OVARIAN    PROSTATE
 <section id="how-many-pcs-to-keep" class="level3">
 <h3 class="anchored" data-anchor-id="how-many-pcs-to-keep">How many PCs to keep?</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mysel80 <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">cumsum</span>(pve) <span class="sc">&gt;</span> <span class="dv">80</span>)[<span class="dv">1</span>] <span class="co"># explains 80% of the variability</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>mysel70 <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">cumsum</span>(pve) <span class="sc">&gt;</span> <span class="dv">70</span>)[<span class="dv">1</span>] <span class="co"># explains 70% of the variability</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)) <span class="co"># plot contains two smaller plots next to each other</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve,  <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel80)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel70, <span class="at">col=</span><span class="dv">3</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"Cumulative PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"brown3"</span>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel80)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">80</span>)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel70, <span class="at">col=</span><span class="dv">3</span>)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">70</span>, <span class="at">col=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>mysel80 <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">cumsum</span>(pve) <span class="sc">&gt;</span> <span class="dv">80</span>)[<span class="dv">1</span>] <span class="co"># explains 80% of the variability</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>mysel70 <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">cumsum</span>(pve) <span class="sc">&gt;</span> <span class="dv">70</span>)[<span class="dv">1</span>] <span class="co"># explains 70% of the variability</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)) <span class="co"># plot contains two smaller plots next to each other</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve,  <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel80)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel70, <span class="at">col=</span><span class="dv">3</span>)</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"Cumulative PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"brown3"</span>)</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel80)</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">80</span>)</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel70, <span class="at">col=</span><span class="dv">3</span>)</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">70</span>, <span class="at">col=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab_day3_pca_files/figure-html/pca-nci-keeppc-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -255,25 +533,25 @@ MCF7A-repro MCF7D-repro    MELANOMA       NSCLC     OVARIAN    PROSTATE
 <p>If we decide to only keep the principal components that explains 70% of the variance, we end up with 24 components, which we can further analyse to better understand the relationships between the variables. For simplicity we only look at the first few components.</p>
 <p>We plot the first few principal component score vectors, to visualize the results. The observations (cell lines) corresponding to a given cancer type will be plotted in the same colour.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Cols<span class="ot">=</span><span class="cf">function</span>(vec){</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  cols<span class="ot">=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(vec)))</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(cols[<span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(vec))])</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the first vs second and first vs third principal component score vectors,</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># with colors associated to labels (using the Cols() helper function)</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span><span class="fu">Cols</span>(nci.labs), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 2"</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)], <span class="at">col=</span><span class="fu">Cols</span>(nci.labs), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 3"</span>)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topleft'</span>, <span class="at">col=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(nci.labs))), <span class="at">legend=</span><span class="fu">unique</span>(nci.labs), <span class="at">bty=</span><span class="st">'n'</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">cex=</span>.<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>Cols<span class="ot">=</span><span class="cf">function</span>(vec){</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  cols<span class="ot">=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(vec)))</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(cols[<span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(vec))])</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the first vs second and first vs third principal component score vectors,</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a><span class="co"># with colors associated to labels (using the Cols() helper function)</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span><span class="fu">Cols</span>(nci.labs), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 2"</span>)</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)], <span class="at">col=</span><span class="fu">Cols</span>(nci.labs), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 3"</span>)</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topleft'</span>, <span class="at">col=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(nci.labs))), <span class="at">legend=</span><span class="fu">unique</span>(nci.labs), <span class="at">bty=</span><span class="st">'n'</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">cex=</span>.<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab_day3_pca_files/figure-html/pca-nci-plot2-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
 </section>
-<section id="gene-expression-data" class="level2">
-<h2 class="anchored" data-anchor-id="gene-expression-data">Gene expression data</h2>
+<section id="exercise-3-gene-expression-data" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-3-gene-expression-data">Exercise 3: Gene expression data</h2>
 <p>CH12Ex13 from statistical learning</p>
 <p>Consider again the gene expression data set “Ch12Ex13.csv” (which can be also found on the book website, www.StatLearning.com) that consists of 40 tissue samples with measurements on 1,000 genes.</p>
 <p>The first 20 samples are from healthy patients, while the second 20 are from a diseased group.</p>
@@ -282,30 +560,30 @@ MCF7A-repro MCF7D-repro    MELANOMA       NSCLC     OVARIAN    PROSTATE
 <p>Perform a PCA of these data and visualize the results.</p>
 <p>Note: remember to check if the variables (genes) are on the columns in the dataset before running the PCA. If they are not: use t() to transform the dataset.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set the path to your own!</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>exp.data <span class="ot">&lt;-</span>  <span class="fu">read.csv</span>(<span class="st">"data/Ch12Ex13.csv"</span>,<span class="at">header=</span><span class="cn">FALSE</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># I want each row to represent a sample, and each column a gene</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>exp.data <span class="ot">&lt;-</span> <span class="fu">t</span>(exp.data)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(exp.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set the path to your own!</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>exp.data <span class="ot">&lt;-</span>  <span class="fu">read.csv</span>(<span class="st">"data/Ch12Ex13.csv"</span>,<span class="at">header=</span><span class="cn">FALSE</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># I want each row to represent a sample, and each column a gene</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>exp.data <span class="ot">&lt;-</span> <span class="fu">t</span>(exp.data)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(exp.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]   40 1000</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># should have n=40 samples/rows, and 1000 columns --&gt; OK!</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">20</span>)) <span class="co"># group variable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># should have n=40 samples/rows, and 1000 columns --&gt; OK!</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">20</span>)) <span class="co"># group variable</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Carry out PCA</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pr.exp <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(exp.data, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot proportion of variance explained</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>pr.var <span class="ot">&lt;-</span> pr.exp<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> pr.var<span class="sc">/</span><span class="fu">sum</span>(pr.var)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span>pve</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve, <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"Cumulative PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>pr.exp <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(exp.data, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot proportion of variance explained</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>pr.var <span class="ot">&lt;-</span> pr.exp<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> pr.var<span class="sc">/</span><span class="fu">sum</span>(pr.var)</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span>pve</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve, <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"Cumulative PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"red"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab_day3_pca_files/figure-html/pca-ge-pca-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -313,16 +591,16 @@ MCF7A-repro MCF7D-repro    MELANOMA       NSCLC     OVARIAN    PROSTATE
 <p>Looks like most of the principal components are needed to explain the data well. Maybe we can decide to keep 25-30 components?</p>
 <p>Can also plot some of the first principal components</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remember the use the helper-function to get colours</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Cols<span class="ot">=</span><span class="cf">function</span>(vec){</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  cols<span class="ot">=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(vec)))</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(cols[<span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(vec))])</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)) <span class="co"># plot-window has two small plots next to each other</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.exp<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span><span class="fu">Cols</span>(groups), <span class="at">pch=</span><span class="dv">19</span>, <span class="at">xlab=</span><span class="st">"PC 1"</span>, <span class="at">ylab=</span><span class="st">" PC 2"</span>)</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.exp<span class="sc">$</span>x[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)], <span class="at">col=</span><span class="fu">Cols</span>(groups), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 3"</span>)</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topleft'</span>, <span class="at">col=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(groups))), <span class="at">legend=</span><span class="fu">paste</span>(<span class="st">'group '</span>,<span class="fu">unique</span>(groups),<span class="at">sep=</span><span class="st">''</span>), <span class="at">bty=</span><span class="st">'n'</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">cex=</span>.<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remember the use the helper-function to get colours</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>Cols<span class="ot">=</span><span class="cf">function</span>(vec){</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  cols<span class="ot">=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(vec)))</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(cols[<span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(vec))])</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)) <span class="co"># plot-window has two small plots next to each other</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.exp<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span><span class="fu">Cols</span>(groups), <span class="at">pch=</span><span class="dv">19</span>, <span class="at">xlab=</span><span class="st">"PC 1"</span>, <span class="at">ylab=</span><span class="st">" PC 2"</span>)</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.exp<span class="sc">$</span>x[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)], <span class="at">col=</span><span class="fu">Cols</span>(groups), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 3"</span>)</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topleft'</span>, <span class="at">col=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(groups))), <span class="at">legend=</span><span class="fu">paste</span>(<span class="st">'group '</span>,<span class="fu">unique</span>(groups),<span class="at">sep=</span><span class="st">''</span>), <span class="at">bty=</span><span class="st">'n'</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">cex=</span>.<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab_day3_pca_files/figure-html/pca-ge-plot-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -618,205 +896,442 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb16" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "R Lab (day 3): EDA, Principal Component Analysis"</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> </span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: false</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>Datasets</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>R script</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>Lab lecture </span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>(If not enough content, try include the data manipulation in R + another genomics dataset)</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## NCI60</span></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>Now we move to a typical large-scale biological data set (this is partly based on Lab 10.3 in James et al., 2013).</span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>We have already seen the NCI60 cancer cell line microarray data set, consisting of 6830 gene expression measurements on 64 cancer cell lines.</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-loaddata</span></span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>nci.labs <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>labs <span class="co"># Sample labels (tissue type)</span></span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>nci.data <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>data <span class="co"># Gene expression data set</span></span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-summary</span></span>
-<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a><span class="co"># what if I would like to compute the mean of each gene within each tissue type?</span></span>
-<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>tissue.means <span class="ot">&lt;-</span> <span class="fu">apply</span>(nci.data, <span class="dv">2</span>, <span class="cf">function</span>(x){<span class="fu">tapply</span>(x, nci.labs, mean)})</span>
-<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(tissue.means)</span>
-<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(nci.labs)</span>
-<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>Compute the PC</span>
-<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-pc</span></span>
-<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA analysis after scaling the variables to standard deviation one:</span></span>
-<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>pr.out <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(nci.data, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
-<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>Print the summary output</span>
-<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-pcsummary</span></span>
-<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pr.out)</span>
-<span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-77"><a href="#cb16-77" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-plotpc</span></span>
-<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb16-80"><a href="#cb16-80" aria-hidden="true" tabindex="-1"></a>pr.var <span class="ot">&lt;-</span> pr.out<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb16-81"><a href="#cb16-81" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> pr.var<span class="sc">/</span><span class="fu">sum</span>(pr.var)</span>
-<span id="cb16-82"><a href="#cb16-82" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span>pve</span>
-<span id="cb16-83"><a href="#cb16-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-84"><a href="#cb16-84" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb16-85"><a href="#cb16-85" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve,  <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span>
-<span id="cb16-86"><a href="#cb16-86" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"Cumulative PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"brown3"</span>)</span>
-<span id="cb16-87"><a href="#cb16-87" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-88"><a href="#cb16-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-89"><a href="#cb16-89" aria-hidden="true" tabindex="-1"></a><span class="fu">### How many PCs to keep?</span></span>
-<span id="cb16-90"><a href="#cb16-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-93"><a href="#cb16-93" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-94"><a href="#cb16-94" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-keeppc</span></span>
-<span id="cb16-95"><a href="#cb16-95" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb16-96"><a href="#cb16-96" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb16-97"><a href="#cb16-97" aria-hidden="true" tabindex="-1"></a>mysel80 <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">cumsum</span>(pve) <span class="sc">&gt;</span> <span class="dv">80</span>)[<span class="dv">1</span>] <span class="co"># explains 80% of the variability</span></span>
-<span id="cb16-98"><a href="#cb16-98" aria-hidden="true" tabindex="-1"></a>mysel70 <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">cumsum</span>(pve) <span class="sc">&gt;</span> <span class="dv">70</span>)[<span class="dv">1</span>] <span class="co"># explains 70% of the variability</span></span>
-<span id="cb16-99"><a href="#cb16-99" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-100"><a href="#cb16-100" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)) <span class="co"># plot contains two smaller plots next to each other</span></span>
-<span id="cb16-101"><a href="#cb16-101" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve,  <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span>
-<span id="cb16-102"><a href="#cb16-102" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel80)</span>
-<span id="cb16-103"><a href="#cb16-103" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel70, <span class="at">col=</span><span class="dv">3</span>)</span>
-<span id="cb16-104"><a href="#cb16-104" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"Cumulative PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"brown3"</span>)</span>
-<span id="cb16-105"><a href="#cb16-105" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel80)</span>
-<span id="cb16-106"><a href="#cb16-106" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">80</span>)</span>
-<span id="cb16-107"><a href="#cb16-107" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel70, <span class="at">col=</span><span class="dv">3</span>)</span>
-<span id="cb16-108"><a href="#cb16-108" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">70</span>, <span class="at">col=</span><span class="dv">3</span>)</span>
-<span id="cb16-109"><a href="#cb16-109" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-110"><a href="#cb16-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-111"><a href="#cb16-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-112"><a href="#cb16-112" aria-hidden="true" tabindex="-1"></a>If we decide to only keep the principal components that explains 70% of the variance, we end up with 24 components, which we can further analyse to better understand the relationships between the variables. For simplicity we only look at the first few components.</span>
-<span id="cb16-113"><a href="#cb16-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-114"><a href="#cb16-114" aria-hidden="true" tabindex="-1"></a>We plot the first few principal component score vectors, to visualize the results. The observations (cell lines) corresponding to a given cancer type will be plotted in the same colour.</span>
-<span id="cb16-115"><a href="#cb16-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-118"><a href="#cb16-118" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-119"><a href="#cb16-119" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-plot2</span></span>
-<span id="cb16-120"><a href="#cb16-120" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb16-121"><a href="#cb16-121" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb16-122"><a href="#cb16-122" aria-hidden="true" tabindex="-1"></a>Cols<span class="ot">=</span><span class="cf">function</span>(vec){</span>
-<span id="cb16-123"><a href="#cb16-123" aria-hidden="true" tabindex="-1"></a>  cols<span class="ot">=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(vec)))</span>
-<span id="cb16-124"><a href="#cb16-124" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(cols[<span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(vec))])</span>
-<span id="cb16-125"><a href="#cb16-125" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb16-126"><a href="#cb16-126" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-127"><a href="#cb16-127" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the first vs second and first vs third principal component score vectors,</span></span>
-<span id="cb16-128"><a href="#cb16-128" aria-hidden="true" tabindex="-1"></a><span class="co"># with colors associated to labels (using the Cols() helper function)</span></span>
-<span id="cb16-129"><a href="#cb16-129" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb16-130"><a href="#cb16-130" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span><span class="fu">Cols</span>(nci.labs), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 2"</span>)</span>
-<span id="cb16-131"><a href="#cb16-131" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)], <span class="at">col=</span><span class="fu">Cols</span>(nci.labs), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 3"</span>)</span>
-<span id="cb16-132"><a href="#cb16-132" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topleft'</span>, <span class="at">col=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(nci.labs))), <span class="at">legend=</span><span class="fu">unique</span>(nci.labs), <span class="at">bty=</span><span class="st">'n'</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">cex=</span>.<span class="dv">6</span>)</span>
-<span id="cb16-133"><a href="#cb16-133" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-134"><a href="#cb16-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-135"><a href="#cb16-135" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-136"><a href="#cb16-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-137"><a href="#cb16-137" aria-hidden="true" tabindex="-1"></a><span class="fu">## Gene expression data</span></span>
-<span id="cb16-138"><a href="#cb16-138" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-139"><a href="#cb16-139" aria-hidden="true" tabindex="-1"></a>CH12Ex13 from statistical learning</span>
-<span id="cb16-140"><a href="#cb16-140" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-141"><a href="#cb16-141" aria-hidden="true" tabindex="-1"></a>Consider again the gene expression data set "Ch12Ex13.csv" (which can be also found on the book website, www.StatLearning.com) that consists of 40 tissue samples with measurements on 1,000 genes.</span>
-<span id="cb16-142"><a href="#cb16-142" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-143"><a href="#cb16-143" aria-hidden="true" tabindex="-1"></a>The first 20 samples are from healthy patients, while the second 20 are from a diseased group.</span>
-<span id="cb16-144"><a href="#cb16-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-145"><a href="#cb16-145" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-146"><a href="#cb16-146" aria-hidden="true" tabindex="-1"></a>Load in the data using read.csv(). You will need to select header=F.</span>
-<span id="cb16-147"><a href="#cb16-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-148"><a href="#cb16-148" aria-hidden="true" tabindex="-1"></a>Alternatively: load in the data using "Import dataset" in the upper right window, and click "no" on the "Heading" option.</span>
-<span id="cb16-149"><a href="#cb16-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-150"><a href="#cb16-150" aria-hidden="true" tabindex="-1"></a>Perform a PCA of these data and visualize the results. </span>
-<span id="cb16-151"><a href="#cb16-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-152"><a href="#cb16-152" aria-hidden="true" tabindex="-1"></a>Note: remember to check if the variables (genes) are on the columns in the dataset before running the PCA. If they are not: use t() to transform the dataset.</span>
-<span id="cb16-153"><a href="#cb16-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-154"><a href="#cb16-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-155"><a href="#cb16-155" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-158"><a href="#cb16-158" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-159"><a href="#cb16-159" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-ge-loaddata</span></span>
-<span id="cb16-160"><a href="#cb16-160" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb16-161"><a href="#cb16-161" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb16-162"><a href="#cb16-162" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-163"><a href="#cb16-163" aria-hidden="true" tabindex="-1"></a><span class="co"># set the path to your own!</span></span>
-<span id="cb16-164"><a href="#cb16-164" aria-hidden="true" tabindex="-1"></a>exp.data <span class="ot">&lt;-</span>  <span class="fu">read.csv</span>(<span class="st">"data/Ch12Ex13.csv"</span>,<span class="at">header=</span><span class="cn">FALSE</span>)</span>
-<span id="cb16-165"><a href="#cb16-165" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-166"><a href="#cb16-166" aria-hidden="true" tabindex="-1"></a><span class="co"># I want each row to represent a sample, and each column a gene</span></span>
-<span id="cb16-167"><a href="#cb16-167" aria-hidden="true" tabindex="-1"></a>exp.data <span class="ot">&lt;-</span> <span class="fu">t</span>(exp.data)</span>
-<span id="cb16-168"><a href="#cb16-168" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(exp.data)</span>
-<span id="cb16-169"><a href="#cb16-169" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-170"><a href="#cb16-170" aria-hidden="true" tabindex="-1"></a><span class="co"># should have n=40 samples/rows, and 1000 columns --&gt; OK!</span></span>
-<span id="cb16-171"><a href="#cb16-171" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">20</span>)) <span class="co"># group variable</span></span>
-<span id="cb16-172"><a href="#cb16-172" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-173"><a href="#cb16-173" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-174"><a href="#cb16-174" aria-hidden="true" tabindex="-1"></a>Carry out PCA</span>
-<span id="cb16-175"><a href="#cb16-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-178"><a href="#cb16-178" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-179"><a href="#cb16-179" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-ge-pca</span></span>
-<span id="cb16-180"><a href="#cb16-180" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb16-181"><a href="#cb16-181" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb16-182"><a href="#cb16-182" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-183"><a href="#cb16-183" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA</span></span>
-<span id="cb16-184"><a href="#cb16-184" aria-hidden="true" tabindex="-1"></a>pr.exp <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(exp.data, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
-<span id="cb16-185"><a href="#cb16-185" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-186"><a href="#cb16-186" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot proportion of variance explained</span></span>
-<span id="cb16-187"><a href="#cb16-187" aria-hidden="true" tabindex="-1"></a>pr.var <span class="ot">&lt;-</span> pr.exp<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb16-188"><a href="#cb16-188" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> pr.var<span class="sc">/</span><span class="fu">sum</span>(pr.var)</span>
-<span id="cb16-189"><a href="#cb16-189" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span>pve</span>
-<span id="cb16-190"><a href="#cb16-190" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb16-191"><a href="#cb16-191" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve, <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span>
-<span id="cb16-192"><a href="#cb16-192" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"Cumulative PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"red"</span>)</span>
-<span id="cb16-193"><a href="#cb16-193" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-194"><a href="#cb16-194" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-195"><a href="#cb16-195" aria-hidden="true" tabindex="-1"></a>Looks like most of the principal components are needed to explain the data well. Maybe we can decide to keep 25-30 components?</span>
-<span id="cb16-196"><a href="#cb16-196" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-197"><a href="#cb16-197" aria-hidden="true" tabindex="-1"></a>Can also plot some of the first principal components</span>
-<span id="cb16-198"><a href="#cb16-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-201"><a href="#cb16-201" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb16-202"><a href="#cb16-202" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-ge-plot</span></span>
-<span id="cb16-203"><a href="#cb16-203" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb16-204"><a href="#cb16-204" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb16-205"><a href="#cb16-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-206"><a href="#cb16-206" aria-hidden="true" tabindex="-1"></a><span class="co"># Remember the use the helper-function to get colours</span></span>
-<span id="cb16-207"><a href="#cb16-207" aria-hidden="true" tabindex="-1"></a>Cols<span class="ot">=</span><span class="cf">function</span>(vec){</span>
-<span id="cb16-208"><a href="#cb16-208" aria-hidden="true" tabindex="-1"></a>  cols<span class="ot">=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(vec)))</span>
-<span id="cb16-209"><a href="#cb16-209" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(cols[<span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(vec))])</span>
-<span id="cb16-210"><a href="#cb16-210" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb16-211"><a href="#cb16-211" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-212"><a href="#cb16-212" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)) <span class="co"># plot-window has two small plots next to each other</span></span>
-<span id="cb16-213"><a href="#cb16-213" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.exp<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span><span class="fu">Cols</span>(groups), <span class="at">pch=</span><span class="dv">19</span>, <span class="at">xlab=</span><span class="st">"PC 1"</span>, <span class="at">ylab=</span><span class="st">" PC 2"</span>)</span>
-<span id="cb16-214"><a href="#cb16-214" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.exp<span class="sc">$</span>x[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)], <span class="at">col=</span><span class="fu">Cols</span>(groups), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 3"</span>)</span>
-<span id="cb16-215"><a href="#cb16-215" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topleft'</span>, <span class="at">col=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(groups))), <span class="at">legend=</span><span class="fu">paste</span>(<span class="st">'group '</span>,<span class="fu">unique</span>(groups),<span class="at">sep=</span><span class="st">''</span>), <span class="at">bty=</span><span class="st">'n'</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">cex=</span>.<span class="dv">6</span>)</span>
-<span id="cb16-216"><a href="#cb16-216" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb16-217"><a href="#cb16-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-218"><a href="#cb16-218" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-219"><a href="#cb16-219" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode" id="cb55" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "R Lab (day 3): Data exploration, Principal Component Analysis"</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: false</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>Datasets</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>The following datasets are used in the exercises. Download datasets from GitHub repository, or from Canvas.</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="in">`Food.txt`</span> (<span class="co">[</span><span class="ot">link</span><span class="co">]()</span>)</span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="in">`nci60`</span></span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="in">`ch12ex13.csv`</span></span>
+<span id="cb55-16"><a href="#cb55-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-17"><a href="#cb55-17" aria-hidden="true" tabindex="-1"></a>R script </span>
+<span id="cb55-18"><a href="#cb55-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-19"><a href="#cb55-19" aria-hidden="true" tabindex="-1"></a>Lab lecture </span>
+<span id="cb55-20"><a href="#cb55-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-21"><a href="#cb55-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-22"><a href="#cb55-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-23"><a href="#cb55-23" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exercise 1: Food</span></span>
+<span id="cb55-24"><a href="#cb55-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-25"><a href="#cb55-25" aria-hidden="true" tabindex="-1"></a>In the first exercise, we explore a low-dimensional dataset, <span class="in">`Food.txt`</span>. </span>
+<span id="cb55-26"><a href="#cb55-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-27"><a href="#cb55-27" aria-hidden="true" tabindex="-1"></a>(This example is not a genomics example, however it is useful to illustrate important concepts in data exploration and dimensional reduction via PCA.)  </span>
+<span id="cb55-28"><a href="#cb55-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-29"><a href="#cb55-29" aria-hidden="true" tabindex="-1"></a><span class="in">`Food.txt`</span> contains data on food consumption of a variety of food categories in European counries. First load the dataset. </span>
+<span id="cb55-30"><a href="#cb55-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-31"><a href="#cb55-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-34"><a href="#cb55-34" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-35"><a href="#cb55-35" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-loaddata</span></span>
+<span id="cb55-36"><a href="#cb55-36" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-37"><a href="#cb55-37" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-38"><a href="#cb55-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-39"><a href="#cb55-39" aria-hidden="true" tabindex="-1"></a>food <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">'data/Food.txt'</span>, <span class="at">header=</span>T)</span>
+<span id="cb55-40"><a href="#cb55-40" aria-hidden="true" tabindex="-1"></a><span class="co"># we change the name from pulses to a more common name, legume</span></span>
+<span id="cb55-41"><a href="#cb55-41" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(food)[<span class="dv">7</span>] <span class="ot">&lt;-</span> <span class="st">'Legume'</span></span>
+<span id="cb55-42"><a href="#cb55-42" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(food) <span class="co"># print first 6 lines </span></span>
+<span id="cb55-43"><a href="#cb55-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-44"><a href="#cb55-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-45"><a href="#cb55-45" aria-hidden="true" tabindex="-1"></a><span class="fu">### Explore the dataset</span></span>
+<span id="cb55-46"><a href="#cb55-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-47"><a href="#cb55-47" aria-hidden="true" tabindex="-1"></a>The first thing to do after loading the dataset is to get to know its content better. </span>
+<span id="cb55-48"><a href="#cb55-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-49"><a href="#cb55-49" aria-hidden="true" tabindex="-1"></a>Try to find out the following information about the data:</span>
+<span id="cb55-50"><a href="#cb55-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-51"><a href="#cb55-51" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>the **dimension** (numbers of columns and rows)</span>
+<span id="cb55-52"><a href="#cb55-52" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span>the **column names**, and **row names**</span>
+<span id="cb55-53"><a href="#cb55-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-54"><a href="#cb55-54" aria-hidden="true" tabindex="-1"></a>We can also look at one food in particular, <span class="in">`Fish`</span>: find the mean, maximum and minimum value for this variable. This is to investigate one column of the data.</span>
+<span id="cb55-55"><a href="#cb55-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-56"><a href="#cb55-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-59"><a href="#cb55-59" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-60"><a href="#cb55-60" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-summary</span></span>
+<span id="cb55-61"><a href="#cb55-61" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-62"><a href="#cb55-62" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-63"><a href="#cb55-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-64"><a href="#cb55-64" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(food)</span>
+<span id="cb55-65"><a href="#cb55-65" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(food)</span>
+<span id="cb55-66"><a href="#cb55-66" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(food)</span>
+<span id="cb55-67"><a href="#cb55-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-68"><a href="#cb55-68" aria-hidden="true" tabindex="-1"></a><span class="co"># explore one variable</span></span>
+<span id="cb55-69"><a href="#cb55-69" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(food<span class="sc">$</span>Fish)</span>
+<span id="cb55-70"><a href="#cb55-70" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(food<span class="sc">$</span>Fish)</span>
+<span id="cb55-71"><a href="#cb55-71" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(food<span class="sc">$</span>Fish)</span>
+<span id="cb55-72"><a href="#cb55-72" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-73"><a href="#cb55-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-74"><a href="#cb55-74" aria-hidden="true" tabindex="-1"></a>Now we investigate the data by row. Each row is a country. We can extract the data ('filter') for Norway, for exmaple.</span>
+<span id="cb55-75"><a href="#cb55-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-76"><a href="#cb55-76" aria-hidden="true" tabindex="-1"></a>It is also easy to get data for more than one country, such as from Denmark and Sweden. </span>
+<span id="cb55-77"><a href="#cb55-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-80"><a href="#cb55-80" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-81"><a href="#cb55-81" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-country</span></span>
+<span id="cb55-82"><a href="#cb55-82" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-83"><a href="#cb55-83" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-84"><a href="#cb55-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-85"><a href="#cb55-85" aria-hidden="true" tabindex="-1"></a><span class="co"># subsetting</span></span>
+<span id="cb55-86"><a href="#cb55-86" aria-hidden="true" tabindex="-1"></a>food[<span class="fu">rownames</span>(food) <span class="sc">==</span> <span class="st">'Norway'</span>,]</span>
+<span id="cb55-87"><a href="#cb55-87" aria-hidden="true" tabindex="-1"></a>food[<span class="fu">rownames</span>(food) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'Norway'</span>, <span class="st">'Denmark'</span>, <span class="st">'Sweden'</span>),]</span>
+<span id="cb55-88"><a href="#cb55-88" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-89"><a href="#cb55-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-90"><a href="#cb55-90" aria-hidden="true" tabindex="-1"></a>Now we can make some simple visualizations. We can look at the distribution for each variable by making a histogram.</span>
+<span id="cb55-91"><a href="#cb55-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-94"><a href="#cb55-94" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-95"><a href="#cb55-95" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-histogram</span></span>
+<span id="cb55-96"><a href="#cb55-96" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-97"><a href="#cb55-97" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-98"><a href="#cb55-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-99"><a href="#cb55-99" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(food<span class="sc">$</span>Fish, <span class="at">main =</span> <span class="st">'Histogram of Fish'</span>)</span>
+<span id="cb55-100"><a href="#cb55-100" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(food<span class="sc">$</span>Fish, <span class="at">breaks =</span> <span class="dv">20</span>, <span class="at">main =</span> <span class="st">'Histogram of Fish'</span>)</span>
+<span id="cb55-101"><a href="#cb55-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-102"><a href="#cb55-102" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(food<span class="sc">$</span>Meat, <span class="at">main =</span> <span class="st">'Histogram of Meat'</span>)</span>
+<span id="cb55-103"><a href="#cb55-103" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-104"><a href="#cb55-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-105"><a href="#cb55-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-106"><a href="#cb55-106" aria-hidden="true" tabindex="-1"></a>A box plot is another commonly used tool for presenting data distribution, for a few variables together. This way you can compare different foods.</span>
+<span id="cb55-107"><a href="#cb55-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-110"><a href="#cb55-110" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-111"><a href="#cb55-111" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-boxplot</span></span>
+<span id="cb55-112"><a href="#cb55-112" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-113"><a href="#cb55-113" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-114"><a href="#cb55-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-115"><a href="#cb55-115" aria-hidden="true" tabindex="-1"></a><span class="co"># las rotates the axis text 90 degrees</span></span>
+<span id="cb55-116"><a href="#cb55-116" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(food, <span class="at">las =</span> <span class="dv">2</span>,</span>
+<span id="cb55-117"><a href="#cb55-117" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">'Food consumption across European countries'</span>)</span>
+<span id="cb55-118"><a href="#cb55-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-119"><a href="#cb55-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-120"><a href="#cb55-120" aria-hidden="true" tabindex="-1"></a>We can look at pairs of food, to identify the whether there is some kind of relationship between them. For example, do countries that consume more fish also consume more meat? What about cereal and fruit?</span>
+<span id="cb55-121"><a href="#cb55-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-122"><a href="#cb55-122" aria-hidden="true" tabindex="-1"></a>A scatter plot with one food on its x-axis and another on the y-axis can be useful.</span>
+<span id="cb55-123"><a href="#cb55-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-124"><a href="#cb55-124" aria-hidden="true" tabindex="-1"></a>We can add the country names on top of the scatter plot to provide more information.</span>
+<span id="cb55-125"><a href="#cb55-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-128"><a href="#cb55-128" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-129"><a href="#cb55-129" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-scatter</span></span>
+<span id="cb55-130"><a href="#cb55-130" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-131"><a href="#cb55-131" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-132"><a href="#cb55-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-133"><a href="#cb55-133" aria-hidden="true" tabindex="-1"></a><span class="co"># two variables</span></span>
+<span id="cb55-134"><a href="#cb55-134" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(food<span class="sc">$</span>Fish, food<span class="sc">$</span>Meat, <span class="at">pch=</span><span class="dv">20</span>, <span class="at">main =</span> <span class="st">'Fish vs Meat'</span>)</span>
+<span id="cb55-135"><a href="#cb55-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-136"><a href="#cb55-136" aria-hidden="true" tabindex="-1"></a><span class="co"># to add country: run this line as well</span></span>
+<span id="cb55-137"><a href="#cb55-137" aria-hidden="true" tabindex="-1"></a><span class="co"># text(food$Fish, food$Meat, labels = rownames(food))</span></span>
+<span id="cb55-138"><a href="#cb55-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-139"><a href="#cb55-139" aria-hidden="true" tabindex="-1"></a><span class="co"># choose aother pair of food, add country label</span></span>
+<span id="cb55-140"><a href="#cb55-140" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(food<span class="sc">$</span>Cereals, food<span class="sc">$</span>Fruit, <span class="at">main =</span> <span class="st">'Cereals vs Fruit'</span>)</span>
+<span id="cb55-141"><a href="#cb55-141" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(food<span class="sc">$</span>Cereals, food<span class="sc">$</span>Fruit, <span class="at">labels =</span> <span class="fu">rownames</span>(food))</span>
+<span id="cb55-142"><a href="#cb55-142" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-143"><a href="#cb55-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-144"><a href="#cb55-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-145"><a href="#cb55-145" aria-hidden="true" tabindex="-1"></a>You can make pair-wise scatter plots for all the food pairs. However when you have many variables, these plots become less easy to read. </span>
+<span id="cb55-146"><a href="#cb55-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-149"><a href="#cb55-149" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-150"><a href="#cb55-150" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-scatter2</span></span>
+<span id="cb55-151"><a href="#cb55-151" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-152"><a href="#cb55-152" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-153"><a href="#cb55-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-154"><a href="#cb55-154" aria-hidden="true" tabindex="-1"></a><span class="co"># pair-wise scatter</span></span>
+<span id="cb55-155"><a href="#cb55-155" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(food, <span class="at">main =</span> <span class="st">'Pair-wise scatter plot'</span>)</span>
+<span id="cb55-156"><a href="#cb55-156" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-157"><a href="#cb55-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-158"><a href="#cb55-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-159"><a href="#cb55-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-160"><a href="#cb55-160" aria-hidden="true" tabindex="-1"></a><span class="fu">### Principal component analysis </span></span>
+<span id="cb55-161"><a href="#cb55-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-162"><a href="#cb55-162" aria-hidden="true" tabindex="-1"></a>We can use principal component analysis PCA to explore the dataset, and reveal more information beyond the original data points.</span>
+<span id="cb55-163"><a href="#cb55-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-164"><a href="#cb55-164" aria-hidden="true" tabindex="-1"></a>The command we use is <span class="in">`prcomp(data, scale)`</span>.</span>
+<span id="cb55-165"><a href="#cb55-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-166"><a href="#cb55-166" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="in">`data`</span> is the dataset to carry out PCA. Sometimes you need to do some processing such as centering and scaling.</span>
+<span id="cb55-167"><a href="#cb55-167" aria-hidden="true" tabindex="-1"></a><span class="ss">* </span><span class="in">`scale`</span> is an argument that asks the program to scale the data for us automatically. We specify it to be TRUE.</span>
+<span id="cb55-168"><a href="#cb55-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-169"><a href="#cb55-169" aria-hidden="true" tabindex="-1"></a>After running the command, you can print out the results using <span class="in">`summary`</span>.</span>
+<span id="cb55-170"><a href="#cb55-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-173"><a href="#cb55-173" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-174"><a href="#cb55-174" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-pca</span></span>
+<span id="cb55-175"><a href="#cb55-175" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-176"><a href="#cb55-176" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-177"><a href="#cb55-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-178"><a href="#cb55-178" aria-hidden="true" tabindex="-1"></a><span class="co"># need to scale the data</span></span>
+<span id="cb55-179"><a href="#cb55-179" aria-hidden="true" tabindex="-1"></a>pc_food <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(food, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
+<span id="cb55-180"><a href="#cb55-180" aria-hidden="true" tabindex="-1"></a><span class="co"># pc_food</span></span>
+<span id="cb55-181"><a href="#cb55-181" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pc_food)</span>
+<span id="cb55-182"><a href="#cb55-182" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-183"><a href="#cb55-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-184"><a href="#cb55-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-187"><a href="#cb55-187" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-188"><a href="#cb55-188" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-loading</span></span>
+<span id="cb55-189"><a href="#cb55-189" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-190"><a href="#cb55-190" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-191"><a href="#cb55-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-192"><a href="#cb55-192" aria-hidden="true" tabindex="-1"></a>loading_food <span class="ot">&lt;-</span> pc_food<span class="sc">$</span>rotation</span>
+<span id="cb55-193"><a href="#cb55-193" aria-hidden="true" tabindex="-1"></a><span class="co"># print out the result, but only keep 2 digits</span></span>
+<span id="cb55-194"><a href="#cb55-194" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(loading_food, <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb55-195"><a href="#cb55-195" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-196"><a href="#cb55-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-197"><a href="#cb55-197" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-198"><a href="#cb55-198" aria-hidden="true" tabindex="-1"></a>Scores (projections)</span>
+<span id="cb55-199"><a href="#cb55-199" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-202"><a href="#cb55-202" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-203"><a href="#cb55-203" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-scores</span></span>
+<span id="cb55-204"><a href="#cb55-204" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-205"><a href="#cb55-205" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-206"><a href="#cb55-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-207"><a href="#cb55-207" aria-hidden="true" tabindex="-1"></a>scores_food <span class="ot">&lt;-</span> pc_food<span class="sc">$</span>x</span>
+<span id="cb55-208"><a href="#cb55-208" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(scores_food, <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb55-209"><a href="#cb55-209" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-210"><a href="#cb55-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-211"><a href="#cb55-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-214"><a href="#cb55-214" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-215"><a href="#cb55-215" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-variance</span></span>
+<span id="cb55-216"><a href="#cb55-216" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-217"><a href="#cb55-217" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-218"><a href="#cb55-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-219"><a href="#cb55-219" aria-hidden="true" tabindex="-1"></a>pc_food_var <span class="ot">&lt;-</span> pc_food<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb55-220"><a href="#cb55-220" aria-hidden="true" tabindex="-1"></a>pc_food_pve <span class="ot">&lt;-</span> pc_food_var<span class="sc">/</span><span class="fu">sum</span>(pc_food_var)</span>
+<span id="cb55-221"><a href="#cb55-221" aria-hidden="true" tabindex="-1"></a>pc_food_pve</span>
+<span id="cb55-222"><a href="#cb55-222" aria-hidden="true" tabindex="-1"></a><span class="fu">cumsum</span>(pc_food_pve)</span>
+<span id="cb55-223"><a href="#cb55-223" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-224"><a href="#cb55-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-225"><a href="#cb55-225" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-226"><a href="#cb55-226" aria-hidden="true" tabindex="-1"></a><span class="fu">### Visualize PCA results</span></span>
+<span id="cb55-227"><a href="#cb55-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-228"><a href="#cb55-228" aria-hidden="true" tabindex="-1"></a>Biplot of the principal components</span>
+<span id="cb55-229"><a href="#cb55-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-232"><a href="#cb55-232" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-233"><a href="#cb55-233" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-biplot</span></span>
+<span id="cb55-234"><a href="#cb55-234" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-235"><a href="#cb55-235" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-236"><a href="#cb55-236" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-237"><a href="#cb55-237" aria-hidden="true" tabindex="-1"></a><span class="co"># by default, pc1 pc2</span></span>
+<span id="cb55-238"><a href="#cb55-238" aria-hidden="true" tabindex="-1"></a><span class="fu">biplot</span>(pc_food)</span>
+<span id="cb55-239"><a href="#cb55-239" aria-hidden="true" tabindex="-1"></a><span class="co"># same as biplot(pc_food, choices = c(1,2)) </span></span>
+<span id="cb55-240"><a href="#cb55-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-241"><a href="#cb55-241" aria-hidden="true" tabindex="-1"></a><span class="fu">biplot</span>(pc_food, <span class="at">choices =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)) <span class="co"># pc1, pc3</span></span>
+<span id="cb55-242"><a href="#cb55-242" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-243"><a href="#cb55-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-244"><a href="#cb55-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-245"><a href="#cb55-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-248"><a href="#cb55-248" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-249"><a href="#cb55-249" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-plot_var</span></span>
+<span id="cb55-250"><a href="#cb55-250" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-251"><a href="#cb55-251" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-252"><a href="#cb55-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-253"><a href="#cb55-253" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb55-254"><a href="#cb55-254" aria-hidden="true" tabindex="-1"></a><span class="co"># variance of the PCs</span></span>
+<span id="cb55-255"><a href="#cb55-255" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(pc_food_var, <span class="at">las=</span><span class="dv">2</span>,</span>
+<span id="cb55-256"><a href="#cb55-256" aria-hidden="true" tabindex="-1"></a>        <span class="at">main=</span><span class="st">'Principal components'</span>, <span class="at">ylab=</span><span class="st">'Variances'</span>,</span>
+<span id="cb55-257"><a href="#cb55-257" aria-hidden="true" tabindex="-1"></a>        <span class="at">names.arg =</span> <span class="fu">paste</span>(<span class="st">'PC '</span>,<span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(pc_food_var),<span class="at">sep=</span><span class="st">''</span>))</span>
+<span id="cb55-258"><a href="#cb55-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-259"><a href="#cb55-259" aria-hidden="true" tabindex="-1"></a><span class="co"># variance of the original data variables</span></span>
+<span id="cb55-260"><a href="#cb55-260" aria-hidden="true" tabindex="-1"></a><span class="fu">barplot</span>(<span class="fu">apply</span>(food, <span class="dv">2</span>, sd)<span class="sc">^</span><span class="dv">2</span>, <span class="at">las=</span><span class="dv">2</span>, <span class="at">main=</span><span class="st">'Original Variables'</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">150</span>), <span class="at">ylab=</span><span class="st">'Variances'</span>)</span>
+<span id="cb55-261"><a href="#cb55-261" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-262"><a href="#cb55-262" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-263"><a href="#cb55-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-266"><a href="#cb55-266" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-267"><a href="#cb55-267" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-food-plot_pve</span></span>
+<span id="cb55-268"><a href="#cb55-268" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-269"><a href="#cb55-269" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-270"><a href="#cb55-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-271"><a href="#cb55-271" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb55-272"><a href="#cb55-272" aria-hidden="true" tabindex="-1"></a><span class="co"># PVE</span></span>
+<span id="cb55-273"><a href="#cb55-273" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pc_food_pve), <span class="at">type=</span><span class="st">'b'</span>, <span class="at">axes=</span>F, <span class="at">xlab=</span><span class="st">'number of components'</span>,</span>
+<span id="cb55-274"><a href="#cb55-274" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">'contribution to total variance'</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>))</span>
+<span id="cb55-275"><a href="#cb55-275" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">1</span>, <span class="at">col=</span><span class="st">'blue'</span>)</span>
+<span id="cb55-276"><a href="#cb55-276" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="fl">0.8</span>, <span class="at">lty=</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">'blue'</span>)</span>
+<span id="cb55-277"><a href="#cb55-277" aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>()</span>
+<span id="cb55-278"><a href="#cb55-278" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">2</span>,<span class="at">at=</span><span class="dv">0</span><span class="sc">:</span><span class="dv">10</span><span class="sc">/</span><span class="dv">10</span>,<span class="at">labels=</span><span class="dv">0</span><span class="sc">:</span><span class="dv">10</span><span class="sc">/</span><span class="dv">10</span>)</span>
+<span id="cb55-279"><a href="#cb55-279" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>,<span class="at">at=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(food),<span class="at">labels=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(food),<span class="at">las=</span><span class="dv">2</span>)</span>
+<span id="cb55-280"><a href="#cb55-280" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-281"><a href="#cb55-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-282"><a href="#cb55-282" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exercise 2: NCI60</span></span>
+<span id="cb55-283"><a href="#cb55-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-284"><a href="#cb55-284" aria-hidden="true" tabindex="-1"></a>Now we move to a typical large-scale biological data set (this is partly based on Lab 10.3 in James et al., 2013).</span>
+<span id="cb55-285"><a href="#cb55-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-286"><a href="#cb55-286" aria-hidden="true" tabindex="-1"></a>We have already seen the NCI60 cancer cell line microarray data set, consisting of 6830 gene expression measurements on 64 cancer cell lines.</span>
+<span id="cb55-287"><a href="#cb55-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-288"><a href="#cb55-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-291"><a href="#cb55-291" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-292"><a href="#cb55-292" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-loaddata</span></span>
+<span id="cb55-293"><a href="#cb55-293" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-294"><a href="#cb55-294" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-295"><a href="#cb55-295" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-296"><a href="#cb55-296" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb55-297"><a href="#cb55-297" aria-hidden="true" tabindex="-1"></a>nci.labs <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>labs <span class="co"># Sample labels (tissue type)</span></span>
+<span id="cb55-298"><a href="#cb55-298" aria-hidden="true" tabindex="-1"></a>nci.data <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>data <span class="co"># Gene expression data set</span></span>
+<span id="cb55-299"><a href="#cb55-299" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-300"><a href="#cb55-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-303"><a href="#cb55-303" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-304"><a href="#cb55-304" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-summary</span></span>
+<span id="cb55-305"><a href="#cb55-305" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-306"><a href="#cb55-306" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-307"><a href="#cb55-307" aria-hidden="true" tabindex="-1"></a><span class="co"># what if I would like to compute the mean of each gene within each tissue type?</span></span>
+<span id="cb55-308"><a href="#cb55-308" aria-hidden="true" tabindex="-1"></a>tissue.means <span class="ot">&lt;-</span> <span class="fu">apply</span>(nci.data, <span class="dv">2</span>, <span class="cf">function</span>(x){<span class="fu">tapply</span>(x, nci.labs, mean)})</span>
+<span id="cb55-309"><a href="#cb55-309" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(tissue.means)</span>
+<span id="cb55-310"><a href="#cb55-310" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(nci.labs)</span>
+<span id="cb55-311"><a href="#cb55-311" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-312"><a href="#cb55-312" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-313"><a href="#cb55-313" aria-hidden="true" tabindex="-1"></a>Compute the PC</span>
+<span id="cb55-314"><a href="#cb55-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-317"><a href="#cb55-317" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-318"><a href="#cb55-318" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-pc</span></span>
+<span id="cb55-319"><a href="#cb55-319" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-320"><a href="#cb55-320" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-321"><a href="#cb55-321" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA analysis after scaling the variables to standard deviation one:</span></span>
+<span id="cb55-322"><a href="#cb55-322" aria-hidden="true" tabindex="-1"></a>pr.out <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(nci.data, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
+<span id="cb55-323"><a href="#cb55-323" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-324"><a href="#cb55-324" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-325"><a href="#cb55-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-326"><a href="#cb55-326" aria-hidden="true" tabindex="-1"></a>Print the summary output</span>
+<span id="cb55-327"><a href="#cb55-327" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb55-330"><a href="#cb55-330" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-331"><a href="#cb55-331" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-pcsummary</span></span>
+<span id="cb55-332"><a href="#cb55-332" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-333"><a href="#cb55-333" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-334"><a href="#cb55-334" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb55-335"><a href="#cb55-335" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pr.out)</span>
+<span id="cb55-336"><a href="#cb55-336" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-337"><a href="#cb55-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-338"><a href="#cb55-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-341"><a href="#cb55-341" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-342"><a href="#cb55-342" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-plotpc</span></span>
+<span id="cb55-343"><a href="#cb55-343" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-344"><a href="#cb55-344" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-345"><a href="#cb55-345" aria-hidden="true" tabindex="-1"></a>pr.var <span class="ot">&lt;-</span> pr.out<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb55-346"><a href="#cb55-346" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> pr.var<span class="sc">/</span><span class="fu">sum</span>(pr.var)</span>
+<span id="cb55-347"><a href="#cb55-347" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span>pve</span>
+<span id="cb55-348"><a href="#cb55-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-349"><a href="#cb55-349" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb55-350"><a href="#cb55-350" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve,  <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb55-351"><a href="#cb55-351" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"Cumulative PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"brown3"</span>)</span>
+<span id="cb55-352"><a href="#cb55-352" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-353"><a href="#cb55-353" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-354"><a href="#cb55-354" aria-hidden="true" tabindex="-1"></a><span class="fu">### How many PCs to keep?</span></span>
+<span id="cb55-355"><a href="#cb55-355" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-358"><a href="#cb55-358" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-359"><a href="#cb55-359" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-keeppc</span></span>
+<span id="cb55-360"><a href="#cb55-360" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-361"><a href="#cb55-361" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-362"><a href="#cb55-362" aria-hidden="true" tabindex="-1"></a>mysel80 <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">cumsum</span>(pve) <span class="sc">&gt;</span> <span class="dv">80</span>)[<span class="dv">1</span>] <span class="co"># explains 80% of the variability</span></span>
+<span id="cb55-363"><a href="#cb55-363" aria-hidden="true" tabindex="-1"></a>mysel70 <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">cumsum</span>(pve) <span class="sc">&gt;</span> <span class="dv">70</span>)[<span class="dv">1</span>] <span class="co"># explains 70% of the variability</span></span>
+<span id="cb55-364"><a href="#cb55-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-365"><a href="#cb55-365" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)) <span class="co"># plot contains two smaller plots next to each other</span></span>
+<span id="cb55-366"><a href="#cb55-366" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve,  <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb55-367"><a href="#cb55-367" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel80)</span>
+<span id="cb55-368"><a href="#cb55-368" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel70, <span class="at">col=</span><span class="dv">3</span>)</span>
+<span id="cb55-369"><a href="#cb55-369" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"Cumulative PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"brown3"</span>)</span>
+<span id="cb55-370"><a href="#cb55-370" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel80)</span>
+<span id="cb55-371"><a href="#cb55-371" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">80</span>)</span>
+<span id="cb55-372"><a href="#cb55-372" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v =</span> mysel70, <span class="at">col=</span><span class="dv">3</span>)</span>
+<span id="cb55-373"><a href="#cb55-373" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">70</span>, <span class="at">col=</span><span class="dv">3</span>)</span>
+<span id="cb55-374"><a href="#cb55-374" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-375"><a href="#cb55-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-376"><a href="#cb55-376" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-377"><a href="#cb55-377" aria-hidden="true" tabindex="-1"></a>If we decide to only keep the principal components that explains 70% of the variance, we end up with 24 components, which we can further analyse to better understand the relationships between the variables. For simplicity we only look at the first few components.</span>
+<span id="cb55-378"><a href="#cb55-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-379"><a href="#cb55-379" aria-hidden="true" tabindex="-1"></a>We plot the first few principal component score vectors, to visualize the results. The observations (cell lines) corresponding to a given cancer type will be plotted in the same colour.</span>
+<span id="cb55-380"><a href="#cb55-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-383"><a href="#cb55-383" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-384"><a href="#cb55-384" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-nci-plot2</span></span>
+<span id="cb55-385"><a href="#cb55-385" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-386"><a href="#cb55-386" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-387"><a href="#cb55-387" aria-hidden="true" tabindex="-1"></a>Cols<span class="ot">=</span><span class="cf">function</span>(vec){</span>
+<span id="cb55-388"><a href="#cb55-388" aria-hidden="true" tabindex="-1"></a>  cols<span class="ot">=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(vec)))</span>
+<span id="cb55-389"><a href="#cb55-389" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(cols[<span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(vec))])</span>
+<span id="cb55-390"><a href="#cb55-390" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb55-391"><a href="#cb55-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-392"><a href="#cb55-392" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the first vs second and first vs third principal component score vectors,</span></span>
+<span id="cb55-393"><a href="#cb55-393" aria-hidden="true" tabindex="-1"></a><span class="co"># with colors associated to labels (using the Cols() helper function)</span></span>
+<span id="cb55-394"><a href="#cb55-394" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb55-395"><a href="#cb55-395" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span><span class="fu">Cols</span>(nci.labs), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 2"</span>)</span>
+<span id="cb55-396"><a href="#cb55-396" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)], <span class="at">col=</span><span class="fu">Cols</span>(nci.labs), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 3"</span>)</span>
+<span id="cb55-397"><a href="#cb55-397" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topleft'</span>, <span class="at">col=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(nci.labs))), <span class="at">legend=</span><span class="fu">unique</span>(nci.labs), <span class="at">bty=</span><span class="st">'n'</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">cex=</span>.<span class="dv">6</span>)</span>
+<span id="cb55-398"><a href="#cb55-398" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-399"><a href="#cb55-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-400"><a href="#cb55-400" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-401"><a href="#cb55-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-402"><a href="#cb55-402" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exercise 3: Gene expression data</span></span>
+<span id="cb55-403"><a href="#cb55-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-404"><a href="#cb55-404" aria-hidden="true" tabindex="-1"></a>CH12Ex13 from statistical learning</span>
+<span id="cb55-405"><a href="#cb55-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-406"><a href="#cb55-406" aria-hidden="true" tabindex="-1"></a>Consider again the gene expression data set "Ch12Ex13.csv" (which can be also found on the book website, www.StatLearning.com) that consists of 40 tissue samples with measurements on 1,000 genes.</span>
+<span id="cb55-407"><a href="#cb55-407" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-408"><a href="#cb55-408" aria-hidden="true" tabindex="-1"></a>The first 20 samples are from healthy patients, while the second 20 are from a diseased group.</span>
+<span id="cb55-409"><a href="#cb55-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-410"><a href="#cb55-410" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-411"><a href="#cb55-411" aria-hidden="true" tabindex="-1"></a>Load in the data using read.csv(). You will need to select header=F.</span>
+<span id="cb55-412"><a href="#cb55-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-413"><a href="#cb55-413" aria-hidden="true" tabindex="-1"></a>Alternatively: load in the data using "Import dataset" in the upper right window, and click "no" on the "Heading" option.</span>
+<span id="cb55-414"><a href="#cb55-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-415"><a href="#cb55-415" aria-hidden="true" tabindex="-1"></a>Perform a PCA of these data and visualize the results. </span>
+<span id="cb55-416"><a href="#cb55-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-417"><a href="#cb55-417" aria-hidden="true" tabindex="-1"></a>Note: remember to check if the variables (genes) are on the columns in the dataset before running the PCA. If they are not: use t() to transform the dataset.</span>
+<span id="cb55-418"><a href="#cb55-418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-419"><a href="#cb55-419" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-420"><a href="#cb55-420" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-423"><a href="#cb55-423" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-424"><a href="#cb55-424" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-ge-loaddata</span></span>
+<span id="cb55-425"><a href="#cb55-425" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-426"><a href="#cb55-426" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-427"><a href="#cb55-427" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-428"><a href="#cb55-428" aria-hidden="true" tabindex="-1"></a><span class="co"># set the path to your own!</span></span>
+<span id="cb55-429"><a href="#cb55-429" aria-hidden="true" tabindex="-1"></a>exp.data <span class="ot">&lt;-</span>  <span class="fu">read.csv</span>(<span class="st">"data/Ch12Ex13.csv"</span>,<span class="at">header=</span><span class="cn">FALSE</span>)</span>
+<span id="cb55-430"><a href="#cb55-430" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-431"><a href="#cb55-431" aria-hidden="true" tabindex="-1"></a><span class="co"># I want each row to represent a sample, and each column a gene</span></span>
+<span id="cb55-432"><a href="#cb55-432" aria-hidden="true" tabindex="-1"></a>exp.data <span class="ot">&lt;-</span> <span class="fu">t</span>(exp.data)</span>
+<span id="cb55-433"><a href="#cb55-433" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(exp.data)</span>
+<span id="cb55-434"><a href="#cb55-434" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-435"><a href="#cb55-435" aria-hidden="true" tabindex="-1"></a><span class="co"># should have n=40 samples/rows, and 1000 columns --&gt; OK!</span></span>
+<span id="cb55-436"><a href="#cb55-436" aria-hidden="true" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">20</span>), <span class="fu">rep</span>(<span class="dv">2</span>,<span class="dv">20</span>)) <span class="co"># group variable</span></span>
+<span id="cb55-437"><a href="#cb55-437" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-438"><a href="#cb55-438" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-439"><a href="#cb55-439" aria-hidden="true" tabindex="-1"></a>Carry out PCA</span>
+<span id="cb55-440"><a href="#cb55-440" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-443"><a href="#cb55-443" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-444"><a href="#cb55-444" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-ge-pca</span></span>
+<span id="cb55-445"><a href="#cb55-445" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-446"><a href="#cb55-446" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-447"><a href="#cb55-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-448"><a href="#cb55-448" aria-hidden="true" tabindex="-1"></a><span class="co"># PCA</span></span>
+<span id="cb55-449"><a href="#cb55-449" aria-hidden="true" tabindex="-1"></a>pr.exp <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(exp.data, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
+<span id="cb55-450"><a href="#cb55-450" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-451"><a href="#cb55-451" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot proportion of variance explained</span></span>
+<span id="cb55-452"><a href="#cb55-452" aria-hidden="true" tabindex="-1"></a>pr.var <span class="ot">&lt;-</span> pr.exp<span class="sc">$</span>sdev<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb55-453"><a href="#cb55-453" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> pr.var<span class="sc">/</span><span class="fu">sum</span>(pr.var)</span>
+<span id="cb55-454"><a href="#cb55-454" aria-hidden="true" tabindex="-1"></a>pve <span class="ot">&lt;-</span> <span class="dv">100</span><span class="sc">*</span>pve</span>
+<span id="cb55-455"><a href="#cb55-455" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb55-456"><a href="#cb55-456" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pve, <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span>
+<span id="cb55-457"><a href="#cb55-457" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumsum</span>(pve), <span class="at">type=</span><span class="st">"o"</span>, <span class="at">ylab=</span><span class="st">"Cumulative PVE"</span>, <span class="at">xlab=</span><span class="st">"Principal Component"</span>, <span class="at">col=</span><span class="st">"red"</span>)</span>
+<span id="cb55-458"><a href="#cb55-458" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-459"><a href="#cb55-459" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-460"><a href="#cb55-460" aria-hidden="true" tabindex="-1"></a>Looks like most of the principal components are needed to explain the data well. Maybe we can decide to keep 25-30 components?</span>
+<span id="cb55-461"><a href="#cb55-461" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-462"><a href="#cb55-462" aria-hidden="true" tabindex="-1"></a>Can also plot some of the first principal components</span>
+<span id="cb55-463"><a href="#cb55-463" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-466"><a href="#cb55-466" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb55-467"><a href="#cb55-467" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: pca-ge-plot</span></span>
+<span id="cb55-468"><a href="#cb55-468" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb55-469"><a href="#cb55-469" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb55-470"><a href="#cb55-470" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-471"><a href="#cb55-471" aria-hidden="true" tabindex="-1"></a><span class="co"># Remember the use the helper-function to get colours</span></span>
+<span id="cb55-472"><a href="#cb55-472" aria-hidden="true" tabindex="-1"></a>Cols<span class="ot">=</span><span class="cf">function</span>(vec){</span>
+<span id="cb55-473"><a href="#cb55-473" aria-hidden="true" tabindex="-1"></a>  cols<span class="ot">=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(vec)))</span>
+<span id="cb55-474"><a href="#cb55-474" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(cols[<span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(vec))])</span>
+<span id="cb55-475"><a href="#cb55-475" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb55-476"><a href="#cb55-476" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-477"><a href="#cb55-477" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>)) <span class="co"># plot-window has two small plots next to each other</span></span>
+<span id="cb55-478"><a href="#cb55-478" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.exp<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span><span class="fu">Cols</span>(groups), <span class="at">pch=</span><span class="dv">19</span>, <span class="at">xlab=</span><span class="st">"PC 1"</span>, <span class="at">ylab=</span><span class="st">" PC 2"</span>)</span>
+<span id="cb55-479"><a href="#cb55-479" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.exp<span class="sc">$</span>x[,<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>)], <span class="at">col=</span><span class="fu">Cols</span>(groups), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 3"</span>)</span>
+<span id="cb55-480"><a href="#cb55-480" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topleft'</span>, <span class="at">col=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(groups))), <span class="at">legend=</span><span class="fu">paste</span>(<span class="st">'group '</span>,<span class="fu">unique</span>(groups),<span class="at">sep=</span><span class="st">''</span>), <span class="at">bty=</span><span class="st">'n'</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">cex=</span>.<span class="dv">6</span>)</span>
+<span id="cb55-481"><a href="#cb55-481" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb55-482"><a href="#cb55-482" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-483"><a href="#cb55-483" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-484"><a href="#cb55-484" aria-hidden="true" tabindex="-1"></a></span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
