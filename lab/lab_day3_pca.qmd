@@ -166,6 +166,8 @@ summary(pc_food)
 ```
 
 
+Examine the **loading** (rotation). This is a $p \times n_{pc}$ matrix where each row corresponds to one feature from the original data, and each column corresponds to one principal component PC. 
+
 ```{r}
 #| label: pca-food-loading
 #| warning: false
@@ -177,7 +179,9 @@ round(loading_food, digits = 2)
 ```
 
 
-Scores (projections)
+**Scores (projections)** are produced by multiplying the original $n \times p$ data matrix and $p \times n_{pc}$ loading matrix. The result is a $n \times n_{pc}$ matrix where rows correspond to the rows in the original data (country names), and columns are the principal components. 
+
+You can visualize the points using a few selected PCs rather than the original data (next section). 
 
 ```{r}
 #| label: pca-food-scores
@@ -188,22 +192,32 @@ scores_food <- pc_food$x
 round(scores_food, digits = 2)
 ```
 
+Another important result from the `prcomp()` command is the explained variance (PVE, proportion of variance explained). All PCs explain 100% of the variance; while the first PC explains the largest proportion (46%), second PC explains the second largest proportion (18.2%) and so on. 
+
+You can find the variance (squared standard deviation, `sdev`) using the following commands. You can compare with the results from `summary()`, see if they correspond.
 
 ```{r}
 #| label: pca-food-variance
 #| warning: false
 #| echo: true
 
+# variance explained by each PC
 pc_food_var <- pc_food$sdev^2
+# proportion
 pc_food_pve <- pc_food_var/sum(pc_food_var)
-pc_food_pve
+# print out, keep 3 digits
+round(pc_food_pve, digits = 3)
+# cumulative of 1st, 2nd, ... 8th PC
 cumsum(pc_food_pve)
 ```
 
 
 ### Visualize PCA results
 
-Biplot of the principal components
+Biplot of the principal components displays two principal components with their labels. By default, it plots the first 2 PC; but you can also select PC1, PC3 with the `choices = c(1,3)` argument.
+
+The country labels indicate the position where the original datapoints are projected onto PC1 and PC2. The closer points are clustered together, the more similar the points are. You can find the arrows pointing towards different directions, which tells additional information as in what way countries are similar.
+
 
 ```{r}
 #| label: pca-food-biplot
@@ -211,13 +225,19 @@ Biplot of the principal components
 #| echo: true
 
 # by default, pc1 pc2
-biplot(pc_food)
+# set x-axis limit
 # same as biplot(pc_food, choices = c(1,2)) 
+biplot(pc_food, xlim = c(-0.5, 0.5))
 
-biplot(pc_food, choices = c(1,3)) # pc1, pc3
+# choose pc1 and pc3
+biplot(pc_food, choices = c(1,3)) 
 ```
 
+Now we can visualize the variance explained by the PCs, and compare with the original data features (columns). We use bar plots on the variance already computed from the previous section. 
 
+It can be seen that the first PC corresponds to the largest variance explained, the second PC corresponds to the second largest variance explained, etc.
+
+On the other hand, the original data features have different variances, and do not seem to have obvious patterns.
 
 ```{r}
 #| label: pca-food-plot_var
@@ -231,9 +251,11 @@ barplot(pc_food_var, las=2,
         names.arg = paste('PC ',1:length(pc_food_var),sep=''))
 
 # variance of the original data variables
+# apply command here computes sd by column
 barplot(apply(food, 2, sd)^2, las=2, main='Original Variables', ylim=c(0,150), ylab='Variances')
 ```
 
+Lastly, you can visualize the **cumulative** variance explained well.
 
 ```{r}
 #| label: pca-food-plot_pve
@@ -253,7 +275,7 @@ axis(1,at=1:ncol(food),labels=1:ncol(food),las=2)
 
 ## Exercise 2: NCI60
 
-Now we move to a typical large-scale biological data set (this is partly based on Lab 10.3 in James et al., 2013).
+Now we move to a typical large-scale biological data set.
 
 We have already seen the NCI60 cancer cell line microarray data set, consisting of 6830 gene expression measurements on 64 cancer cell lines.
 
@@ -268,17 +290,31 @@ nci.labs <- NCI60$labs # Sample labels (tissue type)
 nci.data <- NCI60$data # Gene expression data set
 ```
 
+`nci.data` contains the gene expression level measured on 6830 genes. We can find out the dimension with `dim()` command.
+
+`nci.labs` contains the labels for the cancer types. Note that some cancer types have more than one cell line, we can get a quick overview using `table()`. This counts how many times each cancer type is present in the labels.
+
+Since the focus of today's topic is unsupervised learning, we do not need to pay too much attention to the labels. However we can use the labels in the end to check whether the PCA and clustering produce meaningful results. 
+
 ```{r}
 #| label: pca-nci-summary
 #| warning: false
 #| echo: true
+
+dim(nci.data)
+table(nci.labs)
 # what if I would like to compute the mean of each gene within each tissue type?
 tissue.means <- apply(nci.data, 2, function(x){tapply(x, nci.labs, mean)})
 dim(tissue.means)
-table(nci.labs)
 ```
 
-Compute the PC
+You can and should carry out some exploratory analysis on the data, such as finding out the means and extreme values; this is left for home practice.
+
+### Carry out PCA
+
+The dataset is a high-dimensional one, that is the number of columns (features) are much larger than the number of rows (measurements). It is inpractical to analyze and search for hidden structures by looking at each one of the feature, and PCA is a useful tool to move forward.
+
+We use `prcomp()` to produce PCA results. Set the `scale = T` to make sure the data is standardized to have standard deviation equal to 1 among each column.
 
 ```{r}
 #| label: pca-nci-pc
@@ -289,7 +325,7 @@ pr.out <- prcomp(nci.data, scale=TRUE)
 ```
 
 
-Print the summary output
+Print the summary output with `summary()`. Note that the result is quite long, so we didn't print out everything; but you can execute the line and see what it does.
  
 ```{r}
 #| label: pca-nci-pcsummary
@@ -299,6 +335,7 @@ Print the summary output
 summary(pr.out)
 ```
 
+Now we investigate the variance explained by the PCs. The y-axis in the plots below corresponds to the percentage (from 0 to 100%) explained. 
 
 ```{r}
 #| label: pca-nci-plotpc
@@ -306,21 +343,27 @@ summary(pr.out)
 #| echo: true
 pr.var <- pr.out$sdev^2
 pve <- pr.var/sum(pr.var)
-pve <- 100*pve
+pve <- 100*pve # display percentage
 
 par(mfrow=c(1,2))
-plot(pve,  type="o", ylab="PVE", xlab="Principal Component", col="blue")
-plot(cumsum(pve), type="o", ylab="Cumulative PVE", xlab="Principal Component", col="brown3")
+plot(pve,  type="o", ylab="PVE (%)", xlab="Principal Component", col="blue")
+plot(cumsum(pve), type="o", ylim = c(0, 100),ylab="Cumulative PVE (%)", xlab="Principal Component", col="brown3")
 ```
 
 ### How many PCs to keep?
+
+The maximum number of PC computed in principal component analysis is the $min\{n, p\}$. This means, for a high dimensional problem like this one, we have at most 64 PCs. 
+
+For the purpose of dimensional reduction, we do not need to keep all the PCs. We can check how many PCs explain at least a certain amount of the variance. For example, we found out that the first 24 PC and first 32 PC explained 70% and 80% of the variance. We can mark it on the plots from before.
 
 ```{r}
 #| label: pca-nci-keeppc
 #| warning: false
 #| echo: true
-mysel80 <- which(cumsum(pve) > 80)[1] # explains 80% of the variability
-mysel70 <- which(cumsum(pve) > 70)[1] # explains 70% of the variability
+
+mysel70 <- which(cumsum(pve) > 70)[1] # explains 70% 
+mysel80 <- which(cumsum(pve) > 80)[1] # explains 80% 
+c(mysel70, mysel80)
 
 par(mfrow=c(1,2)) # plot contains two smaller plots next to each other
 plot(pve,  type="o", ylab="PVE", xlab="Principal Component", col="blue")
@@ -356,12 +399,21 @@ legend('topleft', col=rainbow(length(unique(nci.labs))), legend=unique(nci.labs)
 ```
 
 
+::: callout-note
+## Why not use biplot?
+
+You might have realized that the plots above are essentially what `biplot` did in the first exercise: plotting PC1, PC2 againt each other. The reason we do not use it here is simple: by default `biplot` displays also the loading vectors (rotation). Given that we have 64 PCs, the final figure would be unreadable. 
+
+You can try to remove the loading vectors from biplot as an exercise. 
+:::
+
+
 
 ## Exercise 3: Gene expression data
 
-CH12Ex13 from statistical learning
+(CH12Ex13 from statistical learning)
 
-Consider again the gene expression data set "Ch12Ex13.csv" (which can be also found on the book website, www.StatLearning.com) that consists of 40 tissue samples with measurements on 1,000 genes.
+Consider again the gene expression data set "Ch12Ex13.csv" (which can be also found on the [book website](www.StatLearning.com)) that consists of 40 tissue samples with measurements on 1,000 genes.
 
 The first 20 samples are from healthy patients, while the second 20 are from a diseased group.
 
