@@ -180,22 +180,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="datasets" class="level2">
 <h2 class="anchored" data-anchor-id="datasets">Datasets</h2>
-<p>day 2 (MT)</p>
+<p>Download datasets <a href="https://github.com/ocbe-uio/course_med3007/tree/main/lab/data">here</a>, or from Canvas.</p>
+<p>day 2 (Multiple testing)</p>
 <ul>
-<li>brainshake (t-test)</li>
-<li>NCI60 (t-test, multiple testing)</li>
+<li>brainshake</li>
+<li>NCI60</li>
 <li>Ch10Ex11</li>
 </ul>
 <p>day 3 (PCA)</p>
 <ul>
 <li>Food</li>
 <li>NCI60</li>
-<li>CH10Ex11</li>
+<li>CH12Ex13</li>
 </ul>
 <p>day 4 (clustering)</p>
 <ul>
 <li>NCI60</li>
-<li>CH10Ex11</li>
+<li>CH12Ex13</li>
 </ul>
 </section>
 <section id="lab-notes-and-r-scripts" class="level2">
@@ -206,6 +207,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <th style="text-align: center;">Day</th>
 <th style="text-align: center;">Lab notes</th>
 <th style="text-align: center;">R script</th>
+<th style="text-align: center;">Presentation</th>
 </tr>
 </thead>
 <tbody>
@@ -213,26 +215,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: center;">Day 1</td>
 <td style="text-align: center;"><a href="../lab/lab_day1_intro.html">Day 1: Introduction to R</a></td>
 <td style="text-align: center;"><a href="https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab0_intro_r.R">Code</a></td>
+<td style="text-align: center;"><a href="presentation/Lab_IntroR.pdf">Slides</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: center;"></td>
-<td style="text-align: center;"><a href="../lab/lab_day1s_rstudio.html">Day 1 (supplement): Navigate RStudio and workspace</a></td>
+<td style="text-align: center;"><a href="../lab/lab_day1s_rstudio.html">(supplement): Navigate RStudio and workspace</a></td>
+<td style="text-align: center;"></td>
 <td style="text-align: center;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">Day 2</td>
 <td style="text-align: center;"><a href="../lab/lab_day2_testing.html">Day 2: Multiple testing</a></td>
 <td style="text-align: center;"><a href="https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1.R">Code</a>, <a href="https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1_exercise_solution.R">Code (solution)</a></td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Day 3</td>
 <td style="text-align: center;"><a href="../lab/lab_day3_pca.html">Day 3: Principal Component Analysis</a></td>
 <td style="text-align: center;"><a href="https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab2_pca.R">Code</a></td>
+<td style="text-align: center;"></td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">Day 4</td>
 <td style="text-align: center;"><a href="../lab/lab_day4_clustering.html">Day 4: Clustering</a></td>
 <td style="text-align: center;"><a href="https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R">Code</a></td>
+<td style="text-align: center;"></td>
 </tr>
 </tbody>
 </table>
@@ -537,35 +544,37 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## Datasets</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>day 2 (MT)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>Download datasets <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/ocbe-uio/course_med3007/tree/main/lab/data)</span>, or from Canvas.</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>brainshake (t-test)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>NCI60 (t-test, multiple testing)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Ch10Ex11</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>day 3 (PCA)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>day 2 (Multiple testing)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>brainshake </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>NCI60 </span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Ch10Ex11</span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Food</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>NCI60 </span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CH10Ex11</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>day 4 (clustering)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>day 3 (PCA)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Food</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>NCI60 </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CH12Ex13</span>
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>NCI60</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CH10Ex11</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## Lab notes and R scripts</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>day 4 (clustering)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>NCI60</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>CH12Ex13</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>|     Day      |                 Lab notes                |  R script  |</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>|:-------------:|:------------------------------------:|:-----------------:|</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>| Day 1   | <span class="co">[</span><span class="ot">Day 1: Introduction to R</span><span class="co">](lab_day1_intro.qmd)</span>  | <span class="co">[</span><span class="ot">Code</span><span class="co">](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab0_intro_r.R)</span>  |</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>|    | <span class="co">[</span><span class="ot">Day 1 (supplement): Navigate RStudio and workspace</span><span class="co">](lab_day1s_rstudio.qmd)</span>  |  |</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>| Day 2  | <span class="co">[</span><span class="ot">Day 2: Multiple testing</span><span class="co">](lab_day2_testing.qmd)</span>  |  <span class="co">[</span><span class="ot">Code</span><span class="co">](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1.R)</span>, <span class="co">[</span><span class="ot">Code (solution)</span><span class="co">](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1_exercise_solution.R)</span> |</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>| Day 3  | <span class="co">[</span><span class="ot">Day 3: Principal Component Analysis</span><span class="co">](lab_day3_pca.qmd)</span> |<span class="co">[</span><span class="ot">Code</span><span class="co">](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab2_pca.R)</span> |</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>| Day 4  | <span class="co">[</span><span class="ot">Day 4: Clustering</span><span class="co">](lab_day4_clustering.qmd)</span> |<span class="co">[</span><span class="ot">Code</span><span class="co">](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R)</span> |</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">## Lab notes and R scripts</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>|     Day      |                 Lab notes                |  R script  | Presentation  |</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>|:-------------:|:------------------------------------:|:-----------------:|:-----------------:</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>| Day 1   | <span class="co">[</span><span class="ot">Day 1: Introduction to R</span><span class="co">](lab_day1_intro.qmd)</span>  |  <span class="co">[</span><span class="ot">Code</span><span class="co">](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab0_intro_r.R)</span>  |<span class="co">[</span><span class="ot">Slides</span><span class="co">](presentation/Lab_IntroR.pdf)</span> |</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>|    | <span class="co">[</span><span class="ot">(supplement): Navigate RStudio and workspace</span><span class="co">](lab_day1s_rstudio.qmd)</span>  |  | |</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>| Day 2  | <span class="co">[</span><span class="ot">Day 2: Multiple testing</span><span class="co">](lab_day2_testing.qmd)</span>  |   <span class="co">[</span><span class="ot">Code</span><span class="co">](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1.R)</span>, <span class="co">[</span><span class="ot">Code (solution)</span><span class="co">](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1_exercise_solution.R)</span> | |</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>| Day 3  | <span class="co">[</span><span class="ot">Day 3: Principal Component Analysis</span><span class="co">](lab_day3_pca.qmd)</span> |<span class="co">[</span><span class="ot">Code</span><span class="co">](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab2_pca.R)</span> | |</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>| Day 4  | <span class="co">[</span><span class="ot">Day 4: Clustering</span><span class="co">](lab_day4_clustering.qmd)</span> |<span class="co">[</span><span class="ot">Code</span><span class="co">](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R)</span> | |</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
 

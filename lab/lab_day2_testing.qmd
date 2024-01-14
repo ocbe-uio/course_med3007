@@ -10,9 +10,8 @@ Download datasets [here](https://github.com/ocbe-uio/course_med3007/tree/main/la
 
 R scripts
 
-* [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1.R))
-* [Code (solution)](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab2_pca.R)
-
+* [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1.R)
+* [Code (solution)](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1_exercise_solution.R)
 
 ## Exercise 1: brain data
 
@@ -118,7 +117,7 @@ Does this variable look normally distributed?
 
 2. Perform a t-test to verify that `vitD_v1` is different across gender groups
 
-(Solution see R script [MED3007_Lab1_exercise_solution.R]())
+(Solution see R script [MED3007_Lab1_exercise_solution.R](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1_exercise_solution.R))
 
 
 ## Exercise 3: NCI60
@@ -218,7 +217,7 @@ hist(pval.ttest, breaks = 1/alpha, xlab = 'p-values', ylab = 'counts',
 The histogram of the p-values shows nearly uniform values but we see a slight peak around 0.
 
 
-### Multiple testing correction
+### Multiple testing correction
 
 ```{r}
 #| label: ttest-nci60-pval
@@ -267,6 +266,6 @@ Consider the gene expression data set "Ch10Ex11.csv" that consists of 40 tissue 
 
 Suggest a way to answer this question, and apply it here.
 
-
+(Solution see R script [MED3007_Lab1_exercise_solution.R](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1_exercise_solution.R))
 
 

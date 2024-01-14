@@ -6,14 +6,16 @@ format:
     code-tools: true
 ---
 
-Download datasets [here](https://github.com/ocbe-uio/course_med3007/tree/main/lab/data) or from Canvas.
+Download datasets [here](https://github.com/ocbe-uio/course_med3007/tree/main/lab/data), or from Canvas.
 
 R script: [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R)
 
-Lab lecture 
+Presentation: [Slides]()
 
 
-## NCI60
+## Exercise 1: NCI60
+
+We look at the NCI60 data again. First load the dataset.
 
 ```{r}
 #| label: clust-nci60-loaddata
@@ -21,14 +23,14 @@ Lab lecture
 #| echo: true
 
 library(ISLR)
+# or, load('data/NCI60.RData')
 nci.labs <- NCI60$labs # Sample labels (tissue type)
 nci.data <- NCI60$data # Gene expression data set
 ```
 
 ### Hierarchical clustering
 
-We start by scaling the data, calculate the distance matrix (using the Euclidean distance), and then investigate different linkage methods.
-
+We start by scaling the data, and calculate the distance matrix (using the Euclidean distance), and then investigate different linkage methods.
 
 
 ```{r}
@@ -39,12 +41,15 @@ We start by scaling the data, calculate the distance matrix (using the Euclidean
 # Scale the data to zero mean and unit variance:
 sd.data <- scale(nci.data)
 
-# Calculate the distance matrix (default = Euclidean):
+# Calculate the distance matrix 
+# equivalent: data.dist <- dist(sd.data, method="euclidean")
 data.dist <- dist(sd.data)
-data.dist <- dist(sd.data, method="euclidean")
-
 ```
 
+
+Next we perform hierarchical clustering with distance matrix as input. The function we use is `hclust()`. We specify the linkage method to be `complete`.
+
+Once the result is saved in `hc.complete` object, you can plot the dendrogram.
 
 ```{r}
 #| label: clust-nci60-hccomplete
@@ -56,18 +61,27 @@ hc.complete <- hclust(data.dist, method="complete")
 
 # names(hc.complete)
 plot(hc.complete, labels=nci.labs, main="Complete Linkage", xlab="", sub="")
+```
+
+The object `hc.complete` contains a lot of information. To get the information, you can use the `$` operator. 
+
+You should refer to the documentation for `hclust()` to see a complete list of output. Use `?hclust` to get the documentation on how to use the function.
+
+```{r}
+#| label: clust-nci60-hccomplete-2
+#| warning: false
+#| echo: true
+
+hc.complete$dist.method # distance method
 
 # hc.complete$merge  # order of aggregations of samples / clusters
 # hc.complete$height # distance at which aggregations happen
-# hc.complete$order  # correct order of the samples for obtaining the plot
 # hc.complete$labels # labels (numeric, since we don't know the original categories!)
 # hc.complete$method
 # hc.complete$call
-# hc.complete$dist.method
 ```
 
-
-Different linkage methods
+We can try different linkage methods and see how the clustering results differ. Change the `method` argument in the function, and plot the results.
 
 ```{r}
 #| label: clust-nci60-otherlink
@@ -82,30 +96,51 @@ plot(hc.average, labels=nci.labs, main="Average Linkage", xlab="", sub="")
 plot(hc.single, labels=nci.labs,  main="Single Linkage", xlab="", sub="")
 ```
 
+Now we focus on **complete linkage** only.
+
+First, we use `cutree()` to compare the results when the data are separated into either 2 or 4 clusters.
 
 ```{r}
 #| label: clust-nci60-cutree
 #| warning: false
 #| echo: true
 
-## First, we use cutree() to compare the results when the data are separated
-## into either 2 or 4 clusters.
-
 # Compare 2 clusters and 4 clusters:
 hc.clusters <- cutree(hc.complete, c(2, 4))
+head(hc.clusters) # print first 6 results
+
+# cross tabulation
 table(hc.clusters[,"2"], hc.clusters[,"4"])
+```
 
-# How are the labels distributed between clusters:
-table(hc.clusters[,"4"], nci.labs)
+It is more straightforward to check the results with a dendrogram.
 
+```{r}
 # visualize the cuts
+# how do you know where to draw the line? check height
+heights <- hc.complete$height
+tail(heights, 4)  # print the last 4
 plot(hc.complete, labels=nci.labs, main="Complete Linkage", xlab="", sub="")
 abline(h=140, col="red")  # 4 clusters
 abline(h=150, col="blue") # 2 clusters
-
 ```
 
-Finally, we see what happens if we use unscaled data instead of scaled data, or if we use a correlation-based distance metric instead of the Euclidean distance.
+The way to interpret the height variable is simple: it is where two clusters are merged into one. For example, the largest cluster corresponds to the last value of `height` (162.2) - if you check the figure, it is exactly where the horizontal line is merging the two groups. Similarly, 142.9 is where three groups became two, 141.2 is where four groups became three. If you draw a line at 140, it points out the four clusters.
+
+
+How are the labels distributed between clusters? We can focus on 4 cluster situation, and use `table()` to list out which cancer types is merged in which of the four clusters.
+
+For example, breast cancer appears in all but 3rd cluster; melanoma only appears in the first clsuter; so on so forth.
+
+```{r}
+#| label: clust-nci60-cutree2
+#| warning: false
+#| echo: true
+
+table(hc.clusters[,"4"], nci.labs)
+```
+
+Finally, we see what happens if we use **unscaled data** instead of scaled data, or if we use a **correlation-based distance metric** instead of the Euclidean distance.
 
 Compare the dendrograms: How different are the resulting clusterings? Do you recognise subclusters that are consistent?
 
@@ -117,59 +152,66 @@ Compare the dendrograms: How different are the resulting clusterings? Do you rec
 
 # Compare scaled data versus non-scaled data:
 hc.unscaled <- hclust(dist(nci.data), method="complete")
-par(mfrow=c(1,1))
 plot(hc.unscaled, labels=nci.labs, main="Complete linkage with unscaled features", xlab="", sub="")
 
 # Compare Euclidean distance with correlation-based distance:
 dd <- as.dist(1-cor(t(sd.data)))
 hc.corr <- hclust(dd, method="complete")
-par(mfrow=c(1,1))
 plot(hc.corr, labels=nci.labs, main="Complete linkage with correlation-based distance", xlab="", sub="")
 ```
 
 ### K-means clustering
 
+In this section we explore the K-means clustering on the same dataset. 
+
+In contrast to the hierarchical clustering which requires a **distance** as input, with K-means you would provide the data matrix. The data matrix can be scaled (centered and with unit variance), or unscaled.
+
+In this example we use scaled data computed from before, `sd.data`. 
 
 ```{r}
 #| label: clust-nci60-km4
 #| warning: false
 #| echo: true
 
-set.seed(4)
-km.out4 <- kmeans(sd.data, 4, nstart=20)
+set.seed(4) # set random seed
+km.out4 <- kmeans(sd.data, centers = 4, nstart=20)
 km.out4$cluster
 ```
 
-Read the help file ?kmeans to understand what the argument nstart=20 does. Comparing an analysis with nstart=20 versus nstart=1 demonstrates how the cluster results can be improved if we allow more evaluations with different randomly chosen starting centroids.
+Read the help file `?kmeans` to understand what the argument nstart=20 does. Comparing an analysis with nstart=20 versus nstart=1 demonstrates how the cluster results can be improved if we allow more evaluations with different randomly chosen starting centroids.
 
+Set a different random seed, say 3 (as long as it's different from the one you used before), and run the analysis again. This time we use a different `nstart`
 
 ```{r}
 #| label: clust-nci60-km3
 #| warning: false
 #| echo: true
 
-# More evaluations with different starting centroids improve the clustering:
+# different starting centroids improve the clustering:
 set.seed(3)
-km.out <- kmeans(sd.data, 3, nstart=1)
-km.out$tot.withinss
-
-km.out <- kmeans(sd.data, 3, nstart=20)
+km.out <- kmeans(sd.data, centers = 4, nstart=1)
+km.out$cluster
 km.out$tot.withinss
 ```
 
-Compare with hierarchical clustering
+### Compare with hierarchical clustering
 
 ```{r}
 #| label: clust-nci60-km-res
 #| warning: false
 #| echo: true
 
-# then, we can directly compare the k-means result (along rows)
+# we can directly compare the k-means result (along rows)
 # with the hierarchical clustering result (along columns)
 table(km.out4$cluster, hc.clusters[,"4"], deparse.level=2)
 ```
 
-We can visualise the K-means clustering results of high-dimensional data by using PCA for dimension reduction first. We plot the first two principal components and colour the data points (= individual cell lines) by their assigned cluster.
+From the results, you can see that the results are slightly different between the two methods. Keep in mind that in unsupervised learning you do not have the real outcome label (such as the cancer types here), so you need to try a few different methods and compare the outputs, and make interpretations accordingly.
+
+
+### Visualize clusters
+
+We can visualise the K-means clustering results of high-dimensional data by using PCA for dimension reduction. We plot the first two principal components and colour the data points (= individual cell lines) by their assigned cluster from K-means.
 
 ```{r}
 #| label: clust-nci60-km-pca
@@ -194,8 +236,25 @@ plot(pr.out$x[,1:2], col=(km.out4$cluster+1), main="K-Means with K=4",
      xlab="PC 1", ylab="PC 2", pch=20)
 ```
 
+Compare with the plot from Exercise 2 yesterday (left panel) along with the cancer type labels. The clusters from K-means seem to correspond decently to partition the data into groups.
+
+```{r}
+par(mfrow=c(1,1))
+
+Cols=function(vec){
+  cols=rainbow(length(unique(vec)))
+  return(cols[as.numeric(as.factor(vec))])
+}
+plot(pr.out$x[,1:2], col=Cols(nci.labs), pch=19,xlab="PC 1",ylab=" PC 2")
+legend('topleft', col=rainbow(length(unique(nci.labs))), legend=unique(nci.labs), bty='n', lwd=2, cex=.6)
+
+```
 
 ### Heatmap 
+
+A heatmap is another way to visualize the clusters from the data. We use the principal components rather than the raw data, as PCs are already explaining a large amount of variability in the over 6000 features.
+
+Similar values are presented with similar colors. 
 
 ```{r}
 #| label: clust-nci60-heatmap-pca
@@ -203,30 +262,30 @@ plot(pr.out$x[,1:2], col=(km.out4$cluster+1), main="K-Means with K=4",
 #| echo: true
 
 ## We use the scores of the PCA on the NCI60 data, to reduce dimension
-
+scores <- pr.out$x
+scores[1:5, 1:5] # first 5 pc, first 5 measurements
 #  default choices
 heatmap(pr.out$x)
 ```
 
+You can remove the dendrogram on the PCs, only keeping the ones for cancer types. Now you see that the PCs have kept their original order from 1 to 64.
 
 ```{r}
 #| label: clust-nci60-heatmap-dendro
 #| warning: false
 #| echo: true
 
-# I use the previous dendrogram for better ordering of the patients,
-# and I remove the dendrogram for the components
+# hc.corr is the result from hclust. check the section on hierarchical clustering
 heatmap(pr.out$x, Rowv = as.dendrogram(hc.corr), Colv = NA)
 ```
 
+You can also reduce the number of PCs, and add titles to the plot annd y-axis.
 
 ```{r}
 #| label: clust-nci60-heatmap-type
 #| warning: false
 #| echo: true
 
-# I now plot less components for the sake of clarity,
-# I add the patient's tumor type, and I give a title
 par(cex.main = .7)
 heatmap(pr.out$x[,1:40], Rowv = as.dendrogram(hc.corr), Colv = NA,
         labRow = nci.labs, main = 'Heatmap of the scores of the first 40 PCs on the NCI60 data')
@@ -236,7 +295,19 @@ heatmap(pr.out$x[,1:40], Rowv = as.dendrogram(hc.corr), Colv = NA,
 
 
 
-## Gene expression data
+## Exercise 2: Gene expression data
+
+(CH12Ex13 from statistical learning)
+
+We use the `Ch12Ex13.csv` data to repeat some of the clustering analysis we did.
+
+The first 20 samples are from healthy patients, while the second 20 are from a diseased group.
+
+Load in the data using read.csv(). You will need to select header=F. Alternatively: load in the data using “Import dataset” in the upper right window, and click “no” on the “Heading” option.
+
+Carry out both hierarchical clustering and K-means clustering. You should choose the most meaningful number of clusters (think about how many groups of patients we have!). Compare the results. 
+
+Note: remember that the data has genes on the rows and patients on the columns. You need to transpose the data so that the orders are reversed.
 
 ```{r}
 #| label: clust-ge-loaddata
@@ -245,10 +316,24 @@ heatmap(pr.out$x[,1:40], Rowv = as.dendrogram(hc.corr), Colv = NA,
 
 # load in the data using read.csv(). You will need to select header=F.
 data <- read.csv("data/Ch12Ex13.csv", header=FALSE)
-data <- t(data) # want each row to represent a sample ... should have n=40 samples/rows
+dim(data)
+# transpose the data, so that we have each row is one patient (subject)
+data <- t(data) 
+```
+
+Now the first 20 rows are measurements from healthy patients (group 0), and 21-50 rows are the disease patients (group 1). We can denote this information in a vector like this.
+
+```{r}
+#| label: clust-ge-truelabel
+#| warning: false
+#| echo: true
+
+true.groups <- c( rep(0,20), rep(1,20))
 ```
 
 ### Hierarchical clustering 
+
+You can use different linkage options and distance metrics of your choosing. For example, with complete linkage the code is like this.
 
 ```{r}
 #| label: clust-ge-clust
@@ -262,25 +347,24 @@ hclust.df <- hclust(data.dist, method="complete" )
 #hclust.df <- hclust( D, method="single" )
 ```
 
+We can keep 2 clusters with `cutree`. Then do a cross tabulation of the true labels and clustered results: how well do they correspond?
 
 ```{r}
 #| label: clust-ge-clust-res
 #| warning: false
 #| echo: true
 
-
 # find the clusters
 predicted <- cutree( hclust.df, k=2 )
-true.groups <- c( rep(0,20), rep(1,20) )
 
 # How well does our clustering predict health vs. diseased
 table(predicted, true.groups )
 ```
 
 
-
-
 ### K-means
+
+Now you can use K-means to identify 2 clusters. 
 
 ```{r}
 #| label: clust-ge-km
@@ -288,8 +372,9 @@ table(predicted, true.groups )
 #| echo: true
 
 predicted.kmean <- kmeans(data, 2, nstart=20)$cluster
+# agreement with true label
 table(predicted.kmean, true.groups )
 ```
 
 
-
+Both methods seem to do work decently for the task. 

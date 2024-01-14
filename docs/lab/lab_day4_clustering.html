@@ -153,13 +153,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#nci60" id="toc-nci60" class="nav-link active" data-scroll-target="#nci60">NCI60</a>
+  <li><a href="#exercise-1-nci60" id="toc-exercise-1-nci60" class="nav-link active" data-scroll-target="#exercise-1-nci60">Exercise 1: NCI60</a>
   <ul class="collapse">
   <li><a href="#hierarchical-clustering" id="toc-hierarchical-clustering" class="nav-link" data-scroll-target="#hierarchical-clustering">Hierarchical clustering</a></li>
   <li><a href="#k-means-clustering" id="toc-k-means-clustering" class="nav-link" data-scroll-target="#k-means-clustering">K-means clustering</a></li>
+  <li><a href="#compare-with-hierarchical-clustering" id="toc-compare-with-hierarchical-clustering" class="nav-link" data-scroll-target="#compare-with-hierarchical-clustering">Compare with hierarchical clustering</a></li>
+  <li><a href="#visualize-clusters" id="toc-visualize-clusters" class="nav-link" data-scroll-target="#visualize-clusters">Visualize clusters</a></li>
   <li><a href="#heatmap" id="toc-heatmap" class="nav-link" data-scroll-target="#heatmap">Heatmap</a></li>
   </ul></li>
-  <li><a href="#gene-expression-data" id="toc-gene-expression-data" class="nav-link" data-scroll-target="#gene-expression-data">Gene expression data</a>
+  <li><a href="#exercise-2-gene-expression-data" id="toc-exercise-2-gene-expression-data" class="nav-link" data-scroll-target="#exercise-2-gene-expression-data">Exercise 2: Gene expression data</a>
   <ul class="collapse">
   <li><a href="#hierarchical-clustering-1" id="toc-hierarchical-clustering-1" class="nav-link" data-scroll-target="#hierarchical-clustering-1">Hierarchical clustering</a></li>
   <li><a href="#k-means" id="toc-k-means" class="nav-link" data-scroll-target="#k-means">K-means</a></li>
@@ -187,27 +189,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>Download datasets <a href="https://github.com/ocbe-uio/course_med3007/tree/main/lab/data">here</a> or from Canvas.</p>
+<p>Download datasets <a href="https://github.com/ocbe-uio/course_med3007/tree/main/lab/data">here</a>, or from Canvas.</p>
 <p>R script: <a href="https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R">Code</a></p>
-<p>Lab lecture</p>
-<section id="nci60" class="level2">
-<h2 class="anchored" data-anchor-id="nci60">NCI60</h2>
+<p>Presentation: <a href="">Slides</a></p>
+<section id="exercise-1-nci60" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-1-nci60">Exercise 1: NCI60</h2>
+<p>We look at the NCI60 data again. First load the dataset.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>nci.labs <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>labs <span class="co"># Sample labels (tissue type)</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>nci.data <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>data <span class="co"># Gene expression data set</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># or, load('data/NCI60.RData')</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>nci.labs <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>labs <span class="co"># Sample labels (tissue type)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>nci.data <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>data <span class="co"># Gene expression data set</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="hierarchical-clustering" class="level3">
 <h3 class="anchored" data-anchor-id="hierarchical-clustering">Hierarchical clustering</h3>
-<p>We start by scaling the data, calculate the distance matrix (using the Euclidean distance), and then investigate different linkage methods.</p>
+<p>We start by scaling the data, and calculate the distance matrix (using the Euclidean distance), and then investigate different linkage methods.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale the data to zero mean and unit variance:</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sd.data <span class="ot">&lt;-</span> <span class="fu">scale</span>(nci.data)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the distance matrix (default = Euclidean):</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>data.dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(sd.data)</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>data.dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(sd.data, <span class="at">method=</span><span class="st">"euclidean"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the distance matrix </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># equivalent: data.dist &lt;- dist(sd.data, method="euclidean")</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>data.dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(sd.data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Next we perform hierarchical clustering with distance matrix as input. The function we use is <code>hclust()</code>. We specify the linkage method to be <code>complete</code>.</p>
+<p>Once the result is saved in <code>hc.complete</code> object, you can plot the dendrogram.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform clustering</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>hc.complete <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"complete"</span>)</span>
@@ -217,37 +223,73 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <p><img src="lab_day4_clustering_files/figure-html/clust-nci60-hccomplete-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$merge  # order of aggregations of samples / clusters</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$height # distance at which aggregations happen</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$order  # correct order of the samples for obtaining the plot</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$labels # labels (numeric, since we don't know the original categories!)</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$method</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$call</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$dist.method</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Different linkage methods</p>
+<p>The object <code>hc.complete</code> contains a lot of information. To get the information, you can use the <code>$</code> operator.</p>
+<p>You should refer to the documentation for <code>hclust()</code> to see a complete list of output. Use <code>?hclust</code> to get the documentation on how to use the function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>hc.average <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"average"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>hc.single <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"single"</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.average, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Average Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.single, <span class="at">labels=</span>nci.labs,  <span class="at">main=</span><span class="st">"Single Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hc.complete<span class="sc">$</span>dist.method <span class="co"># distance method</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "euclidean"</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$merge  # order of aggregations of samples / clusters</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$height # distance at which aggregations happen</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$labels # labels (numeric, since we don't know the original categories!)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$method</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$call</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can try different linkage methods and see how the clustering results differ. Change the <code>method</code> argument in the function, and plot the results.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## First, we use cutree() to compare the results when the data are separated</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="do">## into either 2 or 4 clusters.</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare 2 clusters and 4 clusters:</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>hc.clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc.complete, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>))</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(hc.clusters[,<span class="st">"2"</span>], hc.clusters[,<span class="st">"4"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hc.average <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"average"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>hc.single <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"single"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.average, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Average Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.single, <span class="at">labels=</span>nci.labs,  <span class="at">main=</span><span class="st">"Single Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we focus on <strong>complete linkage</strong> only.</p>
+<p>First, we use <code>cutree()</code> to compare the results when the data are separated into either 2 or 4 clusters.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare 2 clusters and 4 clusters:</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>hc.clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc.complete, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>))</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(hc.clusters) <span class="co"># print first 6 results</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   2 4
+V1 1 1
+V2 1 1
+V3 1 1
+V4 1 1
+V5 1 2
+V6 1 2</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cross tabulation</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(hc.clusters[,<span class="st">"2"</span>], hc.clusters[,<span class="st">"4"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   
      1  2  3  4
   1 40  7  0  0
   2  0  0  8  9</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># How are the labels distributed between clusters:</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(hc.clusters[,<span class="st">"4"</span>], nci.labs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It is more straightforward to check the results with a dendrogram.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the cuts</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># how do you know where to draw the line? check height</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>heights <span class="ot">&lt;-</span> hc.complete<span class="sc">$</span>height</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(heights, <span class="dv">4</span>)  <span class="co"># print the last 4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 137.5633 141.2472 142.9218 162.2074</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.complete, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">140</span>, <span class="at">col=</span><span class="st">"red"</span>)  <span class="co"># 4 clusters</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">150</span>, <span class="at">col=</span><span class="st">"blue"</span>) <span class="co"># 2 clusters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day4_clustering_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>The way to interpret the height variable is simple: it is where two clusters are merged into one. For example, the largest cluster corresponds to the last value of <code>height</code> (162.2) - if you check the figure, it is exactly where the horizontal line is merging the two groups. Similarly, 142.9 is where three groups became two, 141.2 is where four groups became three. If you draw a line at 140, it points out the four clusters.</p>
+<p>How are the labels distributed between clusters? We can focus on 4 cluster situation, and use <code>table()</code> to list out which cancer types is merged in which of the four clusters.</p>
+<p>For example, breast cancer appears in all but 3rd cluster; melanoma only appears in the first clsuter; so on so forth.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(hc.clusters[,<span class="st">"4"</span>], nci.labs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   nci.labs
     BREAST CNS COLON K562A-repro K562B-repro LEUKEMIA MCF7A-repro MCF7D-repro
@@ -262,29 +304,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   3        0     0       0        0     0       0
   4        0     0       0        0     0       0</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the cuts</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.complete, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">140</span>, <span class="at">col=</span><span class="st">"red"</span>)  <span class="co"># 4 clusters</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">150</span>, <span class="at">col=</span><span class="st">"blue"</span>) <span class="co"># 2 clusters</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<p><img src="lab_day4_clustering_files/figure-html/clust-nci60-cutree-1.png" class="img-fluid" width="672"></p>
 </div>
-</div>
-<p>Finally, we see what happens if we use unscaled data instead of scaled data, or if we use a correlation-based distance metric instead of the Euclidean distance.</p>
+<p>Finally, we see what happens if we use <strong>unscaled data</strong> instead of scaled data, or if we use a <strong>correlation-based distance metric</strong> instead of the Euclidean distance.</p>
 <p>Compare the dendrograms: How different are the resulting clusterings? Do you recognise subclusters that are consistent?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare scaled data versus non-scaled data:</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>hc.unscaled <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(nci.data), <span class="at">method=</span><span class="st">"complete"</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.unscaled, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete linkage with unscaled features"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare scaled data versus non-scaled data:</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>hc.unscaled <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(nci.data), <span class="at">method=</span><span class="st">"complete"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.unscaled, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete linkage with unscaled features"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab_day4_clustering_files/figure-html/clust-nci60-unscale-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare Euclidean distance with correlation-based distance:</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">as.dist</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">cor</span>(<span class="fu">t</span>(sd.data)))</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>hc.corr <span class="ot">&lt;-</span> <span class="fu">hclust</span>(dd, <span class="at">method=</span><span class="st">"complete"</span>)</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.corr, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete linkage with correlation-based distance"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare Euclidean distance with correlation-based distance:</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">as.dist</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">cor</span>(<span class="fu">t</span>(sd.data)))</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>hc.corr <span class="ot">&lt;-</span> <span class="fu">hclust</span>(dd, <span class="at">method=</span><span class="st">"complete"</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.corr, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete linkage with correlation-based distance"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab_day4_clustering_files/figure-html/clust-nci60-unscale-2.png" class="img-fluid" width="672"></p>
 </div>
@@ -292,10 +325,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="k-means-clustering" class="level3">
 <h3 class="anchored" data-anchor-id="k-means-clustering">K-means clustering</h3>
+<p>In this section we explore the K-means clustering on the same dataset.</p>
+<p>In contrast to the hierarchical clustering which requires a <strong>distance</strong> as input, with K-means you would provide the data matrix. The data matrix can be scaled (centered and with unit variance), or unscaled.</p>
+<p>In this example we use scaled data computed from before, <code>sd.data</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4</span>)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>km.out4 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">4</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>km.out4<span class="sc">$</span>cluster</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4</span>) <span class="co"># set random seed</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>km.out4 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="at">centers =</span> <span class="dv">4</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>km.out4<span class="sc">$</span>cluster</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> V1  V2  V3  V4  V5  V6  V7  V8  V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 
   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4   4 
@@ -307,26 +343,35 @@ V61 V62 V63 V64
   2   2   2   2 </code></pre>
 </div>
 </div>
-<p>Read the help file ?kmeans to understand what the argument nstart=20 does. Comparing an analysis with nstart=20 versus nstart=1 demonstrates how the cluster results can be improved if we allow more evaluations with different randomly chosen starting centroids.</p>
+<p>Read the help file <code>?kmeans</code> to understand what the argument nstart=20 does. Comparing an analysis with nstart=20 versus nstart=1 demonstrates how the cluster results can be improved if we allow more evaluations with different randomly chosen starting centroids.</p>
+<p>Set a different random seed, say 3 (as long as it’s different from the one you used before), and run the analysis again. This time we use a different <code>nstart</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># More evaluations with different starting centroids improve the clustering:</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>km.out <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">3</span>, <span class="at">nstart=</span><span class="dv">1</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>km.out<span class="sc">$</span>tot.withinss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># different starting centroids improve the clustering:</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>km.out <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="at">centers =</span> <span class="dv">4</span>, <span class="at">nstart=</span><span class="dv">1</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>km.out<span class="sc">$</span>cluster</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 375335.1</code></pre>
+<pre><code> V1  V2  V3  V4  V5  V6  V7  V8  V9 V10 V11 V12 V13 V14 V15 V16 V17 V18 V19 V20 
+  1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1   1 
+V21 V22 V23 V24 V25 V26 V27 V28 V29 V30 V31 V32 V33 V34 V35 V36 V37 V38 V39 V40 
+  1   1   1   3   3   1   3   1   3   1   1   3   3   4   4   4   4   4   4   4 
+V41 V42 V43 V44 V45 V46 V47 V48 V49 V50 V51 V52 V53 V54 V55 V56 V57 V58 V59 V60 
+  4   3   3   3   3   3   3   3   3   3   3   3   3   3   3   2   2   2   2   2 
+V61 V62 V63 V64 
+  2   2   2   2 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>km.out <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">3</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>km.out<span class="sc">$</span>tot.withinss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>km.out<span class="sc">$</span>tot.withinss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 366350.6</code></pre>
+<pre><code>[1] 344566.9</code></pre>
 </div>
 </div>
-<p>Compare with hierarchical clustering</p>
+</section>
+<section id="compare-with-hierarchical-clustering" class="level3">
+<h3 class="anchored" data-anchor-id="compare-with-hierarchical-clustering">Compare with hierarchical clustering</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># then, we can directly compare the k-means result (along rows)</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># with the hierarchical clustering result (along columns)</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(km.out4<span class="sc">$</span>cluster, hc.clusters[,<span class="st">"4"</span>], <span class="at">deparse.level=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># we can directly compare the k-means result (along rows)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="co"># with the hierarchical clustering result (along columns)</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(km.out4<span class="sc">$</span>cluster, hc.clusters[,<span class="st">"4"</span>], <span class="at">deparse.level=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               hc.clusters[, "4"]
 km.out4$cluster  1  2  3  4
@@ -336,83 +381,127 @@ km.out4$cluster  1  2  3  4
               4 20  7  0  0</code></pre>
 </div>
 </div>
-<p>We can visualise the K-means clustering results of high-dimensional data by using PCA for dimension reduction first. We plot the first two principal components and colour the data points (= individual cell lines) by their assigned cluster.</p>
+<p>From the results, you can see that the results are slightly different between the two methods. Keep in mind that in unsupervised learning you do not have the real outcome label (such as the cancer types here), so you need to try a few different methods and compare the outputs, and make interpretations accordingly.</p>
+</section>
+<section id="visualize-clusters" class="level3">
+<h3 class="anchored" data-anchor-id="visualize-clusters">Visualize clusters</h3>
+<p>We can visualise the K-means clustering results of high-dimensional data by using PCA for dimension reduction. We plot the first two principal components and colour the data points (= individual cell lines) by their assigned cluster from K-means.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># first, run PCA again on the NCI60 data</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>pr.out <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(nci.data, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># more cluster options</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>km.out2 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">2</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>km.out3 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">3</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># we can now visualise the K-Means results by labelling the data points</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="co"># in a plot of the scores of the first 2 principal components:</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>(km.out2<span class="sc">$</span>cluster<span class="sc">+</span><span class="dv">1</span>), <span class="at">main=</span><span class="st">"K-Means with K=2"</span>,</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"PC 1"</span>, <span class="at">ylab=</span><span class="st">"PC 2"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>(km.out3<span class="sc">$</span>cluster<span class="sc">+</span><span class="dv">1</span>), <span class="at">main=</span><span class="st">"K-Means with K=3"</span>,</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"PC 1"</span>,  <span class="at">ylab=</span><span class="st">"PC 2"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>(km.out4<span class="sc">$</span>cluster<span class="sc">+</span><span class="dv">1</span>), <span class="at">main=</span><span class="st">"K-Means with K=4"</span>,</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"PC 1"</span>, <span class="at">ylab=</span><span class="st">"PC 2"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># first, run PCA again on the NCI60 data</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>pr.out <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(nci.data, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># more cluster options</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>km.out2 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">2</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>km.out3 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">3</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># we can now visualise the K-Means results by labelling the data points</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co"># in a plot of the scores of the first 2 principal components:</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>(km.out2<span class="sc">$</span>cluster<span class="sc">+</span><span class="dv">1</span>), <span class="at">main=</span><span class="st">"K-Means with K=2"</span>,</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"PC 1"</span>, <span class="at">ylab=</span><span class="st">"PC 2"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>(km.out3<span class="sc">$</span>cluster<span class="sc">+</span><span class="dv">1</span>), <span class="at">main=</span><span class="st">"K-Means with K=3"</span>,</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"PC 1"</span>,  <span class="at">ylab=</span><span class="st">"PC 2"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>(km.out4<span class="sc">$</span>cluster<span class="sc">+</span><span class="dv">1</span>), <span class="at">main=</span><span class="st">"K-Means with K=4"</span>,</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"PC 1"</span>, <span class="at">ylab=</span><span class="st">"PC 2"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab_day4_clustering_files/figure-html/clust-nci60-km-pca-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Compare with the plot from Exercise 2 yesterday (left panel) along with the cancer type labels. The clusters from K-means seem to correspond decently to partition the data into groups.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>Cols<span class="ot">=</span><span class="cf">function</span>(vec){</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  cols<span class="ot">=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(vec)))</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(cols[<span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(vec))])</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span><span class="fu">Cols</span>(nci.labs), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 2"</span>)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topleft'</span>, <span class="at">col=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(nci.labs))), <span class="at">legend=</span><span class="fu">unique</span>(nci.labs), <span class="at">bty=</span><span class="st">'n'</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">cex=</span>.<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="lab_day4_clustering_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
 <section id="heatmap" class="level3">
 <h3 class="anchored" data-anchor-id="heatmap">Heatmap</h3>
+<p>A heatmap is another way to visualize the clusters from the data. We use the principal components rather than the raw data, as PCs are already explaining a large amount of variability in the over 6000 features.</p>
+<p>Similar values are presented with similar colors.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## We use the scores of the PCA on the NCI60 data, to reduce dimension</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  default choices</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(pr.out<span class="sc">$</span>x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="do">## We use the scores of the PCA on the NCI60 data, to reduce dimension</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> pr.out<span class="sc">$</span>x</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>scores[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] <span class="co"># first 5 pc, first 5 measurements</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         PC1       PC2         PC3         PC4        PC5
+V1 -19.68245  3.527748  -9.7354382   0.8177816 -12.511081
+V2 -22.90812  6.390938 -13.3725378  -5.5911088  -7.972471
+V3 -27.24077  2.445809  -3.5053437   1.3311502 -12.466296
+V4 -42.48098 -9.691742  -0.8830921  -3.4180227 -41.938370
+V5 -54.98387 -5.158121 -20.9291076 -15.7253986 -10.361364</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#  default choices</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(pr.out<span class="sc">$</span>x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab_day4_clustering_files/figure-html/clust-nci60-heatmap-pca-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>You can remove the dendrogram on the PCs, only keeping the ones for cancer types. Now you see that the PCs have kept their original order from 1 to 64.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I use the previous dendrogram for better ordering of the patients,</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># and I remove the dendrogram for the components</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(pr.out<span class="sc">$</span>x, <span class="at">Rowv =</span> <span class="fu">as.dendrogram</span>(hc.corr), <span class="at">Colv =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.corr is the result from hclust. check the section on hierarchical clustering</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(pr.out<span class="sc">$</span>x, <span class="at">Rowv =</span> <span class="fu">as.dendrogram</span>(hc.corr), <span class="at">Colv =</span> <span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab_day4_clustering_files/figure-html/clust-nci60-heatmap-dendro-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>You can also reduce the number of PCs, and add titles to the plot annd y-axis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I now plot less components for the sake of clarity,</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># I add the patient's tumor type, and I give a title</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">cex.main =</span> .<span class="dv">7</span>)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>], <span class="at">Rowv =</span> <span class="fu">as.dendrogram</span>(hc.corr), <span class="at">Colv =</span> <span class="cn">NA</span>,</span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">labRow =</span> nci.labs, <span class="at">main =</span> <span class="st">'Heatmap of the scores of the first 40 PCs on the NCI60 data'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">cex.main =</span> .<span class="dv">7</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>], <span class="at">Rowv =</span> <span class="fu">as.dendrogram</span>(hc.corr), <span class="at">Colv =</span> <span class="cn">NA</span>,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">labRow =</span> nci.labs, <span class="at">main =</span> <span class="st">'Heatmap of the scores of the first 40 PCs on the NCI60 data'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="lab_day4_clustering_files/figure-html/clust-nci60-heatmap-type-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
 </section>
-<section id="gene-expression-data" class="level2">
-<h2 class="anchored" data-anchor-id="gene-expression-data">Gene expression data</h2>
+<section id="exercise-2-gene-expression-data" class="level2">
+<h2 class="anchored" data-anchor-id="exercise-2-gene-expression-data">Exercise 2: Gene expression data</h2>
+<p>(CH12Ex13 from statistical learning)</p>
+<p>We use the <code>Ch12Ex13.csv</code> data to repeat some of the clustering analysis we did.</p>
+<p>The first 20 samples are from healthy patients, while the second 20 are from a diseased group.</p>
+<p>Load in the data using read.csv(). You will need to select header=F. Alternatively: load in the data using “Import dataset” in the upper right window, and click “no” on the “Heading” option.</p>
+<p>Carry out both hierarchical clustering and K-means clustering. You should choose the most meaningful number of clusters (think about how many groups of patients we have!). Compare the results.</p>
+<p>Note: remember that the data has genes on the rows and patients on the columns. You need to transpose the data so that the orders are reversed.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load in the data using read.csv(). You will need to select header=F.</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Ch12Ex13.csv"</span>, <span class="at">header=</span><span class="cn">FALSE</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">t</span>(data) <span class="co"># want each row to represent a sample ... should have n=40 samples/rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load in the data using read.csv(). You will need to select header=F.</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Ch12Ex13.csv"</span>, <span class="at">header=</span><span class="cn">FALSE</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1000   40</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># transpose the data, so that we have each row is one patient (subject)</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">t</span>(data) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now the first 20 rows are measurements from healthy patients (group 0), and 21-50 rows are the disease patients (group 1). We can denote this information in a vector like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>true.groups <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">20</span>), <span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="hierarchical-clustering-1" class="level3">
 <h3 class="anchored" data-anchor-id="hierarchical-clustering-1">Hierarchical clustering</h3>
+<p>You can use different linkage options and distance metrics of your choosing. For example, with complete linkage the code is like this.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>data.dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(data) <span class="co"># need to compute the distance matrix</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>hclust.df <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"complete"</span> )</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co">#alternatives:</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">#hclust.df &lt;- hclust( D, method="average" )</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">#hclust.df &lt;- hclust( D, method="single" )</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>data.dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(data) <span class="co"># need to compute the distance matrix</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>hclust.df <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"complete"</span> )</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">#alternatives:</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#hclust.df &lt;- hclust( D, method="average" )</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co">#hclust.df &lt;- hclust( D, method="single" )</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>We can keep 2 clusters with <code>cutree</code>. Then do a cross tabulation of the true labels and clustered results: how well do they correspond?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># find the clusters</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">cutree</span>( hclust.df, <span class="at">k=</span><span class="dv">2</span> )</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>true.groups <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">20</span>), <span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">20</span>) )</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co"># How well does our clustering predict health vs. diseased</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predicted, true.groups )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># find the clusters</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">cutree</span>( hclust.df, <span class="at">k=</span><span class="dv">2</span> )</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># How well does our clustering predict health vs. diseased</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predicted, true.groups )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         true.groups
 predicted  0  1
@@ -423,16 +512,19 @@ predicted  0  1
 </section>
 <section id="k-means" class="level3">
 <h3 class="anchored" data-anchor-id="k-means">K-means</h3>
+<p>Now you can use K-means to identify 2 clusters.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>predicted.kmean <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(data, <span class="dv">2</span>, <span class="at">nstart=</span><span class="dv">20</span>)<span class="sc">$</span>cluster</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predicted.kmean, true.groups )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>predicted.kmean <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(data, <span class="dv">2</span>, <span class="at">nstart=</span><span class="dv">20</span>)<span class="sc">$</span>cluster</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co"># agreement with true label</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predicted.kmean, true.groups )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               true.groups
 predicted.kmean  0  1
-              1  0 20
-              2 20  0</code></pre>
+              1 20  0
+              2  0 20</code></pre>
 </div>
 </div>
+<p>Both methods seem to do work decently for the task.</p>
 
 
 <!-- -->
@@ -725,300 +817,386 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb31" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "R Lab (day 4): Clustering"</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> </span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: false</span></span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>Download datasets <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/ocbe-uio/course_med3007/tree/main/lab/data)</span> or from Canvas.</span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>R script: <span class="co">[</span><span class="ot">Code</span><span class="co">](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R)</span></span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>Lab lecture </span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## NCI60</span></span>
-<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-loaddata</span></span>
-<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
-<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>nci.labs <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>labs <span class="co"># Sample labels (tissue type)</span></span>
-<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>nci.data <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>data <span class="co"># Gene expression data set</span></span>
-<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a><span class="fu">### Hierarchical clustering</span></span>
-<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>We start by scaling the data, calculate the distance matrix (using the Euclidean distance), and then investigate different linkage methods.</span>
-<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-35"><a href="#cb31-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-38"><a href="#cb31-38" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-39"><a href="#cb31-39" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-scale</span></span>
-<span id="cb31-40"><a href="#cb31-40" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-41"><a href="#cb31-41" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-42"><a href="#cb31-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-43"><a href="#cb31-43" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale the data to zero mean and unit variance:</span></span>
-<span id="cb31-44"><a href="#cb31-44" aria-hidden="true" tabindex="-1"></a>sd.data <span class="ot">&lt;-</span> <span class="fu">scale</span>(nci.data)</span>
-<span id="cb31-45"><a href="#cb31-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-46"><a href="#cb31-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the distance matrix (default = Euclidean):</span></span>
-<span id="cb31-47"><a href="#cb31-47" aria-hidden="true" tabindex="-1"></a>data.dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(sd.data)</span>
-<span id="cb31-48"><a href="#cb31-48" aria-hidden="true" tabindex="-1"></a>data.dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(sd.data, <span class="at">method=</span><span class="st">"euclidean"</span>)</span>
-<span id="cb31-49"><a href="#cb31-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-50"><a href="#cb31-50" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-51"><a href="#cb31-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-52"><a href="#cb31-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-55"><a href="#cb31-55" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-56"><a href="#cb31-56" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-hccomplete</span></span>
-<span id="cb31-57"><a href="#cb31-57" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-58"><a href="#cb31-58" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-59"><a href="#cb31-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-60"><a href="#cb31-60" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform clustering</span></span>
-<span id="cb31-61"><a href="#cb31-61" aria-hidden="true" tabindex="-1"></a>hc.complete <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"complete"</span>)</span>
-<span id="cb31-62"><a href="#cb31-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-63"><a href="#cb31-63" aria-hidden="true" tabindex="-1"></a><span class="co"># names(hc.complete)</span></span>
-<span id="cb31-64"><a href="#cb31-64" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.complete, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
-<span id="cb31-65"><a href="#cb31-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-66"><a href="#cb31-66" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$merge  # order of aggregations of samples / clusters</span></span>
-<span id="cb31-67"><a href="#cb31-67" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$height # distance at which aggregations happen</span></span>
-<span id="cb31-68"><a href="#cb31-68" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$order  # correct order of the samples for obtaining the plot</span></span>
-<span id="cb31-69"><a href="#cb31-69" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$labels # labels (numeric, since we don't know the original categories!)</span></span>
-<span id="cb31-70"><a href="#cb31-70" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$method</span></span>
-<span id="cb31-71"><a href="#cb31-71" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$call</span></span>
-<span id="cb31-72"><a href="#cb31-72" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$dist.method</span></span>
-<span id="cb31-73"><a href="#cb31-73" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-74"><a href="#cb31-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-75"><a href="#cb31-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-76"><a href="#cb31-76" aria-hidden="true" tabindex="-1"></a>Different linkage methods</span>
-<span id="cb31-77"><a href="#cb31-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-80"><a href="#cb31-80" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-81"><a href="#cb31-81" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-otherlink</span></span>
-<span id="cb31-82"><a href="#cb31-82" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-83"><a href="#cb31-83" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-84"><a href="#cb31-84" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb31-85"><a href="#cb31-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-86"><a href="#cb31-86" aria-hidden="true" tabindex="-1"></a>hc.average <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"average"</span>)</span>
-<span id="cb31-87"><a href="#cb31-87" aria-hidden="true" tabindex="-1"></a>hc.single <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"single"</span>)</span>
-<span id="cb31-88"><a href="#cb31-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-89"><a href="#cb31-89" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.average, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Average Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
-<span id="cb31-90"><a href="#cb31-90" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.single, <span class="at">labels=</span>nci.labs,  <span class="at">main=</span><span class="st">"Single Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
-<span id="cb31-91"><a href="#cb31-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-92"><a href="#cb31-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-93"><a href="#cb31-93" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-96"><a href="#cb31-96" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-97"><a href="#cb31-97" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-cutree</span></span>
-<span id="cb31-98"><a href="#cb31-98" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-99"><a href="#cb31-99" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-100"><a href="#cb31-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-101"><a href="#cb31-101" aria-hidden="true" tabindex="-1"></a><span class="do">## First, we use cutree() to compare the results when the data are separated</span></span>
-<span id="cb31-102"><a href="#cb31-102" aria-hidden="true" tabindex="-1"></a><span class="do">## into either 2 or 4 clusters.</span></span>
-<span id="cb31-103"><a href="#cb31-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-104"><a href="#cb31-104" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare 2 clusters and 4 clusters:</span></span>
-<span id="cb31-105"><a href="#cb31-105" aria-hidden="true" tabindex="-1"></a>hc.clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc.complete, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>))</span>
-<span id="cb31-106"><a href="#cb31-106" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(hc.clusters[,<span class="st">"2"</span>], hc.clusters[,<span class="st">"4"</span>])</span>
-<span id="cb31-107"><a href="#cb31-107" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-108"><a href="#cb31-108" aria-hidden="true" tabindex="-1"></a><span class="co"># How are the labels distributed between clusters:</span></span>
-<span id="cb31-109"><a href="#cb31-109" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(hc.clusters[,<span class="st">"4"</span>], nci.labs)</span>
-<span id="cb31-110"><a href="#cb31-110" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-111"><a href="#cb31-111" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the cuts</span></span>
-<span id="cb31-112"><a href="#cb31-112" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.complete, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
-<span id="cb31-113"><a href="#cb31-113" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">140</span>, <span class="at">col=</span><span class="st">"red"</span>)  <span class="co"># 4 clusters</span></span>
-<span id="cb31-114"><a href="#cb31-114" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">150</span>, <span class="at">col=</span><span class="st">"blue"</span>) <span class="co"># 2 clusters</span></span>
-<span id="cb31-115"><a href="#cb31-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-116"><a href="#cb31-116" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-117"><a href="#cb31-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-118"><a href="#cb31-118" aria-hidden="true" tabindex="-1"></a>Finally, we see what happens if we use unscaled data instead of scaled data, or if we use a correlation-based distance metric instead of the Euclidean distance.</span>
-<span id="cb31-119"><a href="#cb31-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-120"><a href="#cb31-120" aria-hidden="true" tabindex="-1"></a>Compare the dendrograms: How different are the resulting clusterings? Do you recognise subclusters that are consistent?</span>
-<span id="cb31-121"><a href="#cb31-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-122"><a href="#cb31-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-125"><a href="#cb31-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-126"><a href="#cb31-126" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-unscale</span></span>
-<span id="cb31-127"><a href="#cb31-127" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-128"><a href="#cb31-128" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-129"><a href="#cb31-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-130"><a href="#cb31-130" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare scaled data versus non-scaled data:</span></span>
-<span id="cb31-131"><a href="#cb31-131" aria-hidden="true" tabindex="-1"></a>hc.unscaled <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(nci.data), <span class="at">method=</span><span class="st">"complete"</span>)</span>
-<span id="cb31-132"><a href="#cb31-132" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb31-133"><a href="#cb31-133" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.unscaled, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete linkage with unscaled features"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
-<span id="cb31-134"><a href="#cb31-134" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-135"><a href="#cb31-135" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare Euclidean distance with correlation-based distance:</span></span>
-<span id="cb31-136"><a href="#cb31-136" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">as.dist</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">cor</span>(<span class="fu">t</span>(sd.data)))</span>
-<span id="cb31-137"><a href="#cb31-137" aria-hidden="true" tabindex="-1"></a>hc.corr <span class="ot">&lt;-</span> <span class="fu">hclust</span>(dd, <span class="at">method=</span><span class="st">"complete"</span>)</span>
-<span id="cb31-138"><a href="#cb31-138" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb31-139"><a href="#cb31-139" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.corr, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete linkage with correlation-based distance"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
-<span id="cb31-140"><a href="#cb31-140" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-141"><a href="#cb31-141" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-142"><a href="#cb31-142" aria-hidden="true" tabindex="-1"></a><span class="fu">### K-means clustering</span></span>
-<span id="cb31-143"><a href="#cb31-143" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-144"><a href="#cb31-144" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-147"><a href="#cb31-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-148"><a href="#cb31-148" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-km4</span></span>
-<span id="cb31-149"><a href="#cb31-149" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-150"><a href="#cb31-150" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-151"><a href="#cb31-151" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-152"><a href="#cb31-152" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4</span>)</span>
-<span id="cb31-153"><a href="#cb31-153" aria-hidden="true" tabindex="-1"></a>km.out4 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">4</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
-<span id="cb31-154"><a href="#cb31-154" aria-hidden="true" tabindex="-1"></a>km.out4<span class="sc">$</span>cluster</span>
-<span id="cb31-155"><a href="#cb31-155" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-156"><a href="#cb31-156" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-157"><a href="#cb31-157" aria-hidden="true" tabindex="-1"></a>Read the help file ?kmeans to understand what the argument nstart=20 does. Comparing an analysis with nstart=20 versus nstart=1 demonstrates how the cluster results can be improved if we allow more evaluations with different randomly chosen starting centroids.</span>
-<span id="cb31-158"><a href="#cb31-158" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-159"><a href="#cb31-159" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-162"><a href="#cb31-162" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-163"><a href="#cb31-163" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-km3</span></span>
-<span id="cb31-164"><a href="#cb31-164" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-165"><a href="#cb31-165" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-166"><a href="#cb31-166" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-167"><a href="#cb31-167" aria-hidden="true" tabindex="-1"></a><span class="co"># More evaluations with different starting centroids improve the clustering:</span></span>
-<span id="cb31-168"><a href="#cb31-168" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
-<span id="cb31-169"><a href="#cb31-169" aria-hidden="true" tabindex="-1"></a>km.out <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">3</span>, <span class="at">nstart=</span><span class="dv">1</span>)</span>
-<span id="cb31-170"><a href="#cb31-170" aria-hidden="true" tabindex="-1"></a>km.out<span class="sc">$</span>tot.withinss</span>
-<span id="cb31-171"><a href="#cb31-171" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-172"><a href="#cb31-172" aria-hidden="true" tabindex="-1"></a>km.out <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">3</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
-<span id="cb31-173"><a href="#cb31-173" aria-hidden="true" tabindex="-1"></a>km.out<span class="sc">$</span>tot.withinss</span>
-<span id="cb31-174"><a href="#cb31-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-175"><a href="#cb31-175" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-176"><a href="#cb31-176" aria-hidden="true" tabindex="-1"></a>Compare with hierarchical clustering</span>
-<span id="cb31-177"><a href="#cb31-177" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-180"><a href="#cb31-180" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-181"><a href="#cb31-181" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-km-res</span></span>
-<span id="cb31-182"><a href="#cb31-182" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-183"><a href="#cb31-183" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-184"><a href="#cb31-184" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-185"><a href="#cb31-185" aria-hidden="true" tabindex="-1"></a><span class="co"># then, we can directly compare the k-means result (along rows)</span></span>
-<span id="cb31-186"><a href="#cb31-186" aria-hidden="true" tabindex="-1"></a><span class="co"># with the hierarchical clustering result (along columns)</span></span>
-<span id="cb31-187"><a href="#cb31-187" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(km.out4<span class="sc">$</span>cluster, hc.clusters[,<span class="st">"4"</span>], <span class="at">deparse.level=</span><span class="dv">2</span>)</span>
-<span id="cb31-188"><a href="#cb31-188" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-189"><a href="#cb31-189" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-190"><a href="#cb31-190" aria-hidden="true" tabindex="-1"></a>We can visualise the K-means clustering results of high-dimensional data by using PCA for dimension reduction first. We plot the first two principal components and colour the data points (= individual cell lines) by their assigned cluster.</span>
-<span id="cb31-191"><a href="#cb31-191" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-194"><a href="#cb31-194" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-195"><a href="#cb31-195" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-km-pca</span></span>
-<span id="cb31-196"><a href="#cb31-196" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-197"><a href="#cb31-197" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-198"><a href="#cb31-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-199"><a href="#cb31-199" aria-hidden="true" tabindex="-1"></a><span class="co"># first, run PCA again on the NCI60 data</span></span>
-<span id="cb31-200"><a href="#cb31-200" aria-hidden="true" tabindex="-1"></a>pr.out <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(nci.data, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
-<span id="cb31-201"><a href="#cb31-201" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-202"><a href="#cb31-202" aria-hidden="true" tabindex="-1"></a><span class="co"># more cluster options</span></span>
-<span id="cb31-203"><a href="#cb31-203" aria-hidden="true" tabindex="-1"></a>km.out2 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">2</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
-<span id="cb31-204"><a href="#cb31-204" aria-hidden="true" tabindex="-1"></a>km.out3 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">3</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
-<span id="cb31-205"><a href="#cb31-205" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-206"><a href="#cb31-206" aria-hidden="true" tabindex="-1"></a><span class="co"># we can now visualise the K-Means results by labelling the data points</span></span>
-<span id="cb31-207"><a href="#cb31-207" aria-hidden="true" tabindex="-1"></a><span class="co"># in a plot of the scores of the first 2 principal components:</span></span>
-<span id="cb31-208"><a href="#cb31-208" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
-<span id="cb31-209"><a href="#cb31-209" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>(km.out2<span class="sc">$</span>cluster<span class="sc">+</span><span class="dv">1</span>), <span class="at">main=</span><span class="st">"K-Means with K=2"</span>,</span>
-<span id="cb31-210"><a href="#cb31-210" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"PC 1"</span>, <span class="at">ylab=</span><span class="st">"PC 2"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span>
-<span id="cb31-211"><a href="#cb31-211" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>(km.out3<span class="sc">$</span>cluster<span class="sc">+</span><span class="dv">1</span>), <span class="at">main=</span><span class="st">"K-Means with K=3"</span>,</span>
-<span id="cb31-212"><a href="#cb31-212" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"PC 1"</span>,  <span class="at">ylab=</span><span class="st">"PC 2"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span>
-<span id="cb31-213"><a href="#cb31-213" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>(km.out4<span class="sc">$</span>cluster<span class="sc">+</span><span class="dv">1</span>), <span class="at">main=</span><span class="st">"K-Means with K=4"</span>,</span>
-<span id="cb31-214"><a href="#cb31-214" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"PC 1"</span>, <span class="at">ylab=</span><span class="st">"PC 2"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span>
-<span id="cb31-215"><a href="#cb31-215" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-216"><a href="#cb31-216" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-217"><a href="#cb31-217" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-218"><a href="#cb31-218" aria-hidden="true" tabindex="-1"></a><span class="fu">### Heatmap </span></span>
-<span id="cb31-219"><a href="#cb31-219" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-222"><a href="#cb31-222" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-223"><a href="#cb31-223" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-heatmap-pca</span></span>
-<span id="cb31-224"><a href="#cb31-224" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-225"><a href="#cb31-225" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-226"><a href="#cb31-226" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-227"><a href="#cb31-227" aria-hidden="true" tabindex="-1"></a><span class="do">## We use the scores of the PCA on the NCI60 data, to reduce dimension</span></span>
-<span id="cb31-228"><a href="#cb31-228" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-229"><a href="#cb31-229" aria-hidden="true" tabindex="-1"></a><span class="co">#  default choices</span></span>
-<span id="cb31-230"><a href="#cb31-230" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(pr.out<span class="sc">$</span>x)</span>
-<span id="cb31-231"><a href="#cb31-231" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-232"><a href="#cb31-232" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-233"><a href="#cb31-233" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-236"><a href="#cb31-236" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-237"><a href="#cb31-237" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-heatmap-dendro</span></span>
-<span id="cb31-238"><a href="#cb31-238" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-239"><a href="#cb31-239" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-240"><a href="#cb31-240" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-241"><a href="#cb31-241" aria-hidden="true" tabindex="-1"></a><span class="co"># I use the previous dendrogram for better ordering of the patients,</span></span>
-<span id="cb31-242"><a href="#cb31-242" aria-hidden="true" tabindex="-1"></a><span class="co"># and I remove the dendrogram for the components</span></span>
-<span id="cb31-243"><a href="#cb31-243" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(pr.out<span class="sc">$</span>x, <span class="at">Rowv =</span> <span class="fu">as.dendrogram</span>(hc.corr), <span class="at">Colv =</span> <span class="cn">NA</span>)</span>
-<span id="cb31-244"><a href="#cb31-244" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-245"><a href="#cb31-245" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-246"><a href="#cb31-246" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-249"><a href="#cb31-249" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-250"><a href="#cb31-250" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-heatmap-type</span></span>
-<span id="cb31-251"><a href="#cb31-251" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-252"><a href="#cb31-252" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-253"><a href="#cb31-253" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-254"><a href="#cb31-254" aria-hidden="true" tabindex="-1"></a><span class="co"># I now plot less components for the sake of clarity,</span></span>
-<span id="cb31-255"><a href="#cb31-255" aria-hidden="true" tabindex="-1"></a><span class="co"># I add the patient's tumor type, and I give a title</span></span>
-<span id="cb31-256"><a href="#cb31-256" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">cex.main =</span> .<span class="dv">7</span>)</span>
-<span id="cb31-257"><a href="#cb31-257" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>], <span class="at">Rowv =</span> <span class="fu">as.dendrogram</span>(hc.corr), <span class="at">Colv =</span> <span class="cn">NA</span>,</span>
-<span id="cb31-258"><a href="#cb31-258" aria-hidden="true" tabindex="-1"></a>        <span class="at">labRow =</span> nci.labs, <span class="at">main =</span> <span class="st">'Heatmap of the scores of the first 40 PCs on the NCI60 data'</span>)</span>
-<span id="cb31-259"><a href="#cb31-259" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-260"><a href="#cb31-260" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-261"><a href="#cb31-261" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-262"><a href="#cb31-262" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-263"><a href="#cb31-263" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-264"><a href="#cb31-264" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-265"><a href="#cb31-265" aria-hidden="true" tabindex="-1"></a><span class="fu">## Gene expression data</span></span>
-<span id="cb31-266"><a href="#cb31-266" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-269"><a href="#cb31-269" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-270"><a href="#cb31-270" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-ge-loaddata</span></span>
-<span id="cb31-271"><a href="#cb31-271" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-272"><a href="#cb31-272" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-273"><a href="#cb31-273" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-274"><a href="#cb31-274" aria-hidden="true" tabindex="-1"></a><span class="co"># load in the data using read.csv(). You will need to select header=F.</span></span>
-<span id="cb31-275"><a href="#cb31-275" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Ch12Ex13.csv"</span>, <span class="at">header=</span><span class="cn">FALSE</span>)</span>
-<span id="cb31-276"><a href="#cb31-276" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">t</span>(data) <span class="co"># want each row to represent a sample ... should have n=40 samples/rows</span></span>
-<span id="cb31-277"><a href="#cb31-277" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-278"><a href="#cb31-278" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-279"><a href="#cb31-279" aria-hidden="true" tabindex="-1"></a><span class="fu">### Hierarchical clustering </span></span>
-<span id="cb31-280"><a href="#cb31-280" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-283"><a href="#cb31-283" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-284"><a href="#cb31-284" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-ge-clust</span></span>
-<span id="cb31-285"><a href="#cb31-285" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-286"><a href="#cb31-286" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-287"><a href="#cb31-287" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-288"><a href="#cb31-288" aria-hidden="true" tabindex="-1"></a>data.dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(data) <span class="co"># need to compute the distance matrix</span></span>
-<span id="cb31-289"><a href="#cb31-289" aria-hidden="true" tabindex="-1"></a>hclust.df <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"complete"</span> )</span>
-<span id="cb31-290"><a href="#cb31-290" aria-hidden="true" tabindex="-1"></a><span class="co">#alternatives:</span></span>
-<span id="cb31-291"><a href="#cb31-291" aria-hidden="true" tabindex="-1"></a><span class="co">#hclust.df &lt;- hclust( D, method="average" )</span></span>
-<span id="cb31-292"><a href="#cb31-292" aria-hidden="true" tabindex="-1"></a><span class="co">#hclust.df &lt;- hclust( D, method="single" )</span></span>
-<span id="cb31-293"><a href="#cb31-293" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-294"><a href="#cb31-294" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-295"><a href="#cb31-295" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-298"><a href="#cb31-298" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-299"><a href="#cb31-299" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-ge-clust-res</span></span>
-<span id="cb31-300"><a href="#cb31-300" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-301"><a href="#cb31-301" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-302"><a href="#cb31-302" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-303"><a href="#cb31-303" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-304"><a href="#cb31-304" aria-hidden="true" tabindex="-1"></a><span class="co"># find the clusters</span></span>
-<span id="cb31-305"><a href="#cb31-305" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">cutree</span>( hclust.df, <span class="at">k=</span><span class="dv">2</span> )</span>
-<span id="cb31-306"><a href="#cb31-306" aria-hidden="true" tabindex="-1"></a>true.groups <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">20</span>), <span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">20</span>) )</span>
-<span id="cb31-307"><a href="#cb31-307" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-308"><a href="#cb31-308" aria-hidden="true" tabindex="-1"></a><span class="co"># How well does our clustering predict health vs. diseased</span></span>
-<span id="cb31-309"><a href="#cb31-309" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predicted, true.groups )</span>
-<span id="cb31-310"><a href="#cb31-310" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-311"><a href="#cb31-311" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-312"><a href="#cb31-312" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-313"><a href="#cb31-313" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-314"><a href="#cb31-314" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-315"><a href="#cb31-315" aria-hidden="true" tabindex="-1"></a><span class="fu">### K-means</span></span>
-<span id="cb31-316"><a href="#cb31-316" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-319"><a href="#cb31-319" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb31-320"><a href="#cb31-320" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-ge-km</span></span>
-<span id="cb31-321"><a href="#cb31-321" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
-<span id="cb31-322"><a href="#cb31-322" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
-<span id="cb31-323"><a href="#cb31-323" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-324"><a href="#cb31-324" aria-hidden="true" tabindex="-1"></a>predicted.kmean <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(data, <span class="dv">2</span>, <span class="at">nstart=</span><span class="dv">20</span>)<span class="sc">$</span>cluster</span>
-<span id="cb31-325"><a href="#cb31-325" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predicted.kmean, true.groups )</span>
-<span id="cb31-326"><a href="#cb31-326" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb31-327"><a href="#cb31-327" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-328"><a href="#cb31-328" aria-hidden="true" tabindex="-1"></a></span>
+<div class="sourceCode" id="cb43" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "R Lab (day 4): Clustering"</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> </span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: false</span></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>Download datasets <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/ocbe-uio/course_med3007/tree/main/lab/data)</span>, or from Canvas.</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>R script: <span class="co">[</span><span class="ot">Code</span><span class="co">](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R)</span></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a>Presentation: <span class="co">[</span><span class="ot">Slides</span><span class="co">]()</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exercise 1: NCI60</span></span>
+<span id="cb43-17"><a href="#cb43-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-18"><a href="#cb43-18" aria-hidden="true" tabindex="-1"></a>We look at the NCI60 data again. First load the dataset.</span>
+<span id="cb43-19"><a href="#cb43-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-22"><a href="#cb43-22" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-23"><a href="#cb43-23" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-loaddata</span></span>
+<span id="cb43-24"><a href="#cb43-24" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-25"><a href="#cb43-25" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-26"><a href="#cb43-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-27"><a href="#cb43-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ISLR)</span>
+<span id="cb43-28"><a href="#cb43-28" aria-hidden="true" tabindex="-1"></a><span class="co"># or, load('data/NCI60.RData')</span></span>
+<span id="cb43-29"><a href="#cb43-29" aria-hidden="true" tabindex="-1"></a>nci.labs <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>labs <span class="co"># Sample labels (tissue type)</span></span>
+<span id="cb43-30"><a href="#cb43-30" aria-hidden="true" tabindex="-1"></a>nci.data <span class="ot">&lt;-</span> NCI60<span class="sc">$</span>data <span class="co"># Gene expression data set</span></span>
+<span id="cb43-31"><a href="#cb43-31" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-32"><a href="#cb43-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-33"><a href="#cb43-33" aria-hidden="true" tabindex="-1"></a><span class="fu">### Hierarchical clustering</span></span>
+<span id="cb43-34"><a href="#cb43-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-35"><a href="#cb43-35" aria-hidden="true" tabindex="-1"></a>We start by scaling the data, and calculate the distance matrix (using the Euclidean distance), and then investigate different linkage methods.</span>
+<span id="cb43-36"><a href="#cb43-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-37"><a href="#cb43-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-40"><a href="#cb43-40" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-41"><a href="#cb43-41" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-scale</span></span>
+<span id="cb43-42"><a href="#cb43-42" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-43"><a href="#cb43-43" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-44"><a href="#cb43-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-45"><a href="#cb43-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale the data to zero mean and unit variance:</span></span>
+<span id="cb43-46"><a href="#cb43-46" aria-hidden="true" tabindex="-1"></a>sd.data <span class="ot">&lt;-</span> <span class="fu">scale</span>(nci.data)</span>
+<span id="cb43-47"><a href="#cb43-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-48"><a href="#cb43-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the distance matrix </span></span>
+<span id="cb43-49"><a href="#cb43-49" aria-hidden="true" tabindex="-1"></a><span class="co"># equivalent: data.dist &lt;- dist(sd.data, method="euclidean")</span></span>
+<span id="cb43-50"><a href="#cb43-50" aria-hidden="true" tabindex="-1"></a>data.dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(sd.data)</span>
+<span id="cb43-51"><a href="#cb43-51" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-52"><a href="#cb43-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-53"><a href="#cb43-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-54"><a href="#cb43-54" aria-hidden="true" tabindex="-1"></a>Next we perform hierarchical clustering with distance matrix as input. The function we use is <span class="in">`hclust()`</span>. We specify the linkage method to be <span class="in">`complete`</span>.</span>
+<span id="cb43-55"><a href="#cb43-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-56"><a href="#cb43-56" aria-hidden="true" tabindex="-1"></a>Once the result is saved in <span class="in">`hc.complete`</span> object, you can plot the dendrogram.</span>
+<span id="cb43-57"><a href="#cb43-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-60"><a href="#cb43-60" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-61"><a href="#cb43-61" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-hccomplete</span></span>
+<span id="cb43-62"><a href="#cb43-62" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-63"><a href="#cb43-63" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-64"><a href="#cb43-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-65"><a href="#cb43-65" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform clustering</span></span>
+<span id="cb43-66"><a href="#cb43-66" aria-hidden="true" tabindex="-1"></a>hc.complete <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"complete"</span>)</span>
+<span id="cb43-67"><a href="#cb43-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-68"><a href="#cb43-68" aria-hidden="true" tabindex="-1"></a><span class="co"># names(hc.complete)</span></span>
+<span id="cb43-69"><a href="#cb43-69" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.complete, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
+<span id="cb43-70"><a href="#cb43-70" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-71"><a href="#cb43-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-72"><a href="#cb43-72" aria-hidden="true" tabindex="-1"></a>The object <span class="in">`hc.complete`</span> contains a lot of information. To get the information, you can use the <span class="in">`$`</span> operator. </span>
+<span id="cb43-73"><a href="#cb43-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-74"><a href="#cb43-74" aria-hidden="true" tabindex="-1"></a>You should refer to the documentation for <span class="in">`hclust()`</span> to see a complete list of output. Use <span class="in">`?hclust`</span> to get the documentation on how to use the function.</span>
+<span id="cb43-75"><a href="#cb43-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-78"><a href="#cb43-78" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-79"><a href="#cb43-79" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-hccomplete-2</span></span>
+<span id="cb43-80"><a href="#cb43-80" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-81"><a href="#cb43-81" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-82"><a href="#cb43-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-83"><a href="#cb43-83" aria-hidden="true" tabindex="-1"></a>hc.complete<span class="sc">$</span>dist.method <span class="co"># distance method</span></span>
+<span id="cb43-84"><a href="#cb43-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-85"><a href="#cb43-85" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$merge  # order of aggregations of samples / clusters</span></span>
+<span id="cb43-86"><a href="#cb43-86" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$height # distance at which aggregations happen</span></span>
+<span id="cb43-87"><a href="#cb43-87" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$labels # labels (numeric, since we don't know the original categories!)</span></span>
+<span id="cb43-88"><a href="#cb43-88" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$method</span></span>
+<span id="cb43-89"><a href="#cb43-89" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.complete$call</span></span>
+<span id="cb43-90"><a href="#cb43-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-91"><a href="#cb43-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-92"><a href="#cb43-92" aria-hidden="true" tabindex="-1"></a>We can try different linkage methods and see how the clustering results differ. Change the <span class="in">`method`</span> argument in the function, and plot the results.</span>
+<span id="cb43-93"><a href="#cb43-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-96"><a href="#cb43-96" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-97"><a href="#cb43-97" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-otherlink</span></span>
+<span id="cb43-98"><a href="#cb43-98" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-99"><a href="#cb43-99" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-100"><a href="#cb43-100" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb43-101"><a href="#cb43-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-102"><a href="#cb43-102" aria-hidden="true" tabindex="-1"></a>hc.average <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"average"</span>)</span>
+<span id="cb43-103"><a href="#cb43-103" aria-hidden="true" tabindex="-1"></a>hc.single <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"single"</span>)</span>
+<span id="cb43-104"><a href="#cb43-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-105"><a href="#cb43-105" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.average, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Average Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
+<span id="cb43-106"><a href="#cb43-106" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.single, <span class="at">labels=</span>nci.labs,  <span class="at">main=</span><span class="st">"Single Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
+<span id="cb43-107"><a href="#cb43-107" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-108"><a href="#cb43-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-109"><a href="#cb43-109" aria-hidden="true" tabindex="-1"></a>Now we focus on **complete linkage** only.</span>
+<span id="cb43-110"><a href="#cb43-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-111"><a href="#cb43-111" aria-hidden="true" tabindex="-1"></a>First, we use <span class="in">`cutree()`</span> to compare the results when the data are separated into either 2 or 4 clusters.</span>
+<span id="cb43-112"><a href="#cb43-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-115"><a href="#cb43-115" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-116"><a href="#cb43-116" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-cutree</span></span>
+<span id="cb43-117"><a href="#cb43-117" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-118"><a href="#cb43-118" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-119"><a href="#cb43-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-120"><a href="#cb43-120" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare 2 clusters and 4 clusters:</span></span>
+<span id="cb43-121"><a href="#cb43-121" aria-hidden="true" tabindex="-1"></a>hc.clusters <span class="ot">&lt;-</span> <span class="fu">cutree</span>(hc.complete, <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>))</span>
+<span id="cb43-122"><a href="#cb43-122" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(hc.clusters) <span class="co"># print first 6 results</span></span>
+<span id="cb43-123"><a href="#cb43-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-124"><a href="#cb43-124" aria-hidden="true" tabindex="-1"></a><span class="co"># cross tabulation</span></span>
+<span id="cb43-125"><a href="#cb43-125" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(hc.clusters[,<span class="st">"2"</span>], hc.clusters[,<span class="st">"4"</span>])</span>
+<span id="cb43-126"><a href="#cb43-126" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-127"><a href="#cb43-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-128"><a href="#cb43-128" aria-hidden="true" tabindex="-1"></a>It is more straightforward to check the results with a dendrogram.</span>
+<span id="cb43-129"><a href="#cb43-129" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-132"><a href="#cb43-132" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-133"><a href="#cb43-133" aria-hidden="true" tabindex="-1"></a><span class="co"># visualize the cuts</span></span>
+<span id="cb43-134"><a href="#cb43-134" aria-hidden="true" tabindex="-1"></a><span class="co"># how do you know where to draw the line? check height</span></span>
+<span id="cb43-135"><a href="#cb43-135" aria-hidden="true" tabindex="-1"></a>heights <span class="ot">&lt;-</span> hc.complete<span class="sc">$</span>height</span>
+<span id="cb43-136"><a href="#cb43-136" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(heights, <span class="dv">4</span>)  <span class="co"># print the last 4</span></span>
+<span id="cb43-137"><a href="#cb43-137" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.complete, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete Linkage"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
+<span id="cb43-138"><a href="#cb43-138" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">140</span>, <span class="at">col=</span><span class="st">"red"</span>)  <span class="co"># 4 clusters</span></span>
+<span id="cb43-139"><a href="#cb43-139" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="dv">150</span>, <span class="at">col=</span><span class="st">"blue"</span>) <span class="co"># 2 clusters</span></span>
+<span id="cb43-140"><a href="#cb43-140" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-141"><a href="#cb43-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-142"><a href="#cb43-142" aria-hidden="true" tabindex="-1"></a>The way to interpret the height variable is simple: it is where two clusters are merged into one. For example, the largest cluster corresponds to the last value of <span class="in">`height`</span> (162.2) - if you check the figure, it is exactly where the horizontal line is merging the two groups. Similarly, 142.9 is where three groups became two, 141.2 is where four groups became three. If you draw a line at 140, it points out the four clusters.</span>
+<span id="cb43-143"><a href="#cb43-143" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-144"><a href="#cb43-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-145"><a href="#cb43-145" aria-hidden="true" tabindex="-1"></a>How are the labels distributed between clusters? We can focus on 4 cluster situation, and use <span class="in">`table()`</span> to list out which cancer types is merged in which of the four clusters.</span>
+<span id="cb43-146"><a href="#cb43-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-147"><a href="#cb43-147" aria-hidden="true" tabindex="-1"></a>For example, breast cancer appears in all but 3rd cluster; melanoma only appears in the first clsuter; so on so forth.</span>
+<span id="cb43-148"><a href="#cb43-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-151"><a href="#cb43-151" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-152"><a href="#cb43-152" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-cutree2</span></span>
+<span id="cb43-153"><a href="#cb43-153" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-154"><a href="#cb43-154" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-155"><a href="#cb43-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-156"><a href="#cb43-156" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(hc.clusters[,<span class="st">"4"</span>], nci.labs)</span>
+<span id="cb43-157"><a href="#cb43-157" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-158"><a href="#cb43-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-159"><a href="#cb43-159" aria-hidden="true" tabindex="-1"></a>Finally, we see what happens if we use **unscaled data** instead of scaled data, or if we use a **correlation-based distance metric** instead of the Euclidean distance.</span>
+<span id="cb43-160"><a href="#cb43-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-161"><a href="#cb43-161" aria-hidden="true" tabindex="-1"></a>Compare the dendrograms: How different are the resulting clusterings? Do you recognise subclusters that are consistent?</span>
+<span id="cb43-162"><a href="#cb43-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-163"><a href="#cb43-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-166"><a href="#cb43-166" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-167"><a href="#cb43-167" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-unscale</span></span>
+<span id="cb43-168"><a href="#cb43-168" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-169"><a href="#cb43-169" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-170"><a href="#cb43-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-171"><a href="#cb43-171" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare scaled data versus non-scaled data:</span></span>
+<span id="cb43-172"><a href="#cb43-172" aria-hidden="true" tabindex="-1"></a>hc.unscaled <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(nci.data), <span class="at">method=</span><span class="st">"complete"</span>)</span>
+<span id="cb43-173"><a href="#cb43-173" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.unscaled, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete linkage with unscaled features"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
+<span id="cb43-174"><a href="#cb43-174" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-175"><a href="#cb43-175" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare Euclidean distance with correlation-based distance:</span></span>
+<span id="cb43-176"><a href="#cb43-176" aria-hidden="true" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">as.dist</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">cor</span>(<span class="fu">t</span>(sd.data)))</span>
+<span id="cb43-177"><a href="#cb43-177" aria-hidden="true" tabindex="-1"></a>hc.corr <span class="ot">&lt;-</span> <span class="fu">hclust</span>(dd, <span class="at">method=</span><span class="st">"complete"</span>)</span>
+<span id="cb43-178"><a href="#cb43-178" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hc.corr, <span class="at">labels=</span>nci.labs, <span class="at">main=</span><span class="st">"Complete linkage with correlation-based distance"</span>, <span class="at">xlab=</span><span class="st">""</span>, <span class="at">sub=</span><span class="st">""</span>)</span>
+<span id="cb43-179"><a href="#cb43-179" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-180"><a href="#cb43-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-181"><a href="#cb43-181" aria-hidden="true" tabindex="-1"></a><span class="fu">### K-means clustering</span></span>
+<span id="cb43-182"><a href="#cb43-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-183"><a href="#cb43-183" aria-hidden="true" tabindex="-1"></a>In this section we explore the K-means clustering on the same dataset. </span>
+<span id="cb43-184"><a href="#cb43-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-185"><a href="#cb43-185" aria-hidden="true" tabindex="-1"></a>In contrast to the hierarchical clustering which requires a **distance** as input, with K-means you would provide the data matrix. The data matrix can be scaled (centered and with unit variance), or unscaled.</span>
+<span id="cb43-186"><a href="#cb43-186" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-187"><a href="#cb43-187" aria-hidden="true" tabindex="-1"></a>In this example we use scaled data computed from before, <span class="in">`sd.data`</span>. </span>
+<span id="cb43-188"><a href="#cb43-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-191"><a href="#cb43-191" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-192"><a href="#cb43-192" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-km4</span></span>
+<span id="cb43-193"><a href="#cb43-193" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-194"><a href="#cb43-194" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-195"><a href="#cb43-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-196"><a href="#cb43-196" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">4</span>) <span class="co"># set random seed</span></span>
+<span id="cb43-197"><a href="#cb43-197" aria-hidden="true" tabindex="-1"></a>km.out4 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="at">centers =</span> <span class="dv">4</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
+<span id="cb43-198"><a href="#cb43-198" aria-hidden="true" tabindex="-1"></a>km.out4<span class="sc">$</span>cluster</span>
+<span id="cb43-199"><a href="#cb43-199" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-200"><a href="#cb43-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-201"><a href="#cb43-201" aria-hidden="true" tabindex="-1"></a>Read the help file <span class="in">`?kmeans`</span> to understand what the argument nstart=20 does. Comparing an analysis with nstart=20 versus nstart=1 demonstrates how the cluster results can be improved if we allow more evaluations with different randomly chosen starting centroids.</span>
+<span id="cb43-202"><a href="#cb43-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-203"><a href="#cb43-203" aria-hidden="true" tabindex="-1"></a>Set a different random seed, say 3 (as long as it's different from the one you used before), and run the analysis again. This time we use a different <span class="in">`nstart`</span></span>
+<span id="cb43-204"><a href="#cb43-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-207"><a href="#cb43-207" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-208"><a href="#cb43-208" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-km3</span></span>
+<span id="cb43-209"><a href="#cb43-209" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-210"><a href="#cb43-210" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-211"><a href="#cb43-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-212"><a href="#cb43-212" aria-hidden="true" tabindex="-1"></a><span class="co"># different starting centroids improve the clustering:</span></span>
+<span id="cb43-213"><a href="#cb43-213" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
+<span id="cb43-214"><a href="#cb43-214" aria-hidden="true" tabindex="-1"></a>km.out <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="at">centers =</span> <span class="dv">4</span>, <span class="at">nstart=</span><span class="dv">1</span>)</span>
+<span id="cb43-215"><a href="#cb43-215" aria-hidden="true" tabindex="-1"></a>km.out<span class="sc">$</span>cluster</span>
+<span id="cb43-216"><a href="#cb43-216" aria-hidden="true" tabindex="-1"></a>km.out<span class="sc">$</span>tot.withinss</span>
+<span id="cb43-217"><a href="#cb43-217" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-218"><a href="#cb43-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-219"><a href="#cb43-219" aria-hidden="true" tabindex="-1"></a><span class="fu">### Compare with hierarchical clustering</span></span>
+<span id="cb43-220"><a href="#cb43-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-223"><a href="#cb43-223" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-224"><a href="#cb43-224" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-km-res</span></span>
+<span id="cb43-225"><a href="#cb43-225" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-226"><a href="#cb43-226" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-227"><a href="#cb43-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-228"><a href="#cb43-228" aria-hidden="true" tabindex="-1"></a><span class="co"># we can directly compare the k-means result (along rows)</span></span>
+<span id="cb43-229"><a href="#cb43-229" aria-hidden="true" tabindex="-1"></a><span class="co"># with the hierarchical clustering result (along columns)</span></span>
+<span id="cb43-230"><a href="#cb43-230" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(km.out4<span class="sc">$</span>cluster, hc.clusters[,<span class="st">"4"</span>], <span class="at">deparse.level=</span><span class="dv">2</span>)</span>
+<span id="cb43-231"><a href="#cb43-231" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-232"><a href="#cb43-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-233"><a href="#cb43-233" aria-hidden="true" tabindex="-1"></a>From the results, you can see that the results are slightly different between the two methods. Keep in mind that in unsupervised learning you do not have the real outcome label (such as the cancer types here), so you need to try a few different methods and compare the outputs, and make interpretations accordingly.</span>
+<span id="cb43-234"><a href="#cb43-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-235"><a href="#cb43-235" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-236"><a href="#cb43-236" aria-hidden="true" tabindex="-1"></a><span class="fu">### Visualize clusters</span></span>
+<span id="cb43-237"><a href="#cb43-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-238"><a href="#cb43-238" aria-hidden="true" tabindex="-1"></a>We can visualise the K-means clustering results of high-dimensional data by using PCA for dimension reduction. We plot the first two principal components and colour the data points (= individual cell lines) by their assigned cluster from K-means.</span>
+<span id="cb43-239"><a href="#cb43-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-242"><a href="#cb43-242" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-243"><a href="#cb43-243" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-km-pca</span></span>
+<span id="cb43-244"><a href="#cb43-244" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-245"><a href="#cb43-245" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-246"><a href="#cb43-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-247"><a href="#cb43-247" aria-hidden="true" tabindex="-1"></a><span class="co"># first, run PCA again on the NCI60 data</span></span>
+<span id="cb43-248"><a href="#cb43-248" aria-hidden="true" tabindex="-1"></a>pr.out <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(nci.data, <span class="at">scale=</span><span class="cn">TRUE</span>)</span>
+<span id="cb43-249"><a href="#cb43-249" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-250"><a href="#cb43-250" aria-hidden="true" tabindex="-1"></a><span class="co"># more cluster options</span></span>
+<span id="cb43-251"><a href="#cb43-251" aria-hidden="true" tabindex="-1"></a>km.out2 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">2</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
+<span id="cb43-252"><a href="#cb43-252" aria-hidden="true" tabindex="-1"></a>km.out3 <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(sd.data, <span class="dv">3</span>, <span class="at">nstart=</span><span class="dv">20</span>)</span>
+<span id="cb43-253"><a href="#cb43-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-254"><a href="#cb43-254" aria-hidden="true" tabindex="-1"></a><span class="co"># we can now visualise the K-Means results by labelling the data points</span></span>
+<span id="cb43-255"><a href="#cb43-255" aria-hidden="true" tabindex="-1"></a><span class="co"># in a plot of the scores of the first 2 principal components:</span></span>
+<span id="cb43-256"><a href="#cb43-256" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
+<span id="cb43-257"><a href="#cb43-257" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>(km.out2<span class="sc">$</span>cluster<span class="sc">+</span><span class="dv">1</span>), <span class="at">main=</span><span class="st">"K-Means with K=2"</span>,</span>
+<span id="cb43-258"><a href="#cb43-258" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"PC 1"</span>, <span class="at">ylab=</span><span class="st">"PC 2"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span>
+<span id="cb43-259"><a href="#cb43-259" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>(km.out3<span class="sc">$</span>cluster<span class="sc">+</span><span class="dv">1</span>), <span class="at">main=</span><span class="st">"K-Means with K=3"</span>,</span>
+<span id="cb43-260"><a href="#cb43-260" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"PC 1"</span>,  <span class="at">ylab=</span><span class="st">"PC 2"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span>
+<span id="cb43-261"><a href="#cb43-261" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span>(km.out4<span class="sc">$</span>cluster<span class="sc">+</span><span class="dv">1</span>), <span class="at">main=</span><span class="st">"K-Means with K=4"</span>,</span>
+<span id="cb43-262"><a href="#cb43-262" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">"PC 1"</span>, <span class="at">ylab=</span><span class="st">"PC 2"</span>, <span class="at">pch=</span><span class="dv">20</span>)</span>
+<span id="cb43-263"><a href="#cb43-263" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-264"><a href="#cb43-264" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-265"><a href="#cb43-265" aria-hidden="true" tabindex="-1"></a>Compare with the plot from Exercise 2 yesterday (left panel) along with the cancer type labels. The clusters from K-means seem to correspond decently to partition the data into groups.</span>
+<span id="cb43-266"><a href="#cb43-266" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-269"><a href="#cb43-269" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-270"><a href="#cb43-270" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb43-271"><a href="#cb43-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-272"><a href="#cb43-272" aria-hidden="true" tabindex="-1"></a>Cols<span class="ot">=</span><span class="cf">function</span>(vec){</span>
+<span id="cb43-273"><a href="#cb43-273" aria-hidden="true" tabindex="-1"></a>  cols<span class="ot">=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(vec)))</span>
+<span id="cb43-274"><a href="#cb43-274" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(cols[<span class="fu">as.numeric</span>(<span class="fu">as.factor</span>(vec))])</span>
+<span id="cb43-275"><a href="#cb43-275" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb43-276"><a href="#cb43-276" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">col=</span><span class="fu">Cols</span>(nci.labs), <span class="at">pch=</span><span class="dv">19</span>,<span class="at">xlab=</span><span class="st">"PC 1"</span>,<span class="at">ylab=</span><span class="st">" PC 2"</span>)</span>
+<span id="cb43-277"><a href="#cb43-277" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">'topleft'</span>, <span class="at">col=</span><span class="fu">rainbow</span>(<span class="fu">length</span>(<span class="fu">unique</span>(nci.labs))), <span class="at">legend=</span><span class="fu">unique</span>(nci.labs), <span class="at">bty=</span><span class="st">'n'</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">cex=</span>.<span class="dv">6</span>)</span>
+<span id="cb43-278"><a href="#cb43-278" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-279"><a href="#cb43-279" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-280"><a href="#cb43-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-281"><a href="#cb43-281" aria-hidden="true" tabindex="-1"></a><span class="fu">### Heatmap </span></span>
+<span id="cb43-282"><a href="#cb43-282" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-283"><a href="#cb43-283" aria-hidden="true" tabindex="-1"></a>A heatmap is another way to visualize the clusters from the data. We use the principal components rather than the raw data, as PCs are already explaining a large amount of variability in the over 6000 features.</span>
+<span id="cb43-284"><a href="#cb43-284" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-285"><a href="#cb43-285" aria-hidden="true" tabindex="-1"></a>Similar values are presented with similar colors. </span>
+<span id="cb43-286"><a href="#cb43-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-289"><a href="#cb43-289" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-290"><a href="#cb43-290" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-heatmap-pca</span></span>
+<span id="cb43-291"><a href="#cb43-291" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-292"><a href="#cb43-292" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-293"><a href="#cb43-293" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-294"><a href="#cb43-294" aria-hidden="true" tabindex="-1"></a><span class="do">## We use the scores of the PCA on the NCI60 data, to reduce dimension</span></span>
+<span id="cb43-295"><a href="#cb43-295" aria-hidden="true" tabindex="-1"></a>scores <span class="ot">&lt;-</span> pr.out<span class="sc">$</span>x</span>
+<span id="cb43-296"><a href="#cb43-296" aria-hidden="true" tabindex="-1"></a>scores[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>] <span class="co"># first 5 pc, first 5 measurements</span></span>
+<span id="cb43-297"><a href="#cb43-297" aria-hidden="true" tabindex="-1"></a><span class="co">#  default choices</span></span>
+<span id="cb43-298"><a href="#cb43-298" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(pr.out<span class="sc">$</span>x)</span>
+<span id="cb43-299"><a href="#cb43-299" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-300"><a href="#cb43-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-301"><a href="#cb43-301" aria-hidden="true" tabindex="-1"></a>You can remove the dendrogram on the PCs, only keeping the ones for cancer types. Now you see that the PCs have kept their original order from 1 to 64.</span>
+<span id="cb43-302"><a href="#cb43-302" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-305"><a href="#cb43-305" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-306"><a href="#cb43-306" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-heatmap-dendro</span></span>
+<span id="cb43-307"><a href="#cb43-307" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-308"><a href="#cb43-308" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-309"><a href="#cb43-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-310"><a href="#cb43-310" aria-hidden="true" tabindex="-1"></a><span class="co"># hc.corr is the result from hclust. check the section on hierarchical clustering</span></span>
+<span id="cb43-311"><a href="#cb43-311" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(pr.out<span class="sc">$</span>x, <span class="at">Rowv =</span> <span class="fu">as.dendrogram</span>(hc.corr), <span class="at">Colv =</span> <span class="cn">NA</span>)</span>
+<span id="cb43-312"><a href="#cb43-312" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-313"><a href="#cb43-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-314"><a href="#cb43-314" aria-hidden="true" tabindex="-1"></a>You can also reduce the number of PCs, and add titles to the plot annd y-axis.</span>
+<span id="cb43-315"><a href="#cb43-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-318"><a href="#cb43-318" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-319"><a href="#cb43-319" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-nci60-heatmap-type</span></span>
+<span id="cb43-320"><a href="#cb43-320" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-321"><a href="#cb43-321" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-322"><a href="#cb43-322" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-323"><a href="#cb43-323" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">cex.main =</span> .<span class="dv">7</span>)</span>
+<span id="cb43-324"><a href="#cb43-324" aria-hidden="true" tabindex="-1"></a><span class="fu">heatmap</span>(pr.out<span class="sc">$</span>x[,<span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>], <span class="at">Rowv =</span> <span class="fu">as.dendrogram</span>(hc.corr), <span class="at">Colv =</span> <span class="cn">NA</span>,</span>
+<span id="cb43-325"><a href="#cb43-325" aria-hidden="true" tabindex="-1"></a>        <span class="at">labRow =</span> nci.labs, <span class="at">main =</span> <span class="st">'Heatmap of the scores of the first 40 PCs on the NCI60 data'</span>)</span>
+<span id="cb43-326"><a href="#cb43-326" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-327"><a href="#cb43-327" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-328"><a href="#cb43-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-329"><a href="#cb43-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-330"><a href="#cb43-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-331"><a href="#cb43-331" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-332"><a href="#cb43-332" aria-hidden="true" tabindex="-1"></a><span class="fu">## Exercise 2: Gene expression data</span></span>
+<span id="cb43-333"><a href="#cb43-333" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-334"><a href="#cb43-334" aria-hidden="true" tabindex="-1"></a>(CH12Ex13 from statistical learning)</span>
+<span id="cb43-335"><a href="#cb43-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-336"><a href="#cb43-336" aria-hidden="true" tabindex="-1"></a>We use the <span class="in">`Ch12Ex13.csv`</span> data to repeat some of the clustering analysis we did.</span>
+<span id="cb43-337"><a href="#cb43-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-338"><a href="#cb43-338" aria-hidden="true" tabindex="-1"></a>The first 20 samples are from healthy patients, while the second 20 are from a diseased group.</span>
+<span id="cb43-339"><a href="#cb43-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-340"><a href="#cb43-340" aria-hidden="true" tabindex="-1"></a>Load in the data using read.csv(). You will need to select header=F. Alternatively: load in the data using “Import dataset” in the upper right window, and click “no” on the “Heading” option.</span>
+<span id="cb43-341"><a href="#cb43-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-342"><a href="#cb43-342" aria-hidden="true" tabindex="-1"></a>Carry out both hierarchical clustering and K-means clustering. You should choose the most meaningful number of clusters (think about how many groups of patients we have!). Compare the results. </span>
+<span id="cb43-343"><a href="#cb43-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-344"><a href="#cb43-344" aria-hidden="true" tabindex="-1"></a>Note: remember that the data has genes on the rows and patients on the columns. You need to transpose the data so that the orders are reversed.</span>
+<span id="cb43-345"><a href="#cb43-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-348"><a href="#cb43-348" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-349"><a href="#cb43-349" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-ge-loaddata</span></span>
+<span id="cb43-350"><a href="#cb43-350" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-351"><a href="#cb43-351" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-352"><a href="#cb43-352" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-353"><a href="#cb43-353" aria-hidden="true" tabindex="-1"></a><span class="co"># load in the data using read.csv(). You will need to select header=F.</span></span>
+<span id="cb43-354"><a href="#cb43-354" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/Ch12Ex13.csv"</span>, <span class="at">header=</span><span class="cn">FALSE</span>)</span>
+<span id="cb43-355"><a href="#cb43-355" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(data)</span>
+<span id="cb43-356"><a href="#cb43-356" aria-hidden="true" tabindex="-1"></a><span class="co"># transpose the data, so that we have each row is one patient (subject)</span></span>
+<span id="cb43-357"><a href="#cb43-357" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">t</span>(data) </span>
+<span id="cb43-358"><a href="#cb43-358" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-359"><a href="#cb43-359" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-360"><a href="#cb43-360" aria-hidden="true" tabindex="-1"></a>Now the first 20 rows are measurements from healthy patients (group 0), and 21-50 rows are the disease patients (group 1). We can denote this information in a vector like this.</span>
+<span id="cb43-361"><a href="#cb43-361" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-364"><a href="#cb43-364" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-365"><a href="#cb43-365" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-ge-truelabel</span></span>
+<span id="cb43-366"><a href="#cb43-366" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-367"><a href="#cb43-367" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-368"><a href="#cb43-368" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-369"><a href="#cb43-369" aria-hidden="true" tabindex="-1"></a>true.groups <span class="ot">&lt;-</span> <span class="fu">c</span>( <span class="fu">rep</span>(<span class="dv">0</span>,<span class="dv">20</span>), <span class="fu">rep</span>(<span class="dv">1</span>,<span class="dv">20</span>))</span>
+<span id="cb43-370"><a href="#cb43-370" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-371"><a href="#cb43-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-372"><a href="#cb43-372" aria-hidden="true" tabindex="-1"></a><span class="fu">### Hierarchical clustering </span></span>
+<span id="cb43-373"><a href="#cb43-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-374"><a href="#cb43-374" aria-hidden="true" tabindex="-1"></a>You can use different linkage options and distance metrics of your choosing. For example, with complete linkage the code is like this.</span>
+<span id="cb43-375"><a href="#cb43-375" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-378"><a href="#cb43-378" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-379"><a href="#cb43-379" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-ge-clust</span></span>
+<span id="cb43-380"><a href="#cb43-380" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-381"><a href="#cb43-381" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-382"><a href="#cb43-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-383"><a href="#cb43-383" aria-hidden="true" tabindex="-1"></a>data.dist <span class="ot">&lt;-</span> <span class="fu">dist</span>(data) <span class="co"># need to compute the distance matrix</span></span>
+<span id="cb43-384"><a href="#cb43-384" aria-hidden="true" tabindex="-1"></a>hclust.df <span class="ot">&lt;-</span> <span class="fu">hclust</span>(data.dist, <span class="at">method=</span><span class="st">"complete"</span> )</span>
+<span id="cb43-385"><a href="#cb43-385" aria-hidden="true" tabindex="-1"></a><span class="co">#alternatives:</span></span>
+<span id="cb43-386"><a href="#cb43-386" aria-hidden="true" tabindex="-1"></a><span class="co">#hclust.df &lt;- hclust( D, method="average" )</span></span>
+<span id="cb43-387"><a href="#cb43-387" aria-hidden="true" tabindex="-1"></a><span class="co">#hclust.df &lt;- hclust( D, method="single" )</span></span>
+<span id="cb43-388"><a href="#cb43-388" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-389"><a href="#cb43-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-390"><a href="#cb43-390" aria-hidden="true" tabindex="-1"></a>We can keep 2 clusters with <span class="in">`cutree`</span>. Then do a cross tabulation of the true labels and clustered results: how well do they correspond?</span>
+<span id="cb43-391"><a href="#cb43-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-394"><a href="#cb43-394" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-395"><a href="#cb43-395" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-ge-clust-res</span></span>
+<span id="cb43-396"><a href="#cb43-396" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-397"><a href="#cb43-397" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-398"><a href="#cb43-398" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-399"><a href="#cb43-399" aria-hidden="true" tabindex="-1"></a><span class="co"># find the clusters</span></span>
+<span id="cb43-400"><a href="#cb43-400" aria-hidden="true" tabindex="-1"></a>predicted <span class="ot">&lt;-</span> <span class="fu">cutree</span>( hclust.df, <span class="at">k=</span><span class="dv">2</span> )</span>
+<span id="cb43-401"><a href="#cb43-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-402"><a href="#cb43-402" aria-hidden="true" tabindex="-1"></a><span class="co"># How well does our clustering predict health vs. diseased</span></span>
+<span id="cb43-403"><a href="#cb43-403" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predicted, true.groups )</span>
+<span id="cb43-404"><a href="#cb43-404" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-405"><a href="#cb43-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-406"><a href="#cb43-406" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-407"><a href="#cb43-407" aria-hidden="true" tabindex="-1"></a><span class="fu">### K-means</span></span>
+<span id="cb43-408"><a href="#cb43-408" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-409"><a href="#cb43-409" aria-hidden="true" tabindex="-1"></a>Now you can use K-means to identify 2 clusters. </span>
+<span id="cb43-410"><a href="#cb43-410" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-413"><a href="#cb43-413" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb43-414"><a href="#cb43-414" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: clust-ge-km</span></span>
+<span id="cb43-415"><a href="#cb43-415" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb43-416"><a href="#cb43-416" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb43-417"><a href="#cb43-417" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-418"><a href="#cb43-418" aria-hidden="true" tabindex="-1"></a>predicted.kmean <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(data, <span class="dv">2</span>, <span class="at">nstart=</span><span class="dv">20</span>)<span class="sc">$</span>cluster</span>
+<span id="cb43-419"><a href="#cb43-419" aria-hidden="true" tabindex="-1"></a><span class="co"># agreement with true label</span></span>
+<span id="cb43-420"><a href="#cb43-420" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predicted.kmean, true.groups )</span>
+<span id="cb43-421"><a href="#cb43-421" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb43-422"><a href="#cb43-422" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-423"><a href="#cb43-423" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-424"><a href="#cb43-424" aria-hidden="true" tabindex="-1"></a>Both methods seem to do work decently for the task. </span>
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
