@@ -46,7 +46,7 @@
     "href": "index.html",
     "title": "MED3007: Statistical Principles in Genomics",
     "section": "",
-    "text": "Welcome!\nThis is the course website for MED3007: Statistical Principles in Genomics at the Faculty of Medicine, University of Oslo.\nThe course website is developed by the instructors of the course, hosted for free and public accessible on Github. Course material can be found in the github repository.\n\nStructure\n\nGet Started provides some information about software installation, data download and code.\nR Lab and Code hosts the lab session exercises and code.\n\n\n\n\n\n\n\nOfficial course webpage\n\n\n\nPlease refer to the official course page by University of Oslo for information related to application, evaluation and other administrative matters.\n\n\n\n\nPreparation before the course starts\nYou should have R installed on your computer before the course. More on preparation please read here.\nIf you have trouble setting it up with your own laptop, you can also use the PC in the PC lab.\n\n\n\nSchedule\nYou can find the time and place on the official course schedule at the University of Oslo course website.\nIf there is a conflict of information, please refer to the official schedule.\n\nDay 1\n\n\n\nTime\nTopic\nCourse material\n\n\n\n\n9:00 - 9:45\nIntroduction to the course\nLecture\n\n\n10:00 - 11:30\nLab: Introduction to R and Rstudio\nR Lab, Code\n\n\n13:00 - 14:00\nData screening and multiple testing\nLecture\n\n\n14:00 - 16:00\nQ&A\n\n\n\n\n\n\nDay 2\n\n\n\nTime\nTopic\nCourse material\n\n\n\n\n9:00 - 9:45\nLab: Data screening and multiple testing\n\n\n\n10:00 - 11:30\nExercises\nR Lab, Code\n\n\n13:00 - 14:00\nData visualization, dimensional reduction\nLecture\n\n\n14:00 - 16:00\nQ&A\n\n\n\n\n\n\nDay 3\n\n\n\nTime\nTopic\nCourse material\n\n\n\n\n9:00 - 9:45\nLab: Data visualization, dimensional reduction\nLecture\n\n\n10:00 - 11:30\nExercises\nR Lab, Code\n\n\n13:00 - 14:00\nClustering\nLecture\n\n\n14:00 - 16:00\nQ&A\n\n\n\n\n\n\nDay 4\n\n\n\nTime\nTopic\nCourse material\n\n\n\n\n9:00 - 9:45\nLab: Clustering and heatmaps\n\n\n\n10:00 - 11:30\nExercises\nR Lab, Code\n\n\n13:00 - 14:00\nTake-home exam simulation\n\n\n\n14:00 - 16:00\nQ&A"
+    "text": "Welcome!\nThis is the course website for MED3007: Statistical Principles in Genomics at the Faculty of Medicine, University of Oslo.\nThe course website is developed by the instructors of the course, hosted for free and public accessible on Github. Course material can be found in the github repository.\n\nStructure\n\nGet Started provides some information about software installation, data download and code.\nR Lab and Code hosts the lab session exercises and code.\n\n\n\n\n\n\n\nOfficial course webpage\n\n\n\nPlease refer to the official course page by University of Oslo for information related to application, evaluation and other administrative matters.\n\n\n\n\nPreparation before the course starts\nYou should have R installed on your computer before the course. More on preparation please read here.\nIf you have trouble setting it up with your own laptop, you can also use the PC in the PC lab.\n\n\n\nSchedule\nYou can find the time and place on the official course schedule at the University of Oslo course website.\nIf there is a conflict of information, please refer to the official schedule.\n\nDay 1\n\n\n\nTime\nTopic\nCourse material\n\n\n\n\n9:00 - 9:45\nIntroduction to the course\nLecture\n\n\n10:00 - 11:30\nLab: Introduction to R and Rstudio\nLab: intro to R, Code\n\n\n13:00 - 14:00\nData screening and multiple testing\nLecture\n\n\n14:00 - 16:00\nQ&A\n\n\n\n\n\n\nDay 2\n\n\n\nTime\nTopic\nCourse material\n\n\n\n\n9:00 - 9:45\nLab: Data screening and multiple testing\n\n\n\n10:00 - 11:30\nExercises\nLab: multiple testing, Code, Code (solution)\n\n\n13:00 - 14:00\nData visualization, dimensional reduction\nLecture\n\n\n14:00 - 16:00\nQ&A\n\n\n\n\n\n\nDay 3\n\n\n\nTime\nTopic\nCourse material\n\n\n\n\n9:00 - 9:45\nLab: Data visualization, dimensional reduction\nLecture\n\n\n10:00 - 11:30\nExercises\nLab: PCA, Code\n\n\n13:00 - 14:00\nClustering\nLecture\n\n\n14:00 - 16:00\nQ&A\n\n\n\n\n\n\nDay 4\n\n\n\nTime\nTopic\nCourse material\n\n\n\n\n9:00 - 9:45\nLab: Clustering and heatmaps\n\n\n\n10:00 - 11:30\nExercises\nLab: clustering, Code\n\n\n13:00 - 14:00\nTake-home exam simulation\n\n\n\n14:00 - 16:00\nQ&A"
   },
   {
     "objectID": "about.html",
@@ -186,14 +186,14 @@
     "href": "lab/overview.html#lab-notes-and-r-scripts",
     "title": "R Lab: Overview",
     "section": "Lab notes and R scripts",
-    "text": "Lab notes and R scripts\n\n\n\nDay\nLab notes\nR script\n\n\n\n\nDay 1\nDay 1: Introduction to R\n\n\n\n\nDay 1 (supplement): Navigate RStudio and workspace\n\n\n\nDay 2\nDay 2: Multiple testing\n\n\n\nDay 3\nDay 3: Principal Component Analysis\n\n\n\nDay 4\nDay 4: Clustering"
+    "text": "Lab notes and R scripts\n\n\n\nDay\nLab notes\nR script\n\n\n\n\nDay 1\nDay 1: Introduction to R\nCode\n\n\n\nDay 1 (supplement): Navigate RStudio and workspace\n\n\n\nDay 2\nDay 2: Multiple testing\nCode, Code (solution)\n\n\nDay 3\nDay 3: Principal Component Analysis\nCode\n\n\nDay 4\nDay 4: Clustering\nCode"
   },
   {
     "objectID": "lab/lab_day3_pca.html",
     "href": "lab/lab_day3_pca.html",
     "title": "R Lab (day 3): Data exploration, Principal Component Analysis",
     "section": "",
-    "text": "Datasets\nThe following datasets are used in the exercises. Download datasets from GitHub repository, or from Canvas.\nR script\nLab lecture"
+    "text": "Download datasets here or from Canvas.\nR script: Code\nLab Lecture"
   },
   {
     "objectID": "lab/lab_day3_pca.html#nci60",
@@ -207,7 +207,7 @@
     "href": "lab/lab_day4_clustering.html",
     "title": "R Lab (day 4): Clustering",
     "section": "",
-    "text": "Datasets\nR script\nLab lecture"
+    "text": "Download datasets here or from Canvas.\nR script: Code\nLab lecture"
   },
   {
     "objectID": "lab/lab_day4_clustering.html#nci60",
@@ -333,7 +333,7 @@
     "href": "lab/lab_day2_testing.html",
     "title": "R Lab (day 2): Multiple Testing",
     "section": "",
-    "text": "Datasets\nR script"
+    "text": "Download datasets here or from Canvas.\nR scripts"
   },
   {
     "objectID": "lab/lab_day2_testing.html#t-test-brain-data",

@@ -39,7 +39,7 @@ If there is a conflict of information, please refer to the official schedule.
 |     Time      |                 Topic                |  Course material  |
 |:-------------:|:------------------------------------:|:-----------------:|
 | 9:00 - 9:45   | Introduction to the course | [Lecture](lecture_notes/MED3007_Lecture0.pdf)                  |
-| 10:00 - 11:30  | Lab: Introduction to R and Rstudio  | [R Lab](), [Code]() |
+| 10:00 - 11:30  | Lab: Introduction to R and Rstudio  | [Lab: intro to R](lab/lab_day1_intro.qmd), [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab0_intro_r.R) |
 | 13:00 - 14:00  | Data screening and multiple testing   | [Lecture](lecture_notes/MED3007_Lecture1.pdf)  |
 | 14:00 - 16:00  | Q&A | |
 
@@ -50,7 +50,7 @@ If there is a conflict of information, please refer to the official schedule.
 |     Time      |                 Topic                |  Course material  |
 |:-------------:|:------------------------------------:|:-----------------:|
 | 9:00 - 9:45   | Lab: Data screening and multiple testing  | |
-| 10:00 - 11:30  | Exercises  | [R Lab](), [Code]()  |
+| 10:00 - 11:30  | Exercises  | [Lab: multiple testing](https://ocbe-uio.github.io/course_med3007/lab/lab_day2_testing.html), [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1.R), [Code (solution)](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1_exercise_solution.R)   |
 | 13:00 - 14:00  | Data visualization, dimensional reduction | [Lecture](lecture_notes/MED3007_Lecture2.pdf)   |
 | 14:00 - 16:00  | Q&A | |
 
@@ -61,7 +61,7 @@ If there is a conflict of information, please refer to the official schedule.
 |     Time      |                 Topic                |  Course material  |
 |:-------------:|:------------------------------------:|:-----------------:|
 | 9:00 - 9:45   | Lab: Data visualization, dimensional reduction | [Lecture]()  |
-| 10:00 - 11:30  | Exercises  |[R Lab](), [Code]()  |
+| 10:00 - 11:30  | Exercises  |[Lab: PCA](https://ocbe-uio.github.io/course_med3007/lab/lab_day3_pca.html), [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab2_pca.R)  |
 | 13:00 - 14:00  | Clustering   |  [Lecture](lecture_notes/MED3007_Lecture3.pdf)  |
 | 14:00 - 16:00  | Q&A | |
 
@@ -70,7 +70,7 @@ If there is a conflict of information, please refer to the official schedule.
 |     Time      |                 Topic                |  Course material  |
 |:-------------:|:------------------------------------:|:-----------------:|
 | 9:00 - 9:45   | Lab: Clustering and heatmaps |   |
-| 10:00 - 11:30  | Exercises  | [R Lab](), [Code]() |
+| 10:00 - 11:30  | Exercises  | [Lab: clustering](https://ocbe-uio.github.io/course_med3007/lab/lab_day4_clustering.html), [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R) |
 | 13:00 - 14:00  | Take-home exam simulation   |  |
 | 14:00 - 16:00  | Q&A | |
 

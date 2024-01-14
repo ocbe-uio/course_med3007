@@ -6,9 +6,9 @@ format:
     code-tools: true
 ---
 
-Datasets
+Download datasets [here](https://github.com/ocbe-uio/course_med3007/tree/main/lab/data) or from Canvas.
 
-R script
+R script: [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R)
 
 Lab lecture 
 

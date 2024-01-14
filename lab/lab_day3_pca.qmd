@@ -6,17 +6,12 @@ format:
     code-tools: true
 ---
 
-Datasets
 
-The following datasets are used in the exercises. Download datasets from GitHub repository, or from Canvas.
+Download datasets [here](https://github.com/ocbe-uio/course_med3007/tree/main/lab/data) or from Canvas.
 
-* `Food.txt` ([link]())
-* `nci60`
-* `ch12ex13.csv`
+R script: [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab2_pca.R)
 
-R script 
-
-Lab lecture 
+Lab Lecture 
 
 
 

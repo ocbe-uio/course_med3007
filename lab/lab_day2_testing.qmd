@@ -6,9 +6,12 @@ format:
     code-tools: true
 ---
 
-Datasets
+Download datasets [here](https://github.com/ocbe-uio/course_med3007/tree/main/lab/data) or from Canvas.
 
-R script
+R scripts
+
+* [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1.R))
+* [Code (solution)](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab2_pca.R)
 
 
 ## Exercise 1: brain data
