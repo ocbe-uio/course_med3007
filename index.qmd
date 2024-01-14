@@ -51,7 +51,7 @@ If there is a conflict of information, please refer to the official schedule.
 |:-------------:|:------------------------------------:|:-----------------:|
 | 9:00 - 9:45   | Lab: Data screening and multiple testing  | |
 | 10:00 - 11:30  | Exercises  | [R Lab](), [Code]()  |
-| 13:00 - 14:00  | Data visualization, dimensional reduction | [Lecture]()   |
+| 13:00 - 14:00  | Data visualization, dimensional reduction | [Lecture](lecture_notes/MED3007_Lecture2.pdf)   |
 | 14:00 - 16:00  | Q&A | |
 
 
@@ -62,7 +62,7 @@ If there is a conflict of information, please refer to the official schedule.
 |:-------------:|:------------------------------------:|:-----------------:|
 | 9:00 - 9:45   | Lab: Data visualization, dimensional reduction | [Lecture]()  |
 | 10:00 - 11:30  | Exercises  |[R Lab](), [Code]()  |
-| 13:00 - 14:00  | Clustering   |  [Lecture]()  |
+| 13:00 - 14:00  | Clustering   |  [Lecture](lecture_notes/MED3007_Lecture3.pdf)  |
 | 14:00 - 16:00  | Q&A | |
 
 ### Day 4

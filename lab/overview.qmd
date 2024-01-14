@@ -32,7 +32,7 @@ day 4 (clustering)
 |:-------------:|:------------------------------------:|:-----------------:|
 | Day 1   | [Day 1: Introduction to R](lab_day1_intro.qmd)  |   |
 |    | [Day 1 (supplement): Navigate RStudio and workspace](lab_day1s_rstudio.qmd)  |   |
-| Day 2  | [Day 2: Multiple testing]()  |   |
+| Day 2  | [Day 2: Multiple testing](lab_day2_testing.qmd)  |   |
 | Day 3  | [Day 3: Principal Component Analysis](lab_day3_pca.qmd) | |
 | Day 4  | [Day 4: Clustering](lab_day4_clustering.qmd) | |
 
