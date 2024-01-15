@@ -75,4 +75,8 @@ If there is a conflict of information, please refer to the official schedule.
 | 14:00 - 16:00  | Q&A | |
 
 
+Papers
+
+* [Paper I: Cappelletti 2022](lecture_notes/CappellettiEtAL_2022.pdf)
+* [Paper II: Ankill 2022](lecture_notes/AnkillEtAl_2022.pdf)
 
