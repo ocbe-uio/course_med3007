@@ -35,7 +35,8 @@ day 4 (clustering)
 | Day 1   | [Day 1: Introduction to R](lab_day1_intro.qmd)  |  [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab0_intro_r.R)  |[Slides](presentation/Lab_IntroR.pdf) |
 |    | [(supplement): Navigate RStudio and workspace](lab_day1s_rstudio.qmd)  |  | |
 | Day 2  | [Day 2: Multiple testing](lab_day2_testing.qmd)  |   [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1.R), [Code (solution)](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab1_exercise_solution.R) | |
-| Day 3  | [Day 3: Principal Component Analysis](lab_day3_pca.qmd) |[Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab2_pca.R) | |
+| Day 3  | [Day 3: Principal Component Analysis](lab_day3_pca.qmd) |[Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab2_pca.R) | [Slides](presentation/Lab_pca.pdf)
+ |
 | Day 4  | [Day 4: Clustering](lab_day4_clustering.qmd) |[Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R) | |
 
 

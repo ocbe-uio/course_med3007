@@ -1,3 +1,9 @@
+###-------------------------###
+### SOLUTIONS TO EXERCISES  ###
+###-------------------------###
+
+
+
 ###--------------###
 ### 2. EXERCISE  ###
 ###--------------###
@@ -19,13 +25,17 @@ png('./Rplots/ex2_histogram_vitaminD.png', height = 500, width = 500)
 hist(Testfil_Rcourse$vitD_v1, prob = TRUE, xlab = 'vitamin D', main = 'histogram of vitamin D')
 dev.off() # for closing the plot file
 
-png('./Rplots/ex2_boxplot_vitaminD.png', height = 500, width = 500)
+png('./ex2_boxplot_vitaminD.png', height = 500, width = 500)
 boxplot(vitD_v1 ~ gender, Testfil_Rcourse)
 dev.off() # for closing the plot file
 
 
-vit1 <- Testfil_Rcourse[which(data$gender==0),'vitD_v1']
-vit2 <- Testfil_Rcourse[which(data$gender==1),'vitD_v1']
+vit1 <- Testfil_Rcourse[which(Testfil_Rcourse$gender==0),'vitD_v1']
+vit2 <- Testfil_Rcourse[which(Testfil_Rcourse$gender==1),'vitD_v1']
+# alternative syntax:
+vit1 <- Testfil_Rcourse$vitD_v1[which(Testfil_Rcourse$gender==0)]
+vit2 <- Testfil_Rcourse$vitD_v1[which(Testfil_Rcourse$gender==1)]
+
 
 
 qqnorm(vit1, main = 'vitamin D - females')
@@ -37,7 +47,7 @@ qqline(vit2)
 shapiro.test(vit1)
 shapiro.test(vit2) # data is normally distb.
 
-t.test(vitD_v1 ~ gender, data) # there is a difference in vitD between groups (gender)
+t.test(vitD_v1 ~ gender, Testfil_Rcourse) # there is a difference in vitD between groups (gender)
 
 
 
@@ -55,7 +65,8 @@ t.test(vitD_v1 ~ gender, data) # there is a difference in vitD between groups (g
 
 ## 1. Load in the data using read.csv(). You will need to select header=F.
 
-exp.data <-  read.csv("./data/Ch10Ex11.csv",header=FALSE)
+exp.data <-  read.csv("./data/Ch10Ex11.csv",header=F)
+dim(exp.data)
 # I want each row to represent a sample, and each column a gene
 exp.data <- t(exp.data) 
 dim(exp.data)
@@ -83,6 +94,9 @@ abline(h=0)
 
 # let us first apply the t-test and get an idea of the significance in the data
 # How many significant p-values (without any correction)
+pval.ttest <- apply(exp.data, 2, 
+                    function(x){t.test(x[which(groups==1)], x[which(groups==2)])$p.value})
+
 sum(pval.ttest < alpha)
 
 # how many expected false positives?
@@ -101,11 +115,15 @@ sum(pval.fdr  < alpha)
 
 # Get the significant genes (here the genes are numbered from 1 to 1000)
 sign.genes <- which(pval.fdr < alpha)
+# or 
+sign.genes <- which(pval.fwer < alpha)
 
 # Plot them
 plot(genes.gr.means[1,], xlab = 'genes', main = 'significant genes in blue', 
      ylim = range(genes.gr.means), ylab = 'mean expr')
 points(genes.gr.means[2,], col=2)
-points(sign.genes, genes.gr.means[1,sign.genes], col=4, pch=4)
-points(sign.genes,genes.gr.means[2,sign.genes], col=4, pch=4)
+points(sign.genes, genes.gr.means[1,sign.genes], col=4, pch=4, lwd=2)
+points(sign.genes,genes.gr.means[2,sign.genes], col=4, pch=4, lwd=2)
 abline(h=0)
+
+

@@ -11,7 +11,7 @@ Download datasets [here](https://github.com/ocbe-uio/course_med3007/tree/main/la
 
 R script: [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab2_pca.R)
 
-Lab Lecture 
+Lab Lecture: [Slides](presentation/Lab_pca.pdf)
 
 
 
@@ -186,6 +186,29 @@ You can visualize the points using a few selected PCs rather than the original d
 scores_food <- pc_food$x
 round(scores_food, digits = 2)
 ```
+
+(Optional) You can double check that the score is indeed the product of the original data (after scaling) with loading. Take Albania for example (first row of the data). Its score for PC1 is 2.94. Let us try to reproduce this number from formula.
+
+```{r}
+#| label: pca-food-albania
+#| warning: false
+#| echo: true
+
+food[1,] 
+# scale the data
+food_s <- scale(food)
+round(food_s[1,], digits = 2) # after centering and scaling
+# loading for PC1 is the first column
+round(loading_food[,1], digits = 2)
+# let us muliple element by element, then sum together
+prod_by_element <- as.numeric(food_s[1,]) * loading_food[, 1]
+round(prod_by_element, digits = 2)
+# sum all elements together
+sum(prod_by_element)
+```
+
+
+
 
 Another important result from the `prcomp()` command is the explained variance (PVE, proportion of variance explained). All PCs explain 100% of the variance; while the first PC explains the largest proportion (46%), second PC explains the second largest proportion (18.2%) and so on. 
 
