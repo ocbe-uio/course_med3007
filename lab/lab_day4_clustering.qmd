@@ -10,10 +10,190 @@ Download datasets [here](https://github.com/ocbe-uio/course_med3007/tree/main/la
 
 R script: [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R)
 
-Presentation: [Slides]()
+Presentation: [Slides](presentation/Lab_clustering.pdf)
+
+## Exercise 1: Food
+
+We use the same `Food.txt` data to illustrate two concepts: hierarchical clustering, and heatmap. 
+
+This is not a genomics dataset, but for the ease of interpretability, we use it for teaching purposes.
+
+Let us load the dataset.
+
+```{r}
+#| label: hc-food-loaddata
+#| warning: false
+#| echo: true
+
+food <- read.table('data/Food.txt', header=T)
+# we change the name from pulses to a more common name, legume
+colnames(food)[7] <- 'Legume'
+head(food) # print first 6 lines 
+```
+
+We **scale** the data (also called standardize, or normalize sometimes) so that each column (feature, variable) has 0 mean and 1 variance. We call the scaled data `food_s`.
+
+```{r}
+#| label: hc-food-scale
+#| warning: false
+#| echo: true
+
+food_s <- scale(food)
+head(food_s) # print first 6 lines
+```
 
 
-## Exercise 1: NCI60
+
+### Distances
+
+To do hierarchical clustering, the most convenient command is `hclust()`. As input you would need a **distance** between the subjects (patients, or countries in this example). We do it on the scaled data.
+
+The command to compute pair-wise distance is `dist()`. By default, the distance being computed is the Euclidean distance (*details optional*). Euclidean distance is possibly the most commonly used metric, but there are others. See `?dist()` to find out more options.
+
+We can present the pair-wise distances in a matrix format. You can see that this matrix is symmetric, with 0 on the diagonal - this should be intuitive: the distance between A - B is the same as B - A, and the distance between A and itself is 0.
+
+
+```{r}
+#| label: hc-food-dist
+#| warning: false
+#| echo: true
+
+# compute distance
+food_dist <- dist(food_s)
+# round(food_dist, digits = 2) # try this yourself to see what it does
+# alternatively, look at this as a matrix
+food_dist_matrix <- as.matrix(food_dist)
+round(food_dist_matrix[1:5, 1:5], digits = 2) # first 5 row 5 col
+```
+
+::: callout-note
+## Optional: Euclidean disance
+
+You can check the Euclidean distance between Albania and Austria is indeed 5.95. This distance is the square root of the sum of squared differences between two subjects in all their measurements. 
+
+:::
+
+```{r}
+#| label: hc-food-dist2
+#| warning: false
+#| echo: true
+
+round(food_s[1:2,], digits = 2) # we only keep first 2 digits
+# take the data for two countries each 
+albania <- round(food_s[1,], digits = 2)
+austria <- round(food_s[2,], digits = 2)
+# compute difference between each col
+d <- albania - austria
+d
+# euclidean distance: square each element, sum together, and take a square root
+sqrt(sum(d^2)) 
+```
+
+
+### Hierarchical clustering
+
+Now that we have computed the distance `food_dist`, we plug it in the clustering algorithm, `hclust()`. 
+
+We try the complete linkage method, by specifying `method = 'complete'`. The result is saved as `hc.complete`. You can visualize it, and add label of the country names to make it easier to read.
+
+```{r}
+#| label: hc-food-complete
+#| warning: false
+#| echo: true
+
+hc.complete <- hclust(food_dist, method="complete")
+plot(hc.complete, labels=rownames(food), main="Complete Linkage", xlab="", sub="")
+```
+
+
+### Linkage, dissimilarity, scaling
+
+Hierarchical clustering is a class of methods, and there are a variety of options to set. 
+
+* Linkage (by seting `method` inside `hclust()`): complete, single, average
+* Dissimilarity: Euclidean, correlation, ...
+* Scaling: scaled data (mean 0 variance 1) or unscaled, original data
+
+There is no definite guide on which combination works the best, hence you can try them out and see what could make most sense. Again, in unsupervised learning data do not have outcome labels, so the interpretation is left for the domain experts to make.
+
+
+```{r}
+#| label: hc-food-linkage
+#| warning: false
+#| echo: true
+
+# single linkage
+hc.single <- hclust(food_dist, method="single")
+plot(hc.single, labels=rownames(food), main="Single Linkage", xlab="", sub="")
+
+# average linkage
+hc.average <- hclust(food_dist, method="average")
+plot(hc.average, labels=rownames(food), main="Average Linkage", xlab="", sub="")
+```
+
+
+
+```{r}
+#| label: hc-food-unscaled
+#| warning: false
+#| echo: true
+
+# unscaled data, complete linkage
+hc.unscaled <- hclust(dist(food), method="complete")
+plot(hc.unscaled, labels=rownames(food), main="Complete linkage with unscaled features", xlab="", sub="")
+```
+
+
+```{r}
+#| label: hc-food-cor
+#| warning: false
+#| echo: true
+
+# correlation as dissimiarity, rather than euclidean distance
+dd <- as.dist(1-cor(t(food_s))) # compute the metric
+hc.corr <- hclust(dd, method="complete") # cluster
+plot(hc.corr, labels=rownames(food), main="Complete linkage with correlation-based distance", xlab="", sub="")
+```
+
+
+### Heatmap
+
+Heatmap is a visualization tool to plot data of similar values in similar colors, so that you can identify visualy if there is any pattern. It can also be combined with hierarchical clustering - this is actually the default outcome: dendrograms are displayed for both rows and column.
+
+```{r}
+#| label: hc-food-heatmap1
+#| warning: false
+#| echo: true
+
+# make heatmap on the scaled data
+heatmap(food_s)
+```
+
+To preserve the original ordering of the columns and rows, you can specify `Rowv = NA, Colv = NA`.
+
+```{r}
+#| label: hc-food-heatmap2
+#| warning: false
+#| echo: true
+
+# no clustering for row or col, this preserves the original ordering
+heatmap(food_s, Rowv = NA, Colv = NA)
+```
+
+Can also only do clustering for row only (or column only). 
+
+```{r}
+#| label: hc-food-heatmap3
+#| warning: false
+#| echo: true
+
+# only clustering for row
+heatmap(food_s, Colv = NA)
+```
+
+
+
+## Exercise 2: NCI60
 
 We look at the NCI60 data again. First load the dataset.
 
@@ -190,8 +370,7 @@ Set a different random seed, say 3 (as long as it's different from the one you u
 # different starting centroids improve the clustering:
 set.seed(3)
 km.out <- kmeans(sd.data, centers = 4, nstart=1)
-km.out$cluster
-km.out$tot.withinss
+km.out$cluster # cluster label
 ```
 
 ### Compare with hierarchical clustering
@@ -295,7 +474,7 @@ heatmap(pr.out$x[,1:40], Rowv = as.dendrogram(hc.corr), Colv = NA,
 
 
 
-## Exercise 2: Gene expression data
+## Exercise 3: Gene expression data
 
 (CH12Ex13 from statistical learning)
 

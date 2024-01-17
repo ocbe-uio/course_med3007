@@ -1,5 +1,84 @@
 # code for clustering
 
+# food ----
+# food example for clustering
+# the clustered groups are easier to interpret, hence we use it for teaching
+
+# load data, and change the title of pulse to Legume
+food <- read.table('./lab/data/Food.txt', header=T)
+colnames(food)[7] <- 'Legume'
+head(food) # first 6 lines of code
+
+# the food data has columns (features) that have quite big difference
+# Scale the data to zero mean and unit variance, call it food_s
+food_s <- scale(food)
+
+
+## hierarchical clustering ----
+
+# HC requires distances (not original data) as input
+# Calculate the distance matrix on the scaled data
+# (default method for distance = Euclidean)
+food_dist <- dist(food_s)
+# food_dist <- dist(food_s, method="euclidean")
+# food_dist
+
+# food_dist is a vector of 300 elements
+length(food_dist) # 300
+
+# this is the number of pairs of data
+# we have 25 data points, one for each country
+# Albania vs Austria, Albania vs Belg.Lux, ...
+# in total you have 25 * 24 / 2 pairs
+
+
+
+# Perform clustering with different linkage methods:
+hc.complete <- hclust(food_dist, method="complete")
+plot(hc.complete, labels=rownames(food), main="Complete Linkage", xlab="", sub="")
+
+# single linkage
+hc.single <- hclust(food_dist, method="single")
+plot(hc.single, labels=rownames(food), main="Single Linkage", xlab="", sub="")
+
+# average linkage
+hc.average <- hclust(food_dist, method="average")
+plot(hc.average, labels=rownames(food), main="Average Linkage", xlab="", sub="")
+
+
+# unscaled data, complete linkage
+hc.unscaled <- hclust(dist(food), method="complete")
+plot(hc.unscaled, labels=rownames(food), main="Complete linkage with unscaled features", xlab="", sub="")
+
+
+# correlation on scaled data, complete linkage
+cor(food_s) # this is by col (food)
+cor(t(food_s)) # by country
+
+# 1 minus makes them all positive
+dd <- as.dist(1-cor(t(food_s)))
+hc.corr <- hclust(dd, method="complete")
+plot(hc.corr, labels=rownames(food), main="Complete linkage with correlation-based distance", xlab="", sub="")
+
+
+## heatmap ----
+# heatmap (default)
+# the default heatmap does clustering for both row and col variables
+# dendrograms are also shown
+heatmap(food_s)
+
+# you can specify the arguments so that no clustering is done
+# the original order of col and row are kept
+# heatmap with no clustering
+heatmap(food_s, Rowv = NA, Colv = NA)
+
+# can also do clustering for only row (or col)
+heatmap(food_s, Colv = NA)
+
+
+
+
+# _________ ----
 # NCI 60 ----
 library(ISLR)
 nci.labs <- NCI60$labs # Sample labels (tissue type)
@@ -148,45 +227,25 @@ plot(pr.out$x[,1:2], col=(km.out4$cluster+1), main="K-Means with K=4",
 
 
 # heatmap ----
-
+# find out how to set argument for heatmap by reading the documentation
 ?heatmap
 
-## let create a small heatmap, to fix ideas.
-## We use the scores of the PCA on the NCI60 data, to reduce dimension
+# We use the scores of the PCA on the NCI60 data, to reduce dimension
 
-#  default choices
+# default heatmap (clustering done on both col and row)
 heatmap(pr.out$x)
 
-# I use the previous dendrogram for better ordering of the patients,
-# and I remove the dendrogram for the components
+# clustering (on correlation) done for rows
 heatmap(pr.out$x, Rowv = as.dendrogram(hc.corr), Colv = NA)
 
 # I now plot less components for the sake of clarity,
-# I add the patient's tumor type, and I give a title
+# I add tumor type, and I give a title
 par(cex.main = .7)
 heatmap(pr.out$x[,1:40], Rowv = as.dendrogram(hc.corr), Colv = NA,
         labRow = nci.labs, main = 'Heatmap of the scores of the first 40 PCs on the NCI60 data')
 
 
 
-## elbow plot
-
-# names(km.out2)
-# # the within cluster sum-of-squares is within the object "withinss"
-# # but we need to run much more k-means in order to decide...
-#
-# which.clust <- 1:15
-# within.clust.var <- NULL
-# for(k in which.clust){
-#   myresult <- mean(kmeans(sd.data, k, nstart=10)$withinss)
-#   within.clust.var <- c(within.clust.var, myresult)
-# }
-# # let's plot the values and look for the elbow
-# par(mfrow=c(1,1))
-# plot(which.clust, within.clust.var, type = 'b', lwd = 2,
-#      xlab = 'number of clusters',
-#      ylab = 'within-cluster sum-of-squares',
-#      main = 'k-means clustering of NCI60 data')
 
 
 
@@ -195,6 +254,7 @@ heatmap(pr.out$x[,1:40], Rowv = as.dendrogram(hc.corr), Colv = NA,
 # CH10Ex11 ----
 
 # load in the data using read.csv(). You will need to select header=F.
+# set the right path to load the data!
 data <- read.csv("lab/data/Ch12Ex13.csv", header=FALSE)
 data <- t(data) # want each row to represent a sample ... should have n=40 samples/rows
 
@@ -216,6 +276,7 @@ table(predicted, true.groups )
 # very well!!
 
 # kmeans  ----
+
 predicted.kmean <- kmeans(data, 2, nstart=20)$cluster
 table(predicted.kmean, true.groups )
 # also very well!

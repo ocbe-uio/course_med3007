@@ -71,7 +71,7 @@ If there is a conflict of information, please refer to the official schedule.
 |:-------------:|:------------------------------------:|:-----------------:|
 | 9:00 - 9:45   | Lab: Clustering and heatmaps |   |
 | 10:00 - 11:30  | Exercises  | [Lab: clustering](https://ocbe-uio.github.io/course_med3007/lab/lab_day4_clustering.html), [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R) |
-| 13:00 - 14:00  | Take-home exam simulation   |  |
+| 13:00 - 14:00  | Take-home exam simulation   | [Exam]() |
 | 14:00 - 16:00  | Q&A | |
 
 
