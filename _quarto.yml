@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "MED3007 V24"
+  title: "MED3007 V25"
   navbar:
     left:
       - href: index.qmd

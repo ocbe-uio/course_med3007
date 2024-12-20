@@ -15,6 +15,7 @@ R is a language and environment for statistical computing, data analysis, visual
 
 R runs on a wide variety of platforms, including Windows, Linux and MacOS. 
 
+Lab Lecture (2024 version by Chi): [Slides](presentation/IntroR.pdf)
 
 
 

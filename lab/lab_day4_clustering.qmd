@@ -10,7 +10,7 @@ Download datasets [here](https://github.com/ocbe-uio/course_med3007/tree/main/la
 
 R script: [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab3_clustering.R)
 
-Presentation: [Slides](presentation/Lab_clustering.pdf)
+Presentation (2024 version by Chi): [Slides](presentation/Lab_clustering.pdf)
 
 ## Exercise 1: Food
 

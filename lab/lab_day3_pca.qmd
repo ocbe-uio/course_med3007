@@ -11,7 +11,7 @@ Download datasets [here](https://github.com/ocbe-uio/course_med3007/tree/main/la
 
 R script: [Code](https://github.com/ocbe-uio/course_med3007/blob/main/lab/code/MED3007_Lab2_pca.R)
 
-Lab Lecture: [Slides](presentation/Lab_pca.pdf)
+Presentation (2024 version by Chi): [Slides](presentation/Lab_pca.pdf)
 
 
 

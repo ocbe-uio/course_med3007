@@ -15,6 +15,5 @@ Genomic data analysis is increasingly important both in medical research and in 
 
 Valeria Vitelli (course lead): valeria.vitelli\@medisin.uio.no
 
-Chi Zhang (R lab sessions): chi.zhang\@medisin.uio.no
- 
+
 
